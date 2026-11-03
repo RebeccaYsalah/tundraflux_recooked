@@ -92,8 +92,8 @@ dat <- read.csv(file.path(data_dir, "<insert_file_name>.csv"))
 
 ```
 
+Files inside this repository: give the subfolders ("meta-analysis" or "upscaling") as separate arguments
 
-# Files inside this repository: give the subfolders ("meta-analysis" or "upscaling") as separate arguments
 ```r
 source(here("meta-analysis", "df_0_study_design_fig1.R"))
 ```
