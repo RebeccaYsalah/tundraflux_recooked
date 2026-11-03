@@ -77,7 +77,7 @@ Paths are handled in two steps, so nobody has to edit scripts:
    file.copy("config_template.R", "config.R")
    ```
 
-4. Open `config.R` and change a path only if your folders differ from the structure above. `config.R` is in `.gitignore`, so it is never committed.
+Open `config.R` and change a path only if your folders differ from the structure above. `config.R` is in `.gitignore`, so it is never committed.
 
 ### Using it in scripts
 
