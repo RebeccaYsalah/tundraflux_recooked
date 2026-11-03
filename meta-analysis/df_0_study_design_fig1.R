@@ -1,8 +1,11 @@
 
 ### -------------------------------------------------
 # CHANGES: Setting working directory and find data
-setwd("/home/rebecca/Schreibtisch/Capstone")
-dat <- read.csv("data/df_2.csv", na.strings = "NA", header = TRUE)
+library(here)
+source(here("config.R"))
+
+# Load data: Paths from config.R: data_dir
+dat <- read.csv(file.path(data_dir, "df_2.csv"))
 ### ----------------------------------------------------
 
 # old:
