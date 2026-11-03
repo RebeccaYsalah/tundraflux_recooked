@@ -45,11 +45,11 @@ Clone both repositories into the `git_repositories` folder:
 
 ```bash
 cd PROJECT/git_repositories
-git clone https://github.com/mjalava/tundraflux.git
-git clone https://github.com/RebeccaYsalah/tundraflux_recooked.git
+git clone https://github.com/mjalava/tundraflux.git tundraflux
+git clone https://github.com/RebeccaYsalah/tundraflux_recooked.git tundraflux_recooked
 ```
 
-Place the data in `PROJECT/data`, then follow the scripts in this repository.
+Place the data in `PROJECT/data`
 
 ## Status
 
