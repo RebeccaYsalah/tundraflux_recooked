@@ -16,7 +16,7 @@ The project has two steps:
 The original R scripts and data that accompany the paper are available here:
 
 - Github (this repository) contains all R scripts on https://github.com/mjalava/tundraflux
-- Zenodo contains all data on https://zenodo.org/10.5281/zenodo.10572480
+- Zenodo contains all data on https://doi.org/10.5281/zenodo.10572479 
 
 All credit for the original data, code and analysis goes to the authors of the paper. This repository is an independent re-analysis and is not affiliated with the original authors.
 
