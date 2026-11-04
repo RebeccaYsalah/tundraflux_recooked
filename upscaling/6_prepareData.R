@@ -11,6 +11,8 @@ library(terra)
 library(sf)
 library(tidyverse)
 library(openxlsx)
+library(here)  # CHANGES: added
+source(here("config.R"))  # CHANGES: added
 
 # set working directory the path that this script is located in
 # setwd(dirname(rstudioapi::getActiveDocumentContext()$path))

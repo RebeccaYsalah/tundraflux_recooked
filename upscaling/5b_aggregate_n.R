@@ -1,4 +1,6 @@
 library(terra)
+library(here)  # CHANGES: added
+source(here("config.R"))  # CHANGES: added
 
 # These scripts (three almost identical for soc, bdod and nitrogen) are
 # separated so that it's easy to run them in parallel. Nitrogen has a different

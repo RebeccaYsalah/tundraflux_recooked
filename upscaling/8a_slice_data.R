@@ -1,6 +1,8 @@
 # ONLY FOR SLICING THE SOIL SIMULATION RESULTS, MANUALLY SELECT THE VARIABLES IN THE LOOP
 
 library(data.table)
+library(here)  # CHANGES: added
+source(here("config.R"))  # CHANGES: added
 
 dt_v_CN_n100_boots <- readRDS("dt_v_CN_n100_boots.rds")
 dt_v_TN_n100 <- readRDS("dt_v_TN_n100.rds")

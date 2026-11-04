@@ -14,6 +14,8 @@ library(sf)
 library(readxl)
 library(ggpubr)
 library(geometry)
+library(here)  # CHANGES: added
+source(here("config.R"))  # CHANGES: added
 
 # set working directory as the path where this script is located
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))

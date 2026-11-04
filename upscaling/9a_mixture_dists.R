@@ -2,6 +2,8 @@
 # Based on code by James Weedon.
 
 library(data.table)
+library(here)  # CHANGES: added
+source(here("config.R"))  # CHANGES: added
 
 args = commandArgs(trailingOnly=TRUE) #if slicing needed
 slice <- args[1]

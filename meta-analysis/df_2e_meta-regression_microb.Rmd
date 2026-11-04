@@ -26,6 +26,8 @@ library("effsize")
 library("nlme") 
 library("metafor")
 library("corrplot")
+library(here)  # CHANGES: added
+source(here("config.R"))  # CHANGES: added
 
 df<-read.csv("df_2.csv")
 df_Bacterial_BM_Weight<-read.csv("SMDBacterial_BM_Weight.csv", sep=',', dec='.')

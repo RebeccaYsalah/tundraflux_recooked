@@ -10,6 +10,8 @@ library(metafor) # calculate effect size and do meta analysis
 library(lmtest)
 library(readr) # read in data
 library(dplyr)# handle data
+library(here)  # CHANGES: added
+source(here("config.R"))  # CHANGES: added
 
 # load ER partitioning data
 data <- read_csv("df_3.csv")

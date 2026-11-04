@@ -1,4 +1,6 @@
 library(terra)
+library(here)  # CHANGES: added
+source(here("config.R"))  # CHANGES: added
 
 results <- readRDS("mxt_res_1.rds")
 for(i in 2:40){

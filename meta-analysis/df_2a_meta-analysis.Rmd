@@ -25,6 +25,8 @@ library("esc")
 library("effsize")
 library("nlme") 
 library("metafor")
+library(here)  # CHANGES: added
+source(here("config.R"))  # CHANGES: added
 
 df<-read.csv("df_2.csv")
 

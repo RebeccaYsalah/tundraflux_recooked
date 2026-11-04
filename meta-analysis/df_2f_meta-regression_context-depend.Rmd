@@ -35,6 +35,8 @@ library("crayon")
 library("stringr")
 library("tibble")
 library("multcomp") #"for post hoc tests"
+library(here)  # CHANGES: added
+source(here("config.R"))  # CHANGES: added
 
 df<-read.csv("df_2.csv")
 

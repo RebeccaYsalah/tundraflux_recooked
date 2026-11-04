@@ -9,6 +9,8 @@ library(truncnorm)
 library(tictoc)
 library(lavaan)
 library(mvtnorm)
+library(here)  # CHANGES: added
+source(here("config.R"))  # CHANGES: added
 
 ##### read data ----
 

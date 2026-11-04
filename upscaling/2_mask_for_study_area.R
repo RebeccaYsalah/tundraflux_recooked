@@ -3,6 +3,8 @@
 
 library(terra)
 library(tidyverse)
+library(here)  # CHANGES: added
+source(here("config.R"))  # CHANGES: added
 
 
 

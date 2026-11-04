@@ -6,6 +6,8 @@
 library(metafor)
 library(data.table)
 library(dplyr)
+library(here)  # CHANGES: added
+source(here("config.R"))  # CHANGES: added
 
 args = commandArgs(trailingOnly=TRUE)
 slice <- args[1]

@@ -17,6 +17,8 @@ library(openxlsx) #
 library(readxl)
 library(tidyverse)
 library(dplyr) 
+library(here)  # CHANGES: added
+source(here("config.R"))  # CHANGES: added
 
 
 # set working directory the path that this script is located in

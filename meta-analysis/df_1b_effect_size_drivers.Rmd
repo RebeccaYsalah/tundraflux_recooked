@@ -33,6 +33,8 @@ library("installr")
 library("crayon")
 library("stringr")
 library("tibble")
+library(here)  # CHANGES: added
+source(here("config.R"))  # CHANGES: added
 
 DS_final<-read.csv("df_1.csv")
 DS_final<-DS_final[,-c(1)]
