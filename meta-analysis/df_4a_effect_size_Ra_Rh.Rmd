@@ -49,12 +49,12 @@ ER_CTL <- ER_hr  %>% dplyr::filter(treatment=="CTL")
 ER_OTC <- ER_hr  %>% dplyr::filter(treatment=="OTC")
 ER_hr <- full_join(ER_CTL, ER_OTC, by="ID")
 
-ER_hr<-plyr::rename(ER_hr,c("mean.x"="mean_CTL_hr"))
-ER_hr<-plyr::rename(ER_hr,c("mean.y"="mean_OTC_hr"))
-ER_hr<-plyr::rename(ER_hr,c("sd.x"="sd_CTL_hr"))
-ER_hr<-plyr::rename(ER_hr,c("sd.y"="sd_OTC_hr"))
-ER_hr<-plyr::rename(ER_hr,c("n.x"="n_CTL_hr"))
-ER_hr<-plyr::rename(ER_hr,c("n.y"="n_OTC_hr"))
+ER_hr<-dplyr::rename(ER_hr,any_of(c("mean_CTL_hr"="mean.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_hr<-dplyr::rename(ER_hr,any_of(c("mean_OTC_hr"="mean.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_hr<-dplyr::rename(ER_hr,any_of(c("sd_CTL_hr"="sd.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_hr<-dplyr::rename(ER_hr,any_of(c("sd_OTC_hr"="sd.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_hr<-dplyr::rename(ER_hr,any_of(c("n_CTL_hr"="n.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_hr<-dplyr::rename(ER_hr,any_of(c("n_OTC_hr"="n.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 ```
 
 ```{r calculate effect sizes - heterotrophic respiration, echo=FALSE}
@@ -71,8 +71,8 @@ SMD_hr <- escalc("SMD",       m1i = mean_OTC_hr,
 
 Mean_SMD<-mean(SMD_hr$yi, na.rm = TRUE)
 
-SMD_hr<-plyr::rename(SMD_hr,c("yi"="SMD_HR"))
-SMD_hr<-plyr::rename(SMD_hr,c("vi"="var_SMD_HR"))
+SMD_hr<-dplyr::rename(SMD_hr,any_of(c("SMD_HR"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMD_hr<-dplyr::rename(SMD_hr,any_of(c("var_SMD_HR"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 # calculate log response ratio 
 # For measure="ROM", the log is taken of the ratio of means (i.e., log(m1i/m2i))
@@ -88,8 +88,8 @@ ROM_hr <-
 
 Mean_RR<-mean(ROM_hr$yi, na.rm = TRUE)
 
-ROM_hr<-plyr::rename(ROM_hr,c("yi"="ROM_HR"))
-ROM_hr<-plyr::rename(ROM_hr,c("vi"="var_ROM_HR"))
+ROM_hr<-dplyr::rename(ROM_hr,any_of(c("ROM_HR"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ROM_hr<-dplyr::rename(ROM_hr,any_of(c("var_ROM_HR"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 ```
 
 ```{r merge data - heterotrophic respiration}
@@ -126,12 +126,12 @@ ER_CTL <- ER_er  %>% dplyr::filter(treatment=="CTL")
 ER_OTC <- ER_er  %>% dplyr::filter(treatment=="OTC")
 ER_er <- full_join(ER_CTL, ER_OTC, by="ID")
 
-ER_er<-plyr::rename(ER_er,c("mean.x"="mean_CTL_er"))
-ER_er<-plyr::rename(ER_er,c("mean.y"="mean_OTC_er"))
-ER_er<-plyr::rename(ER_er,c("sd.x"="sd_CTL_er"))
-ER_er<-plyr::rename(ER_er,c("sd.y"="sd_OTC_er"))
-ER_er<-plyr::rename(ER_er,c("n.x"="n_CTL_er"))
-ER_er<-plyr::rename(ER_er,c("n.y"="n_OTC_er"))
+ER_er<-dplyr::rename(ER_er,any_of(c("mean_CTL_er"="mean.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_er<-dplyr::rename(ER_er,any_of(c("mean_OTC_er"="mean.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_er<-dplyr::rename(ER_er,any_of(c("sd_CTL_er"="sd.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_er<-dplyr::rename(ER_er,any_of(c("sd_OTC_er"="sd.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_er<-dplyr::rename(ER_er,any_of(c("n_CTL_er"="n.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_er<-dplyr::rename(ER_er,any_of(c("n_OTC_er"="n.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 # calculate Hedges SMD
@@ -146,8 +146,8 @@ SMD_er <- escalc("SMD",       m1i = mean_OTC_er,
 
 Mean_SMD<-mean(SMD_er$yi, na.rm = TRUE)
 
-SMD_er<-plyr::rename(SMD_er,c("yi"="SMD_ER"))
-SMD_er<-plyr::rename(SMD_er,c("vi"="var_SMD_ER"))
+SMD_er<-dplyr::rename(SMD_er,any_of(c("SMD_ER"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMD_er<-dplyr::rename(SMD_er,any_of(c("var_SMD_ER"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 # calculate log response ratio 
 
@@ -163,8 +163,8 @@ ROM_er <-
 
 Mean_RR<-mean(ROM_er$yi, na.rm = TRUE)
 
-ROM_er<-plyr::rename(ROM_er,c("yi"="ROM_ER"))
-ROM_er<-plyr::rename(ROM_er,c("vi"="var_ROM_ER"))
+ROM_er<-dplyr::rename(ROM_er,any_of(c("ROM_ER"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ROM_er<-dplyr::rename(ROM_er,any_of(c("var_ROM_ER"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 effect2 <- full_join(SMD_er, ROM_er, by = "ID")
 meta_effect2 <- left_join(effect2, ER_data, by="ID")
@@ -189,7 +189,7 @@ ER_meta2 <- ER_meta2[,-10:-17]
 
 ER_data$ratio_HR_ER <-(ER_data$co2_heterotrophic_respiration/ER_data$co2_ecosystem_respiration)*100
 dat_he <- ER_data[complete.cases(ER_data$ratio_HR_ER), ]
-dat_he_sum<-summarySE(dat_he, measurevar = "ratio_HR_ER",  na.rm = TRUE, conf.interval = 0.95, .drop = TRUE)#groupvars = c("Growth.form_2"),
+dat_he_sum<-dat_he %>% dplyr::summarise(N = sum(!is.na(ratio_HR_ER)), ratio_HR_ER = mean(ratio_HR_ER, na.rm = TRUE), sd = sd(ratio_HR_ER, na.rm = TRUE)) %>% dplyr::mutate(se = sd / sqrt(N), ci = se * qt(0.975, N - 1))  # CHANGES: Rmisc::summarySE replaced (Rmisc needs plyr); same N/mean/sd/se/ci columns ##groupvars = c("Growth.form_2"),
 
 #extract values from data file
 ER_he <- ER_data %>% 
@@ -202,12 +202,12 @@ ER_CTL <- ER_he  %>% dplyr::filter(treatment=="CTL")
 ER_OTC <- ER_he  %>% dplyr::filter(treatment=="OTC")
 ER_he <- full_join(ER_CTL, ER_OTC, by="ID")
 
-ER_he<-plyr::rename(ER_he,c("mean.x"="mean_CTL_he"))
-ER_he<-plyr::rename(ER_he,c("mean.y"="mean_OTC_he"))
-ER_he<-plyr::rename(ER_he,c("sd.x"="sd_CTL_he"))
-ER_he<-plyr::rename(ER_he,c("sd.y"="sd_OTC_he"))
-ER_he<-plyr::rename(ER_he,c("n.x"="n_CTL_he"))
-ER_he<-plyr::rename(ER_he,c("n.y"="n_OTC_he"))
+ER_he<-dplyr::rename(ER_he,any_of(c("mean_CTL_he"="mean.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_he<-dplyr::rename(ER_he,any_of(c("mean_OTC_he"="mean.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_he<-dplyr::rename(ER_he,any_of(c("sd_CTL_he"="sd.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_he<-dplyr::rename(ER_he,any_of(c("sd_OTC_he"="sd.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_he<-dplyr::rename(ER_he,any_of(c("n_CTL_he"="n.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_he<-dplyr::rename(ER_he,any_of(c("n_OTC_he"="n.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 # calculate Hedges SMD
 SMD_he <- escalc("SMD",       m1i = mean_OTC_he,
@@ -221,8 +221,8 @@ SMD_he <- escalc("SMD",       m1i = mean_OTC_he,
 
 Mean_SMD<-mean(SMD_he$yi, na.rm = TRUE)
 
-SMD_he<-plyr::rename(SMD_he,c("yi"="SMD_HE"))
-SMD_he<-plyr::rename(SMD_he,c("vi"="var_SMD_HE"))
+SMD_he<-dplyr::rename(SMD_he,any_of(c("SMD_HE"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMD_he<-dplyr::rename(SMD_he,any_of(c("var_SMD_HE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 # calculate log response ratio 
 
@@ -238,8 +238,8 @@ ROM_he <-
 
 Mean_RR<-mean(ROM_he$yi, na.rm = TRUE)
 
-ROM_he<-plyr::rename(ROM_he,c("yi"="ROM_HE"))
-ROM_he<-plyr::rename(ROM_he,c("vi"="var_ROM_HE"))
+ROM_he<-dplyr::rename(ROM_he,any_of(c("ROM_HE"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ROM_he<-dplyr::rename(ROM_he,any_of(c("var_ROM_HE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 # RR = exp(ROM)
 # percchange = 100*(RR-1)
@@ -271,7 +271,7 @@ ER_data$auto_resp <-ER_data$co2_ecosystem_respiration-ER_data$co2_heterotrophic_
 
 ER_data$ratio_AU_ER <-(ER_data$auto_resp/ER_data$co2_ecosystem_respiration)*100
 dat_au <- ER_data[complete.cases(ER_data$ratio_AU_ER), ]
-dat_au_sum<-summarySE(dat_au, measurevar = "ratio_AU_ER",  na.rm = TRUE, conf.interval = 0.95, .drop = TRUE)#groupvars = c("Growth.form_2"),
+dat_au_sum<-dat_au %>% dplyr::summarise(N = sum(!is.na(ratio_AU_ER)), ratio_AU_ER = mean(ratio_AU_ER, na.rm = TRUE), sd = sd(ratio_AU_ER, na.rm = TRUE)) %>% dplyr::mutate(se = sd / sqrt(N), ci = se * qt(0.975, N - 1))  # CHANGES: Rmisc::summarySE replaced (Rmisc needs plyr); same N/mean/sd/se/ci columns ##groupvars = c("Growth.form_2"),
 
 #extract calculated autotrophic respiration
 ER_au <- ER_data %>%
@@ -292,12 +292,12 @@ ER_CTL <- ER_au  %>% dplyr::filter(treatment=="CTL")
 ER_OTC <- ER_au  %>% dplyr::filter(treatment=="OTC")
 ER_au <- full_join(ER_CTL, ER_OTC, by="ID")
 
-ER_au<-plyr::rename(ER_au,c("mean.x"="mean_CTL_au"))
-ER_au<-plyr::rename(ER_au,c("mean.y"="mean_OTC_au"))
-ER_au<-plyr::rename(ER_au,c("sd.x"="sd_CTL_au"))
-ER_au<-plyr::rename(ER_au,c("sd.y"="sd_OTC_au"))
-ER_au<-plyr::rename(ER_au,c("n.x"="n_CTL_au"))
-ER_au<-plyr::rename(ER_au,c("n.y"="n_OTC_au"))
+ER_au<-dplyr::rename(ER_au,any_of(c("mean_CTL_au"="mean.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_au<-dplyr::rename(ER_au,any_of(c("mean_OTC_au"="mean.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_au<-dplyr::rename(ER_au,any_of(c("sd_CTL_au"="sd.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_au<-dplyr::rename(ER_au,any_of(c("sd_OTC_au"="sd.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_au<-dplyr::rename(ER_au,any_of(c("n_CTL_au"="n.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ER_au<-dplyr::rename(ER_au,any_of(c("n_OTC_au"="n.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 # calculate Hedges SMD
 SMD_au <- escalc("SMD",       m1i = mean_OTC_au,
@@ -311,8 +311,8 @@ SMD_au <- escalc("SMD",       m1i = mean_OTC_au,
 
 Mean_SMD<-mean(SMD_au$yi, na.rm = TRUE)
 
-SMD_au<-plyr::rename(SMD_au,c("yi"="SMD_AU"))
-SMD_au<-plyr::rename(SMD_au,c("vi"="var_SMD_AU"))
+SMD_au<-dplyr::rename(SMD_au,any_of(c("SMD_AU"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMD_au<-dplyr::rename(SMD_au,any_of(c("var_SMD_AU"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 # calculate log response ratio 
 
@@ -328,8 +328,8 @@ ROM_au <-
 
 Mean_RR<-mean(ROM_au$yi, na.rm = TRUE)
 
-ROM_au<-plyr::rename(ROM_au,c("yi"="ROM_AU"))
-ROM_au<-plyr::rename(ROM_au,c("vi"="var_ROM_AU"))
+ROM_au<-dplyr::rename(ROM_au,any_of(c("ROM_AU"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+ROM_au<-dplyr::rename(ROM_au,any_of(c("var_ROM_AU"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 effect1 <- full_join(SMD_au, ROM_au, by = "ID")
 meta_effect1 <- left_join(effect1, ER_data, by="ID")

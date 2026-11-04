@@ -10,12 +10,12 @@ editor_options:
 #load data
 ```{r load data, include=FALSE}
 library("ggplot2")
-library("plyr")
+# library("plyr")  # CHANGES: plyr not available for R 4.6 - only rename() was used, now dplyr::rename()
 library("dplyr")
 library("car")
 library("tidyr")
 library("readxl")
-library("reshape2")
+# library("reshape2")  # CHANGES: reshape2 not available for R 4.6 - no reshape2 functions are used
 library("tidyverse")
 library("ggrepel")
 library("tibble")
@@ -39,34 +39,34 @@ df_Mean_H<-read.csv("SMDMean_H.csv")
 
 
 #rename + change data type
-df<-plyr::rename(df,c("ï..Dataset_ID"="Dataset_ID"))
+df<-dplyr::rename(df,any_of(c("Dataset_ID"="ï..Dataset_ID")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df$Exp_ID<-as.factor(df$Exp_ID)
 df$Site<-as.factor(df$Site)
 df$Location<-as.factor(df$Location)
 df$Country<-as.factor(df$Country)
 
-df_Graminoids<-plyr::rename(df_Graminoids,c("X"="Observation_ID"))
+df_Graminoids<-dplyr::rename(df_Graminoids,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_Graminoids$Dataset_ID<-as.factor(df_Graminoids$Dataset_ID)
 
-df_Forbs<-plyr::rename(df_Forbs,c("X"="Observation_ID"))
+df_Forbs<-dplyr::rename(df_Forbs,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_Forbs$Dataset_ID<-as.factor(df_Forbs$Dataset_ID)
 
-df_Decid_Shrubs<-plyr::rename(df_Decid_Shrubs,c("X"="Observation_ID"))
+df_Decid_Shrubs<-dplyr::rename(df_Decid_Shrubs,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_Decid_Shrubs$Dataset_ID<-as.factor(df_Decid_Shrubs$Dataset_ID)
 
-df_Evergr_Shrubs<-plyr::rename(df_Evergr_Shrubs,c("X"="Observation_ID"))
+df_Evergr_Shrubs<-dplyr::rename(df_Evergr_Shrubs,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_Evergr_Shrubs$Dataset_ID<-as.factor(df_Evergr_Shrubs$Dataset_ID)
 
-df_Mosses<-plyr::rename(df_Mosses,c("X"="Observation_ID"))
+df_Mosses<-dplyr::rename(df_Mosses,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_Mosses$Dataset_ID<-as.factor(df_Mosses$Dataset_ID)
 
-df_Lichens<-plyr::rename(df_Lichens,c("X"="Observation_ID"))
+df_Lichens<-dplyr::rename(df_Lichens,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_Lichens$Dataset_ID<-as.factor(df_Lichens$Dataset_ID)
 
-df_BM<-plyr::rename(df_BM,c("X"="Observation_ID"))
+df_BM<-dplyr::rename(df_BM,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_BM$Dataset_ID<-as.factor(df_BM$Dataset_ID)
 
-df_Mean_H<-plyr::rename(df_Mean_H,c("X"="Observation_ID"))
+df_Mean_H<-dplyr::rename(df_Mean_H,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_Mean_H$Dataset_ID<-as.factor(df_Mean_H$Dataset_ID)
 
 ```
@@ -755,7 +755,7 @@ SMD_Graminoidssd<-sd(df$SMD_Graminoids, na.rm=T)
 #CIs https://www.r-bloggers.com/confidence-intervals-for-prediction-in-glmms/
 # https://search.r-project.org/CRAN/refmans/metafor/html/predict.rma.html
 predict<-as.data.frame(predict(model, newmods=cbind(seq(SMD_Graminoidsmin, SMD_Graminoidsmax, length=20)), addx=TRUE))
-predict<-plyr::rename(predict,c("X.SMD_Graminoids"="newmods"))
+predict<-dplyr::rename(predict,any_of(c("newmods"="X.SMD_Graminoids")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 # names(predict)
 
 #colorblind friendly figures!
@@ -798,7 +798,7 @@ ggplot() +
 
 
 #MODEL RESULTS
-   geom_line(color='black', data=predict, aes(x=newmods, y=pred), size=0.6)+ #regression line toevoegen obv predictions rma.mv object
+   geom_line(color='black', data=predict, aes(x=newmods, y=pred), linewidth=0.6)+ #regression line toevoegen obv predictions rma.mv object  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
   geom_ribbon(data=predict, aes(x=newmods, ymin=ci.lb, ymax=ci.ub), linetype=2, alpha=0.1, color=cbPalette[1])+ #ribbon line confidence interval toevoegen
 
 #FORMATTING
@@ -810,15 +810,15 @@ ggplot() +
   # ggtitle("Zone (Mean SMD + 95%-CI)") +
   ylab("ER Hedges SMD") +
   xlab("SMD Graminoid cover")+#
-  geom_hline(yintercept=0.8, linetype="dashed", color = cbPalette[7], size=0.6)+
-  geom_hline(yintercept=0.5, linetype="dashed", color = cbPalette[2], size=0.6)+
-  geom_hline(yintercept=0.2, linetype="dashed", color = cbPalette[5], size=0.6)+
-  geom_hline(yintercept=0, linetype="dashed", color = "black", size=2)+
-  geom_hline(yintercept=-0.2, linetype="dashed", color = cbPalette[1], size=0.6)+
-  geom_hline(yintercept=-0.5, linetype="dashed", color = cbPalette[3], size=0.6)+
-  geom_hline(yintercept=-0.8, linetype="dashed", color = cbPalette[6], size=0.6)+
+  geom_hline(yintercept=0.8, linetype="dashed", color = cbPalette[7], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0.5, linetype="dashed", color = cbPalette[2], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0.2, linetype="dashed", color = cbPalette[5], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0, linetype="dashed", color = "black", linewidth=2)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.2, linetype="dashed", color = cbPalette[1], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.5, linetype="dashed", color = cbPalette[3], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.8, linetype="dashed", color = cbPalette[6], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
 
-  geom_vline(xintercept=0, linetype="dashed",color = "grey", size=0.4)+
+  geom_vline(xintercept=0, linetype="dashed",color = "grey", linewidth=0.4)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
 
 
   theme_classic()+
@@ -875,7 +875,7 @@ SMD_BMsd<-sd(df$SMD_BM, na.rm=T)
 #CIs https://www.r-bloggers.com/confidence-intervals-for-prediction-in-glmms/
 # https://search.r-project.org/CRAN/refmans/metafor/html/predict.rma.html
 predict<-as.data.frame(predict(model, newmods=cbind(seq(SMD_BMmin, SMD_BMmax, length=20)), addx=TRUE))
-predict<-plyr::rename(predict,c("X.SMD_BM"="newmods"))
+predict<-dplyr::rename(predict,any_of(c("newmods"="X.SMD_BM")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 # names(predict)
 
 #colorblind friendly figures!
@@ -918,7 +918,7 @@ ggplot() +
 
 
 #MODEL RESULTS
-   geom_line(color='black', data=predict, aes(x=newmods, y=pred), size=0.6)+ #regression line toevoegen obv predictions rma.mv object
+   geom_line(color='black', data=predict, aes(x=newmods, y=pred), linewidth=0.6)+ #regression line toevoegen obv predictions rma.mv object  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
   geom_ribbon(data=predict, aes(x=newmods, ymin=ci.lb, ymax=ci.ub), linetype=2, alpha=0.1, color=cbPalette[1])+ #ribbon line confidence interval toevoegen
 
 #FORMATTING
@@ -930,15 +930,15 @@ ggplot() +
   # ggtitle("Zone (Mean SMD + 95%-CI)") +
   ylab("ER Hedges SMD") +
   xlab("SMD Biomass")+#
-  geom_hline(yintercept=0.8, linetype="dashed", color = cbPalette[7], size=0.6)+
-  geom_hline(yintercept=0.5, linetype="dashed", color = cbPalette[2], size=0.6)+
-  geom_hline(yintercept=0.2, linetype="dashed", color = cbPalette[5], size=0.6)+
-  geom_hline(yintercept=0, linetype="dashed", color = "black", size=2)+
-  geom_hline(yintercept=-0.2, linetype="dashed", color = cbPalette[1], size=0.6)+
-  geom_hline(yintercept=-0.5, linetype="dashed", color = cbPalette[3], size=0.6)+
-  geom_hline(yintercept=-0.8, linetype="dashed", color = cbPalette[6], size=0.6)+
+  geom_hline(yintercept=0.8, linetype="dashed", color = cbPalette[7], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0.5, linetype="dashed", color = cbPalette[2], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0.2, linetype="dashed", color = cbPalette[5], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0, linetype="dashed", color = "black", linewidth=2)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.2, linetype="dashed", color = cbPalette[1], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.5, linetype="dashed", color = cbPalette[3], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.8, linetype="dashed", color = cbPalette[6], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
 
-  geom_vline(xintercept=0, linetype="dashed",color = "grey", size=0.4)+
+  geom_vline(xintercept=0, linetype="dashed",color = "grey", linewidth=0.4)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
 
   theme_classic()+
  theme(text = element_text(size = 22), plot.title = element_text(hjust = 0.5), plot.margin=unit(c(1.2,1.2,1.2,1.2),"cm"),axis.text=element_text(size=rel(1.1))) +

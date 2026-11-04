@@ -10,12 +10,12 @@ editor_options:
 #load data
 ```{r load data, include=FALSE}
 library("ggplot2")
-library("plyr")
+# library("plyr")  # CHANGES: plyr not available for R 4.6 - only rename() was used, now dplyr::rename()
 library("dplyr")
 library("car")
 library("tidyr")
 library("readxl")
-library("reshape2")
+# library("reshape2")  # CHANGES: reshape2 not available for R 4.6 - no reshape2 functions are used
 library("tidyverse")
 library("ggrepel")
 library("tibble")
@@ -34,22 +34,22 @@ df_FB_Ratio<-read.csv("SMDFB_Ratio.csv", sep=',', dec='.')
 
 
 #rename + change data type
-df<-plyr::rename(df,c("ï..Dataset_ID"="Dataset_ID"))
+df<-dplyr::rename(df,any_of(c("Dataset_ID"="ï..Dataset_ID")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df$Exp_ID<-as.factor(df$Exp_ID)
 df$Site<-as.factor(df$Site)
 df$Location<-as.factor(df$Location)
 df$Country<-as.factor(df$Country)
 
-df_Bacterial_BM_Weight<-plyr::rename(df_Bacterial_BM_Weight,c("Site_Flux_ID_new"="Dataset_ID"))
-df_Bacterial_BM_Weight<-plyr::rename(df_Bacterial_BM_Weight,c("X"="Observation_ID"))
+df_Bacterial_BM_Weight<-dplyr::rename(df_Bacterial_BM_Weight,any_of(c("Dataset_ID"="Site_Flux_ID_new")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+df_Bacterial_BM_Weight<-dplyr::rename(df_Bacterial_BM_Weight,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_Bacterial_BM_Weight$Dataset_ID<-as.factor(df_Bacterial_BM_Weight$Dataset_ID)
 
-df_Fungal_BM_Weight<-plyr::rename(df_Fungal_BM_Weight,c("Site_Flux_ID_new"="Dataset_ID"))
-df_Fungal_BM_Weight<-plyr::rename(df_Fungal_BM_Weight,c("X"="Observation_ID"))
+df_Fungal_BM_Weight<-dplyr::rename(df_Fungal_BM_Weight,any_of(c("Dataset_ID"="Site_Flux_ID_new")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+df_Fungal_BM_Weight<-dplyr::rename(df_Fungal_BM_Weight,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_Fungal_BM_Weight$Dataset_ID<-as.factor(df_Fungal_BM_Weight$Dataset_ID)
 
-df_FB_Ratio<-plyr::rename(df_FB_Ratio,c("Site_Flux_ID_new"="Dataset_ID"))
-df_FB_Ratio<-plyr::rename(df_FB_Ratio,c("X"="Observation_ID"))
+df_FB_Ratio<-dplyr::rename(df_FB_Ratio,any_of(c("Dataset_ID"="Site_Flux_ID_new")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+df_FB_Ratio<-dplyr::rename(df_FB_Ratio,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_FB_Ratio$Dataset_ID<-as.factor(df_FB_Ratio$Dataset_ID)
 
 ```
@@ -136,7 +136,7 @@ summary(model1)
 
 # First run full script df_1b to get the csv files
 df_Bacterial_BM_Weight_RMD<-read.csv("RMDBacterial_BM_Weight.csv")
-df_Bacterial_BM_Weight_RMD<-plyr::rename(df_Bacterial_BM_Weight_RMD,c("X"="Observation_ID"))
+df_Bacterial_BM_Weight_RMD<-dplyr::rename(df_Bacterial_BM_Weight_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]
@@ -152,7 +152,7 @@ summary(model1_RMD)
 
 # First run full script df_1b to get the csv files
 df_Fungal_BM_Weight_RMD<-read.csv("RMDFungal_BM_Weight.csv")
-df_Fungal_BM_Weight_RMD<-plyr::rename(df_Fungal_BM_Weight_RMD,c("X"="Observation_ID"))
+df_Fungal_BM_Weight_RMD<-dplyr::rename(df_Fungal_BM_Weight_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]
@@ -170,7 +170,7 @@ summary(model1_RMD)
 
 # First run full script df_1b to get the csv files
 df_FB_Ratio_RMD<-read.csv("RMDFB_Ratio.csv")
-df_FB_Ratio_RMD<-plyr::rename(df_FB_Ratio_RMD,c("X"="Observation_ID"))
+df_FB_Ratio_RMD<-dplyr::rename(df_FB_Ratio_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]

@@ -10,12 +10,12 @@ editor_options:
 #load data
 ```{r load data, include=FALSE}
 library("ggplot2")
-library("plyr")
+# library("plyr")  # CHANGES: plyr not available for R 4.6 - only rename() was used, now dplyr::rename()
 library("dplyr")
 library("car")
 library("tidyr")
 library("readxl")
-library("reshape2")
+# library("reshape2")  # CHANGES: reshape2 not available for R 4.6 - no reshape2 functions are used
 library("tidyverse")
 library("ggrepel")
 library("tibble")
@@ -45,49 +45,49 @@ df_OL_D_Plot<-read.csv("SMDOL_D_Plot.csv")
 
 
 #rename + change data type
-df<-plyr::rename(df,c("ï..Dataset_ID"="Dataset_ID"))
+df<-dplyr::rename(df,any_of(c("Dataset_ID"="ï..Dataset_ID")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df$Exp_ID<-as.factor(df$Exp_ID)
 df$Site<-as.factor(df$Site)
 df$Location<-as.factor(df$Location)
 df$Country<-as.factor(df$Country)
 
-df_SOM_Org<-plyr::rename(df_SOM_Org,c("X"="Observation_ID"))
+df_SOM_Org<-dplyr::rename(df_SOM_Org,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_SOM_Org$Dataset_ID<-as.factor(df_SOM_Org$Dataset_ID)
 
-df_SOM_Min<-plyr::rename(df_SOM_Min,c("X"="Observation_ID"))
+df_SOM_Min<-dplyr::rename(df_SOM_Min,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_SOM_Min$Dataset_ID<-as.factor(df_SOM_Min$Dataset_ID)
 
-df_SOC_Org<-plyr::rename(df_SOC_Org,c("X"="Observation_ID"))
+df_SOC_Org<-dplyr::rename(df_SOC_Org,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_SOC_Org$Dataset_ID<-as.factor(df_SOC_Org$Dataset_ID)
 
-df_SOC_Min<-plyr::rename(df_SOC_Min,c("X"="Observation_ID"))
+df_SOC_Min<-dplyr::rename(df_SOC_Min,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_SOC_Min$Dataset_ID<-as.factor(df_SOC_Min$Dataset_ID)
 
-df_SON_Org<-plyr::rename(df_SON_Org,c("X"="Observation_ID"))
+df_SON_Org<-dplyr::rename(df_SON_Org,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_SON_Org$Dataset_ID<-as.factor(df_SON_Org$Dataset_ID)
 
-df_SON_Min<-plyr::rename(df_SON_Min,c("X"="Observation_ID"))
+df_SON_Min<-dplyr::rename(df_SON_Min,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_SON_Min$Dataset_ID<-as.factor(df_SON_Min$Dataset_ID)
 
-df_CN_Org<-plyr::rename(df_CN_Org,c("X"="Observation_ID"))
+df_CN_Org<-dplyr::rename(df_CN_Org,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_CN_Org$Dataset_ID<-as.factor(df_CN_Org$Dataset_ID)
 
-df_CN_Min<-plyr::rename(df_CN_Min,c("X"="Observation_ID"))
+df_CN_Min<-dplyr::rename(df_CN_Min,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_CN_Min$Dataset_ID<-as.factor(df_CN_Min$Dataset_ID)
 
-df_pH_Org<-plyr::rename(df_pH_Org,c("X"="Observation_ID"))
+df_pH_Org<-dplyr::rename(df_pH_Org,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_pH_Org$Dataset_ID<-as.factor(df_pH_Org$Dataset_ID)
 
-df_pH_Min<-plyr::rename(df_pH_Min,c("X"="Observation_ID"))
+df_pH_Min<-dplyr::rename(df_pH_Min,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_pH_Min$Dataset_ID<-as.factor(df_pH_Min$Dataset_ID)
 
-df_BD_Org<-plyr::rename(df_BD_Org,c("X"="Observation_ID"))
+df_BD_Org<-dplyr::rename(df_BD_Org,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_BD_Org$Dataset_ID<-as.factor(df_BD_Org$Dataset_ID)
 
-df_BD_Min<-plyr::rename(df_BD_Min,c("X"="Observation_ID"))
+df_BD_Min<-dplyr::rename(df_BD_Min,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_BD_Min$Dataset_ID<-as.factor(df_BD_Min$Dataset_ID)
 
-df_OL_D_Plot<-plyr::rename(df_OL_D_Plot,c("X"="Observation_ID"))
+df_OL_D_Plot<-dplyr::rename(df_OL_D_Plot,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 df_OL_D_Plot$Dataset_ID<-as.factor(df_OL_D_Plot$Dataset_ID)
 
 ```
@@ -353,7 +353,7 @@ summary(model1)
 
 # First run full script df_1b to get the csv files
 df_SOM_Org_RMD<-read.csv("RMDSOM_Org.csv")
-df_SOM_Org_RMD<-plyr::rename(df_SOM_Org_RMD,c("X"="Observation_ID"))
+df_SOM_Org_RMD<-dplyr::rename(df_SOM_Org_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]
@@ -371,7 +371,7 @@ summary(model1_RMD)
 ```{r SOM Org, echo=FALSE}
 # First run full script df_1b to get the csv files
 df_SOM_Min_RMD<-read.csv("RMDSOM_Min.csv")
-df_SOM_Min_RMD<-plyr::rename(df_SOM_Min_RMD,c("X"="Observation_ID"))
+df_SOM_Min_RMD<-dplyr::rename(df_SOM_Min_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]
@@ -391,7 +391,7 @@ summary(model1_RMD)
 ```{r SOC Org, echo=FALSE}
 # First run full script df_1b to get the csv files
 df_SOC_Org_RMD<-read.csv("RMDSOC_Org.csv")
-df_SOC_Org_RMD<-plyr::rename(df_SOC_Org_RMD,c("X"="Observation_ID"))
+df_SOC_Org_RMD<-dplyr::rename(df_SOC_Org_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]
@@ -408,7 +408,7 @@ summary(model1_RMD)
 ```{r SOC Org, echo=FALSE}
 # First run full script df_1b to get the csv files
 df_SOC_Min_RMD<-read.csv("RMDSOC_Min.csv")
-df_SOC_Min_RMD<-plyr::rename(df_SOC_Min_RMD,c("X"="Observation_ID"))
+df_SOC_Min_RMD<-dplyr::rename(df_SOC_Min_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]
@@ -427,7 +427,7 @@ summary(model1_RMD)
 ```{r SON Org, echo=FALSE}
 # First run full script df_1b to get the csv files
 df_SON_Org_RMD<-read.csv("RMDSON_Org.csv")
-df_SON_Org_RMD<-plyr::rename(df_SON_Org_RMD,c("X"="Observation_ID"))
+df_SON_Org_RMD<-dplyr::rename(df_SON_Org_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]
@@ -450,7 +450,7 @@ model1_RMDb
 ```{r SON Org, echo=FALSE}
 # First run full script df_1b to get the csv files
 df_SON_Min_RMD<-read.csv("RMDSON_Min.csv")
-df_SON_Min_RMD<-plyr::rename(df_SON_Min_RMD,c("X"="Observation_ID"))
+df_SON_Min_RMD<-dplyr::rename(df_SON_Min_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]
@@ -469,7 +469,7 @@ summary(model1_RMD)
 ```{r CN Org, echo=FALSE}
 # First run full script df_1b to get the csv files
 df_CN_Org_RMD<-read.csv("RMDCN_Org.csv")
-df_CN_Org_RMD<-plyr::rename(df_CN_Org_RMD,c("X"="Observation_ID"))
+df_CN_Org_RMD<-dplyr::rename(df_CN_Org_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]
@@ -486,7 +486,7 @@ summary(model1_RMD)
 ```{r CN Org, echo=FALSE}
 # First run full script df_1b to get the csv files
 df_CN_Min_RMD<-read.csv("RMDCN_Min.csv")
-df_CN_Min_RMD<-plyr::rename(df_CN_Min_RMD,c("X"="Observation_ID"))
+df_CN_Min_RMD<-dplyr::rename(df_CN_Min_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]
@@ -505,7 +505,7 @@ summary(model1_RMD)
 ```{r pH Org, echo=FALSE}
 # First run full script df_1b to get the csv files
 df_pH_Org_RMD<-read.csv("RMDpH_Org.csv")
-df_pH_Org_RMD<-plyr::rename(df_pH_Org_RMD,c("X"="Observation_ID"))
+df_pH_Org_RMD<-dplyr::rename(df_pH_Org_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]
@@ -522,7 +522,7 @@ summary(model1_RMD)
 ```{r pH Org, echo=FALSE}
 # First run full script df_1b to get the csv files
 df_pH_Min_RMD<-read.csv("RMDpH_Min.csv")
-df_pH_Min_RMD<-plyr::rename(df_pH_Min_RMD,c("X"="Observation_ID"))
+df_pH_Min_RMD<-dplyr::rename(df_pH_Min_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]
@@ -541,7 +541,7 @@ summary(model1_RMD)
 ```{r BD Org, echo=FALSE}
 # First run full script df_1b to get the csv files
 df_BD_Org_RMD<-read.csv("RMDBD_Org.csv")
-df_BD_Org_RMD<-plyr::rename(df_BD_Org_RMD,c("X"="Observation_ID"))
+df_BD_Org_RMD<-dplyr::rename(df_BD_Org_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]
@@ -558,7 +558,7 @@ summary(model1_RMD)
 ```{r BD Org, echo=FALSE}
 # First run full script df_1b to get the csv files
 df_BD_Min_RMD<-read.csv("RMDBD_Min.csv")
-df_BD_Min_RMD<-plyr::rename(df_BD_Min_RMD,c("X"="Observation_ID"))
+df_BD_Min_RMD<-dplyr::rename(df_BD_Min_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]
@@ -574,7 +574,7 @@ summary(model1_RMD)
 ```{r BD Org, echo=FALSE}
 # First run full script df_1b to get the csv files
 df_OL_D_Plot_RMD<-read.csv("RMDOL_D_Plot.csv")
-df_OL_D_Plot_RMD<-plyr::rename(df_OL_D_Plot_RMD,c("X"="Observation_ID"))
+df_OL_D_Plot_RMD<-dplyr::rename(df_OL_D_Plot_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]
@@ -1110,7 +1110,7 @@ SMD_SON_Orgsd<-sd(df$SMD_SON_Org, na.rm=T)
 #CIs https://www.r-bloggers.com/confidence-intervals-for-prediction-in-glmms/
 # https://search.r-project.org/CRAN/refmans/metafor/html/predict.rma.html
 predict<-as.data.frame(predict(model, newmods=cbind(seq(SMD_SON_Orgmin, SMD_SON_Orgmax, length=20)), addx=TRUE))
-predict<-plyr::rename(predict,c("X.SMD_SON_Org"="newmods")) 
+predict<-dplyr::rename(predict,any_of(c("newmods"="X.SMD_SON_Org")))   # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 # names(predict)
 
 #colorblind friendly figures!
@@ -1153,7 +1153,7 @@ ggplot() +
 
  
 #MODEL RESULTS
-   geom_line(color='black', data=predict, aes(x=newmods, y=pred), size=0.6)+ #regression line toevoegen obv predictions rma.mv object
+   geom_line(color='black', data=predict, aes(x=newmods, y=pred), linewidth=0.6)+ #regression line toevoegen obv predictions rma.mv object  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
   geom_ribbon(data=predict, aes(x=newmods, ymin=ci.lb, ymax=ci.ub), linetype=2, alpha=0.1, color=cbPalette[1])+ #ribbon line confidence interval toevoegen
  
 #FORMATTING
@@ -1165,15 +1165,15 @@ ggplot() +
   # ggtitle("Zone (Mean SMD + 95%-CI)") +
   ylab("ER Hedges SMD") +
   xlab("SMD TN Organic layer")+#TO DO MANUAL: 
-  geom_hline(yintercept=0.8, linetype="dashed", color = cbPalette[7], size=0.6)+
-  geom_hline(yintercept=0.5, linetype="dashed", color = cbPalette[2], size=0.6)+
-  geom_hline(yintercept=0.2, linetype="dashed", color = cbPalette[5], size=0.6)+
-  geom_hline(yintercept=0, linetype="dashed", color = "black", size=2)+
-  geom_hline(yintercept=-0.2, linetype="dashed", color = cbPalette[1], size=0.6)+
-  geom_hline(yintercept=-0.5, linetype="dashed", color = cbPalette[3], size=0.6)+   
-  geom_hline(yintercept=-0.8, linetype="dashed", color = cbPalette[6], size=0.6)+
+  geom_hline(yintercept=0.8, linetype="dashed", color = cbPalette[7], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0.5, linetype="dashed", color = cbPalette[2], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0.2, linetype="dashed", color = cbPalette[5], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0, linetype="dashed", color = "black", linewidth=2)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.2, linetype="dashed", color = cbPalette[1], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.5, linetype="dashed", color = cbPalette[3], linewidth=0.6)+     # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.8, linetype="dashed", color = cbPalette[6], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
 
-  geom_vline(xintercept=0, linetype="dashed",color = "grey", size=0.4)+
+  geom_vline(xintercept=0, linetype="dashed",color = "grey", linewidth=0.4)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
 
   
   theme_classic()+
@@ -1225,7 +1225,7 @@ SMD_SON_Minsd<-sd(df$SMD_SON_Min, na.rm=T)
 #CIs https://www.r-bloggers.com/confidence-intervals-for-prediction-in-glmms/
 # https://search.r-project.org/CRAN/refmans/metafor/html/predict.rma.html
 predict<-as.data.frame(predict(model, newmods=cbind(seq(SMD_SON_Minmin, SMD_SON_Minmax, length=20)), addx=TRUE))
-predict<-plyr::rename(predict,c("X.SMD_SON_Min"="newmods")) 
+predict<-dplyr::rename(predict,any_of(c("newmods"="X.SMD_SON_Min")))   # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 # names(predict)
 
 #colorblind friendly figures!
@@ -1268,7 +1268,7 @@ ggplot() +
 
  
 #MODEL RESULTS
-   geom_line(color='black', data=predict, aes(x=newmods, y=pred), size=0.6)+ #regression line toevoegen obv predictions rma.mv object
+   geom_line(color='black', data=predict, aes(x=newmods, y=pred), linewidth=0.6)+ #regression line toevoegen obv predictions rma.mv object  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
   geom_ribbon(data=predict, aes(x=newmods, ymin=ci.lb, ymax=ci.ub), linetype=2, alpha=0.1, color=cbPalette[1])+ #ribbon line confidence interval toevoegen
  
 #FORMATTING
@@ -1280,15 +1280,15 @@ ggplot() +
   # ggtitle("Zone (Mean SMD + 95%-CI)") +
   ylab("ER Hedges SMD") +
   xlab("SMD TN Mineral layer")+#TO DO MANUAL: 
-  geom_hline(yintercept=0.8, linetype="dashed", color = cbPalette[7], size=0.6)+
-  geom_hline(yintercept=0.5, linetype="dashed", color = cbPalette[2], size=0.6)+
-  geom_hline(yintercept=0.2, linetype="dashed", color = cbPalette[5], size=0.6)+
-  geom_hline(yintercept=0, linetype="dashed", color = "black", size=2)+
-  geom_hline(yintercept=-0.2, linetype="dashed", color = cbPalette[1], size=0.6)+
-  geom_hline(yintercept=-0.5, linetype="dashed", color = cbPalette[3], size=0.6)+   
-  geom_hline(yintercept=-0.8, linetype="dashed", color = cbPalette[6], size=0.6)+
+  geom_hline(yintercept=0.8, linetype="dashed", color = cbPalette[7], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0.5, linetype="dashed", color = cbPalette[2], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0.2, linetype="dashed", color = cbPalette[5], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0, linetype="dashed", color = "black", linewidth=2)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.2, linetype="dashed", color = cbPalette[1], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.5, linetype="dashed", color = cbPalette[3], linewidth=0.6)+     # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.8, linetype="dashed", color = cbPalette[6], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
 
-  geom_vline(xintercept=0, linetype="dashed",color = "grey", size=0.4)+
+  geom_vline(xintercept=0, linetype="dashed",color = "grey", linewidth=0.4)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
 
   
   theme_classic()+
@@ -1339,7 +1339,7 @@ SMD_CN_Minsd<-sd(df$SMD_CN_Min, na.rm=T)
 #CIs https://www.r-bloggers.com/confidence-intervals-for-prediction-in-glmms/
 # https://search.r-project.org/CRAN/refmans/metafor/html/predict.rma.html
 predict<-as.data.frame(predict(model, newmods=cbind(seq(SMD_CN_Minmin, SMD_CN_Minmax, length=20)), addx=TRUE))
-predict<-plyr::rename(predict,c("X.SMD_CN_Min"="newmods")) 
+predict<-dplyr::rename(predict,any_of(c("newmods"="X.SMD_CN_Min")))   # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 # names(predict)
 
 #colorblind friendly figures!
@@ -1382,7 +1382,7 @@ ggplot() +
 
  
 #MODEL RESULTS
-   geom_line(color='black', data=predict, aes(x=newmods, y=pred), size=0.6)+ #regression line toevoegen obv predictions rma.mv object
+   geom_line(color='black', data=predict, aes(x=newmods, y=pred), linewidth=0.6)+ #regression line toevoegen obv predictions rma.mv object  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
   geom_ribbon(data=predict, aes(x=newmods, ymin=ci.lb, ymax=ci.ub), linetype=2, alpha=0.1, color=cbPalette[1])+ #ribbon line confidence interval toevoegen
  
 #FORMATTING
@@ -1394,15 +1394,15 @@ ggplot() +
   # ggtitle("Zone (Mean SMD + 95%-CI)") +
   ylab("ER Hedges SMD") +
   xlab("SMD CN-ratio Mineral layer")+#TO DO MANUAL: 
-  geom_hline(yintercept=0.8, linetype="dashed", color = cbPalette[7], size=0.6)+
-  geom_hline(yintercept=0.5, linetype="dashed", color = cbPalette[2], size=0.6)+
-  geom_hline(yintercept=0.2, linetype="dashed", color = cbPalette[5], size=0.6)+
-  geom_hline(yintercept=0, linetype="dashed", color = "black", size=2)+
-  geom_hline(yintercept=-0.2, linetype="dashed", color = cbPalette[1], size=0.6)+
-  geom_hline(yintercept=-0.5, linetype="dashed", color = cbPalette[3], size=0.6)+   
-  geom_hline(yintercept=-0.8, linetype="dashed", color = cbPalette[6], size=0.6)+
+  geom_hline(yintercept=0.8, linetype="dashed", color = cbPalette[7], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0.5, linetype="dashed", color = cbPalette[2], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0.2, linetype="dashed", color = cbPalette[5], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0, linetype="dashed", color = "black", linewidth=2)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.2, linetype="dashed", color = cbPalette[1], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.5, linetype="dashed", color = cbPalette[3], linewidth=0.6)+     # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.8, linetype="dashed", color = cbPalette[6], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
 
-  geom_vline(xintercept=0, linetype="dashed",color = "grey", size=0.4)+
+  geom_vline(xintercept=0, linetype="dashed",color = "grey", linewidth=0.4)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
 
   
   theme_classic()+
@@ -1453,7 +1453,7 @@ SMD_pH_Minsd<-sd(df$SMD_pH_Min, na.rm=T)
 #CIs https://www.r-bloggers.com/confidence-intervals-for-prediction-in-glmms/
 # https://search.r-project.org/CRAN/refmans/metafor/html/predict.rma.html
 predict<-as.data.frame(predict(model, newmods=cbind(seq(SMD_pH_Minmin, SMD_pH_Minmax, length=20)), addx=TRUE))
-predict<-plyr::rename(predict,c("X.SMD_pH_Min"="newmods")) 
+predict<-dplyr::rename(predict,any_of(c("newmods"="X.SMD_pH_Min")))   # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 # names(predict)
 
 #colorblind friendly figures!
@@ -1496,7 +1496,7 @@ ggplot() +
 
  
 #MODEL RESULTS
-   geom_line(color='black', data=predict, aes(x=newmods, y=pred), size=0.6)+ #regression line toevoegen obv predictions rma.mv object
+   geom_line(color='black', data=predict, aes(x=newmods, y=pred), linewidth=0.6)+ #regression line toevoegen obv predictions rma.mv object  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
   geom_ribbon(data=predict, aes(x=newmods, ymin=ci.lb, ymax=ci.ub), linetype=2, alpha=0.1, color=cbPalette[1])+ #ribbon line confidence interval toevoegen
  
 #FORMATTING
@@ -1508,15 +1508,15 @@ ggplot() +
   # ggtitle("Zone (Mean SMD + 95%-CI)") +
   ylab("ER Hedges SMD") +
   xlab("SMD pH Mineral layer")+#TO DO MANUAL: 
-  geom_hline(yintercept=0.8, linetype="dashed", color = cbPalette[7], size=0.6)+
-  geom_hline(yintercept=0.5, linetype="dashed", color = cbPalette[2], size=0.6)+
-  geom_hline(yintercept=0.2, linetype="dashed", color = cbPalette[5], size=0.6)+
-  geom_hline(yintercept=0, linetype="dashed", color = "black", size=2)+
-  geom_hline(yintercept=-0.2, linetype="dashed", color = cbPalette[1], size=0.6)+
-  geom_hline(yintercept=-0.5, linetype="dashed", color = cbPalette[3], size=0.6)+   
-  geom_hline(yintercept=-0.8, linetype="dashed", color = cbPalette[6], size=0.6)+
+  geom_hline(yintercept=0.8, linetype="dashed", color = cbPalette[7], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0.5, linetype="dashed", color = cbPalette[2], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0.2, linetype="dashed", color = cbPalette[5], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0, linetype="dashed", color = "black", linewidth=2)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.2, linetype="dashed", color = cbPalette[1], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.5, linetype="dashed", color = cbPalette[3], linewidth=0.6)+     # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.8, linetype="dashed", color = cbPalette[6], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
 
-  geom_vline(xintercept=0, linetype="dashed",color = "grey", size=0.4)+
+  geom_vline(xintercept=0, linetype="dashed",color = "grey", linewidth=0.4)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
 
   
   theme_classic()+
@@ -1567,7 +1567,7 @@ SMD_BD_Minsd<-sd(df$SMD_BD_Min, na.rm=T)
 #CIs https://www.r-bloggers.com/confidence-intervals-for-prediction-in-glmms/
 # https://search.r-project.org/CRAN/refmans/metafor/html/predict.rma.html
 predict<-as.data.frame(predict(model, newmods=cbind(seq(SMD_BD_Minmin, SMD_BD_Minmax, length=20)), addx=TRUE))
-predict<-plyr::rename(predict,c("X.SMD_BD_Min"="newmods")) 
+predict<-dplyr::rename(predict,any_of(c("newmods"="X.SMD_BD_Min")))   # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 # names(predict)
 
 #colorblind friendly figures!
@@ -1611,7 +1611,7 @@ ggplot() +
 
  
 #MODEL RESULTS
-   geom_line(color='black', data=predict, aes(x=newmods, y=pred), size=0.6)+ #regression line toevoegen obv predictions rma.mv object
+   geom_line(color='black', data=predict, aes(x=newmods, y=pred), linewidth=0.6)+ #regression line toevoegen obv predictions rma.mv object  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
   geom_ribbon(data=predict, aes(x=newmods, ymin=ci.lb, ymax=ci.ub), linetype=2, alpha=0.1, color=cbPalette[1])+ #ribbon line confidence interval toevoegen
  
 #FORMATTING
@@ -1623,15 +1623,15 @@ ggplot() +
   # ggtitle("Zone (Mean SMD + 95%-CI)") +
   ylab("ER Hedges SMD") +
   xlab("SMD BD Mineral layer")+#TO DO MANUAL: 
-  geom_hline(yintercept=0.8, linetype="dashed", color = cbPalette[7], size=0.6)+
-  geom_hline(yintercept=0.5, linetype="dashed", color = cbPalette[2], size=0.6)+
-  geom_hline(yintercept=0.2, linetype="dashed", color = cbPalette[5], size=0.6)+
-  geom_hline(yintercept=0, linetype="dashed", color = "black", size=2)+
-  geom_hline(yintercept=-0.2, linetype="dashed", color = cbPalette[1], size=0.6)+
-  geom_hline(yintercept=-0.5, linetype="dashed", color = cbPalette[3], size=0.6)+   
-  geom_hline(yintercept=-0.8, linetype="dashed", color = cbPalette[6], size=0.6)+
+  geom_hline(yintercept=0.8, linetype="dashed", color = cbPalette[7], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0.5, linetype="dashed", color = cbPalette[2], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0.2, linetype="dashed", color = cbPalette[5], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0, linetype="dashed", color = "black", linewidth=2)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.2, linetype="dashed", color = cbPalette[1], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.5, linetype="dashed", color = cbPalette[3], linewidth=0.6)+     # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.8, linetype="dashed", color = cbPalette[6], linewidth=0.6)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
 
-  geom_vline(xintercept=0, linetype="dashed",color = "grey", size=0.4)+
+  geom_vline(xintercept=0, linetype="dashed",color = "grey", linewidth=0.4)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
 
   
   theme_classic()+

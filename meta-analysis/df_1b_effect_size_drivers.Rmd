@@ -11,12 +11,12 @@ editor_options:
 #load data
 ```{r load data, include=FALSE}
 library("ggplot2")
-library("plyr")
+# library("plyr")  # CHANGES: plyr not available for R 4.6 - only rename() was used, now dplyr::rename()
 library("dplyr")
 library("car")
 library("tidyr")
 library("readxl")
-library("reshape2")
+# library("reshape2")  # CHANGES: reshape2 not available for R 4.6 - no reshape2 functions are used
 library("tidyverse")
 library("ggrepel")
 library("tibble")
@@ -65,12 +65,12 @@ dfSummary_ATCTL <- dfSummary_AT  %>% dplyr::filter(Treatment=="CTL")
 dfSummary_ATOTC <- dfSummary_AT  %>% dplyr::filter(Treatment=="OTC")
 dfSummary_AT <- full_join(dfSummary_ATCTL, dfSummary_ATOTC, by="Dataset_ID")
 
-dfSummary_AT<-plyr::rename(dfSummary_AT,c("MEAN.x"="MEAN_CTL"))
-dfSummary_AT<-plyr::rename(dfSummary_AT,c("MEAN.y"="MEAN_OTC"))
-dfSummary_AT<-plyr::rename(dfSummary_AT,c("SDEV.x"="SDEV_CTL"))
-dfSummary_AT<-plyr::rename(dfSummary_AT,c("SDEV.y"="SDEV_OTC"))
-dfSummary_AT<-plyr::rename(dfSummary_AT,c("SS.x"="SS_CTL"))
-dfSummary_AT<-plyr::rename(dfSummary_AT,c("SS.y"="SS_OTC"))
+dfSummary_AT<-dplyr::rename(dfSummary_AT,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_AT<-dplyr::rename(dfSummary_AT,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_AT<-dplyr::rename(dfSummary_AT,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_AT<-dplyr::rename(dfSummary_AT,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_AT<-dplyr::rename(dfSummary_AT,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_AT<-dplyr::rename(dfSummary_AT,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 # Calculate actual effect sizes per dataset (Raw SMD)
 SMDAT <-
@@ -83,8 +83,8 @@ SMDAT <-
     data = dfSummary_AT 
   )
 
-SMDAT<-plyr::rename(SMDAT,c("yi"="Hedges_SMDAT"))
-SMDAT<-plyr::rename(SMDAT,c("vi"="Hedges_SMDAT_VARIANCE"))
+SMDAT<-dplyr::rename(SMDAT,any_of(c("Hedges_SMDAT"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDAT<-dplyr::rename(SMDAT,any_of(c("Hedges_SMDAT_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 Mean_SMDAT<-mean(SMDAT$Hedges_SMDAT)
 Mean_SMDAT
@@ -105,12 +105,12 @@ dfSummary_STCTL <- dfSummary_ST  %>% dplyr::filter(Treatment=="CTL")
 dfSummary_STOTC <- dfSummary_ST  %>% dplyr::filter(Treatment=="OTC")
 dfSummary_ST <- full_join(dfSummary_STCTL, dfSummary_STOTC, by="Dataset_ID")
 
-dfSummary_ST<-plyr::rename(dfSummary_ST,c("MEAN.x"="MEAN_CTL"))
-dfSummary_ST<-plyr::rename(dfSummary_ST,c("MEAN.y"="MEAN_OTC"))
-dfSummary_ST<-plyr::rename(dfSummary_ST,c("SDEV.x"="SDEV_CTL"))
-dfSummary_ST<-plyr::rename(dfSummary_ST,c("SDEV.y"="SDEV_OTC"))
-dfSummary_ST<-plyr::rename(dfSummary_ST,c("SS.x"="SS_CTL"))
-dfSummary_ST<-plyr::rename(dfSummary_ST,c("SS.y"="SS_OTC"))
+dfSummary_ST<-dplyr::rename(dfSummary_ST,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_ST<-dplyr::rename(dfSummary_ST,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_ST<-dplyr::rename(dfSummary_ST,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_ST<-dplyr::rename(dfSummary_ST,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_ST<-dplyr::rename(dfSummary_ST,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_ST<-dplyr::rename(dfSummary_ST,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDST <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -122,8 +122,8 @@ SMDST <-
     data = dfSummary_ST 
   )
 
-SMDST<-plyr::rename(SMDST,c("yi"="Hedges_SMDST"))
-SMDST<-plyr::rename(SMDST,c("vi"="Hedges_SMDST_VARIANCE"))
+SMDST<-dplyr::rename(SMDST,any_of(c("Hedges_SMDST"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDST<-dplyr::rename(SMDST,any_of(c("Hedges_SMDST_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 Mean_SMDST<-mean(SMDST$Hedges_SMDST)
 Mean_SMDST
@@ -144,12 +144,12 @@ dfSummary_SMCTL <- dfSummary_SM  %>% dplyr::filter(Treatment=="CTL")
 dfSummary_SMOTC <- dfSummary_SM  %>% dplyr::filter(Treatment=="OTC")
 dfSummary_SM <- full_join(dfSummary_SMCTL, dfSummary_SMOTC, by="Dataset_ID")
 
-dfSummary_SM<-plyr::rename(dfSummary_SM,c("MEAN.x"="MEAN_CTL"))
-dfSummary_SM<-plyr::rename(dfSummary_SM,c("MEAN.y"="MEAN_OTC"))
-dfSummary_SM<-plyr::rename(dfSummary_SM,c("SDEV.x"="SDEV_CTL"))
-dfSummary_SM<-plyr::rename(dfSummary_SM,c("SDEV.y"="SDEV_OTC"))
-dfSummary_SM<-plyr::rename(dfSummary_SM,c("SS.x"="SS_CTL"))
-dfSummary_SM<-plyr::rename(dfSummary_SM,c("SS.y"="SS_OTC"))
+dfSummary_SM<-dplyr::rename(dfSummary_SM,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_SM<-dplyr::rename(dfSummary_SM,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_SM<-dplyr::rename(dfSummary_SM,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_SM<-dplyr::rename(dfSummary_SM,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_SM<-dplyr::rename(dfSummary_SM,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_SM<-dplyr::rename(dfSummary_SM,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDSM <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -161,8 +161,8 @@ SMDSM <-
     data = dfSummary_SM 
   )
 
-SMDSM<-plyr::rename(SMDSM,c("yi"="Hedges_SMDSM"))
-SMDSM<-plyr::rename(SMDSM,c("vi"="Hedges_SMDSM_VARIANCE"))
+SMDSM<-dplyr::rename(SMDSM,any_of(c("Hedges_SMDSM"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDSM<-dplyr::rename(SMDSM,any_of(c("Hedges_SMDSM_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 Mean_SMDSM<-mean(SMDSM$Hedges_SMDSM)
 Mean_SMDSM
@@ -198,12 +198,12 @@ dfSummarySOM_OrgCTL <- dfSummarySOM_Org  %>% dplyr::filter(Treatment=="CTL")
 dfSummarySOM_OrgOTC <- dfSummarySOM_Org  %>% dplyr::filter(Treatment=="OTC")
 dfSummarySOM_Org <- full_join(dfSummarySOM_OrgCTL, dfSummarySOM_OrgOTC, by="Dataset_ID")
 
-dfSummarySOM_Org<-plyr::rename(dfSummarySOM_Org,c("MEAN.x"="MEAN_CTL"))
-dfSummarySOM_Org<-plyr::rename(dfSummarySOM_Org,c("MEAN.y"="MEAN_OTC"))
-dfSummarySOM_Org<-plyr::rename(dfSummarySOM_Org,c("SDEV.x"="SDEV_CTL"))
-dfSummarySOM_Org<-plyr::rename(dfSummarySOM_Org,c("SDEV.y"="SDEV_OTC"))
-dfSummarySOM_Org<-plyr::rename(dfSummarySOM_Org,c("SS.x"="SS_CTL"))
-dfSummarySOM_Org<-plyr::rename(dfSummarySOM_Org,c("SS.y"="SS_OTC"))
+dfSummarySOM_Org<-dplyr::rename(dfSummarySOM_Org,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOM_Org<-dplyr::rename(dfSummarySOM_Org,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOM_Org<-dplyr::rename(dfSummarySOM_Org,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOM_Org<-dplyr::rename(dfSummarySOM_Org,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOM_Org<-dplyr::rename(dfSummarySOM_Org,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOM_Org<-dplyr::rename(dfSummarySOM_Org,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDSOM_Org <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -215,8 +215,8 @@ SMDSOM_Org <-
     data = dfSummarySOM_Org 
   )
 
-SMDSOM_Org<-plyr::rename(SMDSOM_Org,c("yi"="Hedges_SMDSOM_Org"))
-SMDSOM_Org<-plyr::rename(SMDSOM_Org,c("vi"="Hedges_SMDSOM_Org_VARIANCE"))
+SMDSOM_Org<-dplyr::rename(SMDSOM_Org,any_of(c("Hedges_SMDSOM_Org"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDSOM_Org<-dplyr::rename(SMDSOM_Org,any_of(c("Hedges_SMDSOM_Org_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 CheckNA<-which(is.na(SMDSOM_Org$Hedges_SMDSOM_Org))
 if(length(CheckNA)>0) {
@@ -243,12 +243,12 @@ SMDSOM_Org$CI_ub<-SMDSOM_Org$Hedges_SMDSOM_Org+1.96*sqrt(SMDSOM_Org$Hedges_SMDSO
 # dfSummarySOM_MinOTC <- dfSummarySOM_Min  %>% dplyr::filter(Treatment=="OTC")
 # dfSummarySOM_Min <- full_join(dfSummarySOM_MinCTL, dfSummarySOM_MinOTC, by="Dataset_ID")
 # 
-# dfSummarySOM_Min<-plyr::rename(dfSummarySOM_Min,c("MEAN.x"="MEAN_CTL"))
-# dfSummarySOM_Min<-plyr::rename(dfSummarySOM_Min,c("MEAN.y"="MEAN_OTC"))
-# dfSummarySOM_Min<-plyr::rename(dfSummarySOM_Min,c("SDEV.x"="SDEV_CTL"))
-# dfSummarySOM_Min<-plyr::rename(dfSummarySOM_Min,c("SDEV.y"="SDEV_OTC"))
-# dfSummarySOM_Min<-plyr::rename(dfSummarySOM_Min,c("SS.x"="SS_CTL"))
-# dfSummarySOM_Min<-plyr::rename(dfSummarySOM_Min,c("SS.y"="SS_OTC"))
+# dfSummarySOM_Min<-dplyr::rename(dfSummarySOM_Min,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarySOM_Min<-dplyr::rename(dfSummarySOM_Min,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarySOM_Min<-dplyr::rename(dfSummarySOM_Min,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarySOM_Min<-dplyr::rename(dfSummarySOM_Min,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarySOM_Min<-dplyr::rename(dfSummarySOM_Min,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarySOM_Min<-dplyr::rename(dfSummarySOM_Min,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 # 
 # SMDSOM_Min <-
 #   escalc("SMD", m1i = MEAN_OTC,
@@ -260,8 +260,8 @@ SMDSOM_Org$CI_ub<-SMDSOM_Org$Hedges_SMDSOM_Org+1.96*sqrt(SMDSOM_Org$Hedges_SMDSO
 #     data = dfSummarySOM_Min 
 #   )
 # 
-# SMDSOM_Min<-plyr::rename(SMDSOM_Min,c("yi"="Hedges_SMDSOM_Min"))
-# SMDSOM_Min<-plyr::rename(SMDSOM_Min,c("vi"="Hedges_SMDSOM_Min_VARIANCE"))
+# SMDSOM_Min<-dplyr::rename(SMDSOM_Min,any_of(c("Hedges_SMDSOM_Min"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# SMDSOM_Min<-dplyr::rename(SMDSOM_Min,any_of(c("Hedges_SMDSOM_Min_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 # 
 # CheckNA<-which(is.na(SMDSOM_Min$Hedges_SMDSOM_Min))
 # if(length(CheckNA)>0) {
@@ -292,12 +292,12 @@ dfSummarySOC_OrgCTL <- dfSummarySOC_Org  %>% dplyr::filter(Treatment=="CTL")
 dfSummarySOC_OrgOTC <- dfSummarySOC_Org  %>% dplyr::filter(Treatment=="OTC")
 dfSummarySOC_Org <- full_join(dfSummarySOC_OrgCTL, dfSummarySOC_OrgOTC, by="Dataset_ID")
 
-dfSummarySOC_Org<-plyr::rename(dfSummarySOC_Org,c("MEAN.x"="MEAN_CTL"))
-dfSummarySOC_Org<-plyr::rename(dfSummarySOC_Org,c("MEAN.y"="MEAN_OTC"))
-dfSummarySOC_Org<-plyr::rename(dfSummarySOC_Org,c("SDEV.x"="SDEV_CTL"))
-dfSummarySOC_Org<-plyr::rename(dfSummarySOC_Org,c("SDEV.y"="SDEV_OTC"))
-dfSummarySOC_Org<-plyr::rename(dfSummarySOC_Org,c("SS.x"="SS_CTL"))
-dfSummarySOC_Org<-plyr::rename(dfSummarySOC_Org,c("SS.y"="SS_OTC"))
+dfSummarySOC_Org<-dplyr::rename(dfSummarySOC_Org,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Org<-dplyr::rename(dfSummarySOC_Org,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Org<-dplyr::rename(dfSummarySOC_Org,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Org<-dplyr::rename(dfSummarySOC_Org,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Org<-dplyr::rename(dfSummarySOC_Org,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Org<-dplyr::rename(dfSummarySOC_Org,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDSOC_Org <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -309,8 +309,8 @@ SMDSOC_Org <-
     data = dfSummarySOC_Org 
   )
 
-SMDSOC_Org<-plyr::rename(SMDSOC_Org,c("yi"="Hedges_SMDSOC_Org"))
-SMDSOC_Org<-plyr::rename(SMDSOC_Org,c("vi"="Hedges_SMDSOC_Org_VARIANCE"))
+SMDSOC_Org<-dplyr::rename(SMDSOC_Org,any_of(c("Hedges_SMDSOC_Org"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDSOC_Org<-dplyr::rename(SMDSOC_Org,any_of(c("Hedges_SMDSOC_Org_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 CheckNA<-which(is.na(SMDSOC_Org$Hedges_SMDSOC_Org))
 if(length(CheckNA)>0) {
@@ -336,12 +336,12 @@ dfSummarySOC_MinCTL <- dfSummarySOC_Min  %>% dplyr::filter(Treatment=="CTL")
 dfSummarySOC_MinOTC <- dfSummarySOC_Min  %>% dplyr::filter(Treatment=="OTC")
 dfSummarySOC_Min <- full_join(dfSummarySOC_MinCTL, dfSummarySOC_MinOTC, by="Dataset_ID")
 
-dfSummarySOC_Min<-plyr::rename(dfSummarySOC_Min,c("MEAN.x"="MEAN_CTL"))
-dfSummarySOC_Min<-plyr::rename(dfSummarySOC_Min,c("MEAN.y"="MEAN_OTC"))
-dfSummarySOC_Min<-plyr::rename(dfSummarySOC_Min,c("SDEV.x"="SDEV_CTL"))
-dfSummarySOC_Min<-plyr::rename(dfSummarySOC_Min,c("SDEV.y"="SDEV_OTC"))
-dfSummarySOC_Min<-plyr::rename(dfSummarySOC_Min,c("SS.x"="SS_CTL"))
-dfSummarySOC_Min<-plyr::rename(dfSummarySOC_Min,c("SS.y"="SS_OTC"))
+dfSummarySOC_Min<-dplyr::rename(dfSummarySOC_Min,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Min<-dplyr::rename(dfSummarySOC_Min,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Min<-dplyr::rename(dfSummarySOC_Min,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Min<-dplyr::rename(dfSummarySOC_Min,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Min<-dplyr::rename(dfSummarySOC_Min,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Min<-dplyr::rename(dfSummarySOC_Min,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDSOC_Min <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -353,8 +353,8 @@ SMDSOC_Min <-
     data = dfSummarySOC_Min 
   )
 
-SMDSOC_Min<-plyr::rename(SMDSOC_Min,c("yi"="Hedges_SMDSOC_Min"))
-SMDSOC_Min<-plyr::rename(SMDSOC_Min,c("vi"="Hedges_SMDSOC_Min_VARIANCE"))
+SMDSOC_Min<-dplyr::rename(SMDSOC_Min,any_of(c("Hedges_SMDSOC_Min"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDSOC_Min<-dplyr::rename(SMDSOC_Min,any_of(c("Hedges_SMDSOC_Min_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 CheckNA<-which(is.na(SMDSOC_Min$Hedges_SMDSOC_Min))
 if(length(CheckNA)>0) {
@@ -382,12 +382,12 @@ dfSummarySON_OrgCTL <- dfSummarySON_Org  %>% dplyr::filter(Treatment=="CTL")
 dfSummarySON_OrgOTC <- dfSummarySON_Org  %>% dplyr::filter(Treatment=="OTC")
 dfSummarySON_Org <- full_join(dfSummarySON_OrgCTL, dfSummarySON_OrgOTC, by="Dataset_ID")
 
-dfSummarySON_Org<-plyr::rename(dfSummarySON_Org,c("MEAN.x"="MEAN_CTL"))
-dfSummarySON_Org<-plyr::rename(dfSummarySON_Org,c("MEAN.y"="MEAN_OTC"))
-dfSummarySON_Org<-plyr::rename(dfSummarySON_Org,c("SDEV.x"="SDEV_CTL"))
-dfSummarySON_Org<-plyr::rename(dfSummarySON_Org,c("SDEV.y"="SDEV_OTC"))
-dfSummarySON_Org<-plyr::rename(dfSummarySON_Org,c("SS.x"="SS_CTL"))
-dfSummarySON_Org<-plyr::rename(dfSummarySON_Org,c("SS.y"="SS_OTC"))
+dfSummarySON_Org<-dplyr::rename(dfSummarySON_Org,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Org<-dplyr::rename(dfSummarySON_Org,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Org<-dplyr::rename(dfSummarySON_Org,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Org<-dplyr::rename(dfSummarySON_Org,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Org<-dplyr::rename(dfSummarySON_Org,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Org<-dplyr::rename(dfSummarySON_Org,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDSON_Org <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -399,8 +399,8 @@ SMDSON_Org <-
     data = dfSummarySON_Org 
   )
 
-SMDSON_Org<-plyr::rename(SMDSON_Org,c("yi"="Hedges_SMDSON_Org"))
-SMDSON_Org<-plyr::rename(SMDSON_Org,c("vi"="Hedges_SMDSON_Org_VARIANCE"))
+SMDSON_Org<-dplyr::rename(SMDSON_Org,any_of(c("Hedges_SMDSON_Org"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDSON_Org<-dplyr::rename(SMDSON_Org,any_of(c("Hedges_SMDSON_Org_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 CheckNA<-which(is.na(SMDSON_Org$Hedges_SMDSON_Org))
 if(length(CheckNA)>0) {
@@ -426,12 +426,12 @@ dfSummarySON_MinCTL <- dfSummarySON_Min  %>% dplyr::filter(Treatment=="CTL")
 dfSummarySON_MinOTC <- dfSummarySON_Min  %>% dplyr::filter(Treatment=="OTC")
 dfSummarySON_Min <- full_join(dfSummarySON_MinCTL, dfSummarySON_MinOTC, by="Dataset_ID")
 
-dfSummarySON_Min<-plyr::rename(dfSummarySON_Min,c("MEAN.x"="MEAN_CTL"))
-dfSummarySON_Min<-plyr::rename(dfSummarySON_Min,c("MEAN.y"="MEAN_OTC"))
-dfSummarySON_Min<-plyr::rename(dfSummarySON_Min,c("SDEV.x"="SDEV_CTL"))
-dfSummarySON_Min<-plyr::rename(dfSummarySON_Min,c("SDEV.y"="SDEV_OTC"))
-dfSummarySON_Min<-plyr::rename(dfSummarySON_Min,c("SS.x"="SS_CTL"))
-dfSummarySON_Min<-plyr::rename(dfSummarySON_Min,c("SS.y"="SS_OTC"))
+dfSummarySON_Min<-dplyr::rename(dfSummarySON_Min,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Min<-dplyr::rename(dfSummarySON_Min,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Min<-dplyr::rename(dfSummarySON_Min,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Min<-dplyr::rename(dfSummarySON_Min,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Min<-dplyr::rename(dfSummarySON_Min,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Min<-dplyr::rename(dfSummarySON_Min,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDSON_Min <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -443,8 +443,8 @@ SMDSON_Min <-
     data = dfSummarySON_Min 
   )
 
-SMDSON_Min<-plyr::rename(SMDSON_Min,c("yi"="Hedges_SMDSON_Min"))
-SMDSON_Min<-plyr::rename(SMDSON_Min,c("vi"="Hedges_SMDSON_Min_VARIANCE"))
+SMDSON_Min<-dplyr::rename(SMDSON_Min,any_of(c("Hedges_SMDSON_Min"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDSON_Min<-dplyr::rename(SMDSON_Min,any_of(c("Hedges_SMDSON_Min_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 CheckNA<-which(is.na(SMDSON_Min$Hedges_SMDSON_Min))
 if(length(CheckNA)>0) {
@@ -469,12 +469,12 @@ dfSummaryCN_OrgCTL <- dfSummaryCN_Org  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryCN_OrgOTC <- dfSummaryCN_Org  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryCN_Org <- full_join(dfSummaryCN_OrgCTL, dfSummaryCN_OrgOTC, by="Dataset_ID")
 
-dfSummaryCN_Org<-plyr::rename(dfSummaryCN_Org,c("MEAN.x"="MEAN_CTL"))
-dfSummaryCN_Org<-plyr::rename(dfSummaryCN_Org,c("MEAN.y"="MEAN_OTC"))
-dfSummaryCN_Org<-plyr::rename(dfSummaryCN_Org,c("SDEV.x"="SDEV_CTL"))
-dfSummaryCN_Org<-plyr::rename(dfSummaryCN_Org,c("SDEV.y"="SDEV_OTC"))
-dfSummaryCN_Org<-plyr::rename(dfSummaryCN_Org,c("SS.x"="SS_CTL"))
-dfSummaryCN_Org<-plyr::rename(dfSummaryCN_Org,c("SS.y"="SS_OTC"))
+dfSummaryCN_Org<-dplyr::rename(dfSummaryCN_Org,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Org<-dplyr::rename(dfSummaryCN_Org,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Org<-dplyr::rename(dfSummaryCN_Org,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Org<-dplyr::rename(dfSummaryCN_Org,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Org<-dplyr::rename(dfSummaryCN_Org,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Org<-dplyr::rename(dfSummaryCN_Org,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDCN_Org <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -486,8 +486,8 @@ SMDCN_Org <-
     data = dfSummaryCN_Org 
   )
 
-SMDCN_Org<-plyr::rename(SMDCN_Org,c("yi"="Hedges_SMDCN_Org"))
-SMDCN_Org<-plyr::rename(SMDCN_Org,c("vi"="Hedges_SMDCN_Org_VARIANCE"))
+SMDCN_Org<-dplyr::rename(SMDCN_Org,any_of(c("Hedges_SMDCN_Org"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDCN_Org<-dplyr::rename(SMDCN_Org,any_of(c("Hedges_SMDCN_Org_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 CheckNA<-which(is.na(SMDCN_Org$Hedges_SMDCN_Org))
 if(length(CheckNA)>0) {
@@ -512,12 +512,12 @@ dfSummaryCN_MinCTL <- dfSummaryCN_Min  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryCN_MinOTC <- dfSummaryCN_Min  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryCN_Min <- full_join(dfSummaryCN_MinCTL, dfSummaryCN_MinOTC, by="Dataset_ID")
 
-dfSummaryCN_Min<-plyr::rename(dfSummaryCN_Min,c("MEAN.x"="MEAN_CTL"))
-dfSummaryCN_Min<-plyr::rename(dfSummaryCN_Min,c("MEAN.y"="MEAN_OTC"))
-dfSummaryCN_Min<-plyr::rename(dfSummaryCN_Min,c("SDEV.x"="SDEV_CTL"))
-dfSummaryCN_Min<-plyr::rename(dfSummaryCN_Min,c("SDEV.y"="SDEV_OTC"))
-dfSummaryCN_Min<-plyr::rename(dfSummaryCN_Min,c("SS.x"="SS_CTL"))
-dfSummaryCN_Min<-plyr::rename(dfSummaryCN_Min,c("SS.y"="SS_OTC"))
+dfSummaryCN_Min<-dplyr::rename(dfSummaryCN_Min,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Min<-dplyr::rename(dfSummaryCN_Min,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Min<-dplyr::rename(dfSummaryCN_Min,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Min<-dplyr::rename(dfSummaryCN_Min,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Min<-dplyr::rename(dfSummaryCN_Min,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Min<-dplyr::rename(dfSummaryCN_Min,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDCN_Min <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -529,8 +529,8 @@ SMDCN_Min <-
     data = dfSummaryCN_Min 
   )
 
-SMDCN_Min<-plyr::rename(SMDCN_Min,c("yi"="Hedges_SMDCN_Min"))
-SMDCN_Min<-plyr::rename(SMDCN_Min,c("vi"="Hedges_SMDCN_Min_VARIANCE"))
+SMDCN_Min<-dplyr::rename(SMDCN_Min,any_of(c("Hedges_SMDCN_Min"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDCN_Min<-dplyr::rename(SMDCN_Min,any_of(c("Hedges_SMDCN_Min_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 CheckNA<-which(is.na(SMDCN_Min$Hedges_SMDCN_Min))
 if(length(CheckNA)>0) {
@@ -559,12 +559,12 @@ dfSummarypH_OrgCTL <- dfSummarypH_Org  %>% dplyr::filter(Treatment=="CTL")
 dfSummarypH_OrgOTC <- dfSummarypH_Org  %>% dplyr::filter(Treatment=="OTC")
 dfSummarypH_Org <- full_join(dfSummarypH_OrgCTL, dfSummarypH_OrgOTC, by="Dataset_ID")
 
-dfSummarypH_Org<-plyr::rename(dfSummarypH_Org,c("MEAN.x"="MEAN_CTL"))
-dfSummarypH_Org<-plyr::rename(dfSummarypH_Org,c("MEAN.y"="MEAN_OTC"))
-dfSummarypH_Org<-plyr::rename(dfSummarypH_Org,c("SDEV.x"="SDEV_CTL"))
-dfSummarypH_Org<-plyr::rename(dfSummarypH_Org,c("SDEV.y"="SDEV_OTC"))
-dfSummarypH_Org<-plyr::rename(dfSummarypH_Org,c("SS.x"="SS_CTL"))
-dfSummarypH_Org<-plyr::rename(dfSummarypH_Org,c("SS.y"="SS_OTC"))
+dfSummarypH_Org<-dplyr::rename(dfSummarypH_Org,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarypH_Org<-dplyr::rename(dfSummarypH_Org,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarypH_Org<-dplyr::rename(dfSummarypH_Org,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarypH_Org<-dplyr::rename(dfSummarypH_Org,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarypH_Org<-dplyr::rename(dfSummarypH_Org,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarypH_Org<-dplyr::rename(dfSummarypH_Org,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDpH_Org <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -576,8 +576,8 @@ SMDpH_Org <-
     data = dfSummarypH_Org 
   )
 
-SMDpH_Org<-plyr::rename(SMDpH_Org,c("yi"="Hedges_SMDpH_Org"))
-SMDpH_Org<-plyr::rename(SMDpH_Org,c("vi"="Hedges_SMDpH_Org_VARIANCE"))
+SMDpH_Org<-dplyr::rename(SMDpH_Org,any_of(c("Hedges_SMDpH_Org"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDpH_Org<-dplyr::rename(SMDpH_Org,any_of(c("Hedges_SMDpH_Org_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 CheckNA<-which(is.na(SMDpH_Org$Hedges_SMDpH_Org))
 if(length(CheckNA)>0) {
@@ -605,12 +605,12 @@ SMDpH_Org$CI_ub<-SMDpH_Org$Hedges_SMDpH_Org+1.96*sqrt(SMDpH_Org$Hedges_SMDpH_Org
 # dfSummarypH_MinOTC <- dfSummarypH_Min  %>% dplyr::filter(Treatment=="OTC")
 # dfSummarypH_Min <- full_join(dfSummarypH_MinCTL, dfSummarypH_MinOTC, by="Dataset_ID")
 # 
-# dfSummarypH_Min<-plyr::rename(dfSummarypH_Min,c("MEAN.x"="MEAN_CTL"))
-# dfSummarypH_Min<-plyr::rename(dfSummarypH_Min,c("MEAN.y"="MEAN_OTC"))
-# dfSummarypH_Min<-plyr::rename(dfSummarypH_Min,c("SDEV.x"="SDEV_CTL"))
-# dfSummarypH_Min<-plyr::rename(dfSummarypH_Min,c("SDEV.y"="SDEV_OTC"))
-# dfSummarypH_Min<-plyr::rename(dfSummarypH_Min,c("SS.x"="SS_CTL"))
-# dfSummarypH_Min<-plyr::rename(dfSummarypH_Min,c("SS.y"="SS_OTC"))
+# dfSummarypH_Min<-dplyr::rename(dfSummarypH_Min,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarypH_Min<-dplyr::rename(dfSummarypH_Min,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarypH_Min<-dplyr::rename(dfSummarypH_Min,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarypH_Min<-dplyr::rename(dfSummarypH_Min,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarypH_Min<-dplyr::rename(dfSummarypH_Min,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarypH_Min<-dplyr::rename(dfSummarypH_Min,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 # 
 # SMDpH_Min <-
 #   escalc("SMD", m1i = MEAN_OTC,
@@ -622,8 +622,8 @@ SMDpH_Org$CI_ub<-SMDpH_Org$Hedges_SMDpH_Org+1.96*sqrt(SMDpH_Org$Hedges_SMDpH_Org
 #     data = dfSummarypH_Min 
 #   )
 # 
-# SMDpH_Min<-plyr::rename(SMDpH_Min,c("yi"="Hedges_SMDpH_Min"))
-# SMDpH_Min<-plyr::rename(SMDpH_Min,c("vi"="Hedges_SMDpH_Min_VARIANCE"))
+# SMDpH_Min<-dplyr::rename(SMDpH_Min,any_of(c("Hedges_SMDpH_Min"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# SMDpH_Min<-dplyr::rename(SMDpH_Min,any_of(c("Hedges_SMDpH_Min_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 # 
 # CheckNA<-which(is.na(SMDpH_Min$Hedges_SMDpH_Min))
 # if(length(CheckNA)>0) {
@@ -652,12 +652,12 @@ dfSummaryBD_OrgCTL <- dfSummaryBD_Org  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryBD_OrgOTC <- dfSummaryBD_Org  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryBD_Org <- full_join(dfSummaryBD_OrgCTL, dfSummaryBD_OrgOTC, by="Dataset_ID")
 
-dfSummaryBD_Org<-plyr::rename(dfSummaryBD_Org,c("MEAN.x"="MEAN_CTL"))
-dfSummaryBD_Org<-plyr::rename(dfSummaryBD_Org,c("MEAN.y"="MEAN_OTC"))
-dfSummaryBD_Org<-plyr::rename(dfSummaryBD_Org,c("SDEV.x"="SDEV_CTL"))
-dfSummaryBD_Org<-plyr::rename(dfSummaryBD_Org,c("SDEV.y"="SDEV_OTC"))
-dfSummaryBD_Org<-plyr::rename(dfSummaryBD_Org,c("SS.x"="SS_CTL"))
-dfSummaryBD_Org<-plyr::rename(dfSummaryBD_Org,c("SS.y"="SS_OTC"))
+dfSummaryBD_Org<-dplyr::rename(dfSummaryBD_Org,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Org<-dplyr::rename(dfSummaryBD_Org,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Org<-dplyr::rename(dfSummaryBD_Org,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Org<-dplyr::rename(dfSummaryBD_Org,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Org<-dplyr::rename(dfSummaryBD_Org,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Org<-dplyr::rename(dfSummaryBD_Org,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDBD_Org <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -669,8 +669,8 @@ SMDBD_Org <-
     data = dfSummaryBD_Org 
   )
 
-SMDBD_Org<-plyr::rename(SMDBD_Org,c("yi"="Hedges_SMDBD_Org"))
-SMDBD_Org<-plyr::rename(SMDBD_Org,c("vi"="Hedges_SMDBD_Org_VARIANCE"))
+SMDBD_Org<-dplyr::rename(SMDBD_Org,any_of(c("Hedges_SMDBD_Org"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDBD_Org<-dplyr::rename(SMDBD_Org,any_of(c("Hedges_SMDBD_Org_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 CheckNA<-which(is.na(SMDBD_Org$Hedges_SMDBD_Org))
 if(length(CheckNA)>0) {
@@ -696,12 +696,12 @@ dfSummaryBD_MinCTL <- dfSummaryBD_Min  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryBD_MinOTC <- dfSummaryBD_Min  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryBD_Min <- full_join(dfSummaryBD_MinCTL, dfSummaryBD_MinOTC, by="Dataset_ID")
 
-dfSummaryBD_Min<-plyr::rename(dfSummaryBD_Min,c("MEAN.x"="MEAN_CTL"))
-dfSummaryBD_Min<-plyr::rename(dfSummaryBD_Min,c("MEAN.y"="MEAN_OTC"))
-dfSummaryBD_Min<-plyr::rename(dfSummaryBD_Min,c("SDEV.x"="SDEV_CTL"))
-dfSummaryBD_Min<-plyr::rename(dfSummaryBD_Min,c("SDEV.y"="SDEV_OTC"))
-dfSummaryBD_Min<-plyr::rename(dfSummaryBD_Min,c("SS.x"="SS_CTL"))
-dfSummaryBD_Min<-plyr::rename(dfSummaryBD_Min,c("SS.y"="SS_OTC"))
+dfSummaryBD_Min<-dplyr::rename(dfSummaryBD_Min,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Min<-dplyr::rename(dfSummaryBD_Min,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Min<-dplyr::rename(dfSummaryBD_Min,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Min<-dplyr::rename(dfSummaryBD_Min,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Min<-dplyr::rename(dfSummaryBD_Min,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Min<-dplyr::rename(dfSummaryBD_Min,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDBD_Min <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -713,8 +713,8 @@ SMDBD_Min <-
     data = dfSummaryBD_Min 
   )
 
-SMDBD_Min<-plyr::rename(SMDBD_Min,c("yi"="Hedges_SMDBD_Min"))
-SMDBD_Min<-plyr::rename(SMDBD_Min,c("vi"="Hedges_SMDBD_Min_VARIANCE"))
+SMDBD_Min<-dplyr::rename(SMDBD_Min,any_of(c("Hedges_SMDBD_Min"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDBD_Min<-dplyr::rename(SMDBD_Min,any_of(c("Hedges_SMDBD_Min_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 CheckNA<-which(is.na(SMDBD_Min$Hedges_SMDBD_Min))
 if(length(CheckNA)>0) {
@@ -732,7 +732,7 @@ SMDBD_Min$CI_ub<-SMDBD_Min$Hedges_SMDBD_Min+1.96*sqrt(SMDBD_Min$Hedges_SMDBD_Min
 
 # ############### OL_D_Plot ###############
 # 
-df_PLOT_LEVEL<-plyr::rename(df_PLOT_LEVEL,c("OL_D"="OL_D_Plot")) #rename to avoid confusion with site vs plot level
+df_PLOT_LEVEL<-dplyr::rename(df_PLOT_LEVEL,any_of(c("OL_D_Plot"="OL_D"))) #rename to avoid confusion with site vs plot level  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 df_PLOT_LEVEL_OL_D_Plot<-df_PLOT_LEVEL[-which(is.na(df_PLOT_LEVEL$OL_D_Plot)),]
 
@@ -742,12 +742,12 @@ dfSummaryOL_D_PlotCTL <- dfSummaryOL_D_Plot  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryOL_D_PlotOTC <- dfSummaryOL_D_Plot  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryOL_D_Plot <- full_join(dfSummaryOL_D_PlotCTL, dfSummaryOL_D_PlotOTC, by="Dataset_ID")
 
-dfSummaryOL_D_Plot<-plyr::rename(dfSummaryOL_D_Plot,c("MEAN.x"="MEAN_CTL"))
-dfSummaryOL_D_Plot<-plyr::rename(dfSummaryOL_D_Plot,c("MEAN.y"="MEAN_OTC"))
-dfSummaryOL_D_Plot<-plyr::rename(dfSummaryOL_D_Plot,c("SDEV.x"="SDEV_CTL"))
-dfSummaryOL_D_Plot<-plyr::rename(dfSummaryOL_D_Plot,c("SDEV.y"="SDEV_OTC"))
-dfSummaryOL_D_Plot<-plyr::rename(dfSummaryOL_D_Plot,c("SS.x"="SS_CTL"))
-dfSummaryOL_D_Plot<-plyr::rename(dfSummaryOL_D_Plot,c("SS.y"="SS_OTC"))
+dfSummaryOL_D_Plot<-dplyr::rename(dfSummaryOL_D_Plot,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryOL_D_Plot<-dplyr::rename(dfSummaryOL_D_Plot,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryOL_D_Plot<-dplyr::rename(dfSummaryOL_D_Plot,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryOL_D_Plot<-dplyr::rename(dfSummaryOL_D_Plot,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryOL_D_Plot<-dplyr::rename(dfSummaryOL_D_Plot,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryOL_D_Plot<-dplyr::rename(dfSummaryOL_D_Plot,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDOL_D_Plot <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -759,8 +759,8 @@ SMDOL_D_Plot <-
     data = dfSummaryOL_D_Plot
   )
 
-SMDOL_D_Plot<-plyr::rename(SMDOL_D_Plot,c("yi"="Hedges_SMDOL_D_Plot"))
-SMDOL_D_Plot<-plyr::rename(SMDOL_D_Plot,c("vi"="Hedges_SMDOL_D_Plot_VARIANCE"))
+SMDOL_D_Plot<-dplyr::rename(SMDOL_D_Plot,any_of(c("Hedges_SMDOL_D_Plot"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDOL_D_Plot<-dplyr::rename(SMDOL_D_Plot,any_of(c("Hedges_SMDOL_D_Plot_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDOL_D_Plot<-SMDOL_D_Plot[-which(is.na(SMDOL_D_Plot$Hedges_SMDOL_D_Plot)),]
 
@@ -818,12 +818,12 @@ dfSummaryGraminoidsCTL <- dfSummaryGraminoids  %>% dplyr::filter(Treatment=="CTL
 dfSummaryGraminoidsOTC <- dfSummaryGraminoids  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryGraminoids <- full_join(dfSummaryGraminoidsCTL, dfSummaryGraminoidsOTC, by="Dataset_ID")
 
-dfSummaryGraminoids<-plyr::rename(dfSummaryGraminoids,c("MEAN.x"="MEAN_CTL"))
-dfSummaryGraminoids<-plyr::rename(dfSummaryGraminoids,c("MEAN.y"="MEAN_OTC"))
-dfSummaryGraminoids<-plyr::rename(dfSummaryGraminoids,c("SDEV.x"="SDEV_CTL"))
-dfSummaryGraminoids<-plyr::rename(dfSummaryGraminoids,c("SDEV.y"="SDEV_OTC"))
-dfSummaryGraminoids<-plyr::rename(dfSummaryGraminoids,c("SS.x"="SS_CTL"))
-dfSummaryGraminoids<-plyr::rename(dfSummaryGraminoids,c("SS.y"="SS_OTC"))
+dfSummaryGraminoids<-dplyr::rename(dfSummaryGraminoids,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryGraminoids<-dplyr::rename(dfSummaryGraminoids,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryGraminoids<-dplyr::rename(dfSummaryGraminoids,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryGraminoids<-dplyr::rename(dfSummaryGraminoids,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryGraminoids<-dplyr::rename(dfSummaryGraminoids,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryGraminoids<-dplyr::rename(dfSummaryGraminoids,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDGraminoids <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -835,8 +835,8 @@ SMDGraminoids <-
     data = dfSummaryGraminoids 
   )
 
-SMDGraminoids<-plyr::rename(SMDGraminoids,c("yi"="Hedges_SMDGraminoids"))
-SMDGraminoids<-plyr::rename(SMDGraminoids,c("vi"="Hedges_SMDGraminoids_VARIANCE"))
+SMDGraminoids<-dplyr::rename(SMDGraminoids,any_of(c("Hedges_SMDGraminoids"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDGraminoids<-dplyr::rename(SMDGraminoids,any_of(c("Hedges_SMDGraminoids_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 CheckNA<-which(is.na(SMDGraminoids$Hedges_SMDGraminoids))
 if(length(CheckNA)>0) {
@@ -860,12 +860,12 @@ dfSummaryForbsCTL <- dfSummaryForbs  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryForbsOTC <- dfSummaryForbs  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryForbs <- full_join(dfSummaryForbsCTL, dfSummaryForbsOTC, by="Dataset_ID")
 
-dfSummaryForbs<-plyr::rename(dfSummaryForbs,c("MEAN.x"="MEAN_CTL"))
-dfSummaryForbs<-plyr::rename(dfSummaryForbs,c("MEAN.y"="MEAN_OTC"))
-dfSummaryForbs<-plyr::rename(dfSummaryForbs,c("SDEV.x"="SDEV_CTL"))
-dfSummaryForbs<-plyr::rename(dfSummaryForbs,c("SDEV.y"="SDEV_OTC"))
-dfSummaryForbs<-plyr::rename(dfSummaryForbs,c("SS.x"="SS_CTL"))
-dfSummaryForbs<-plyr::rename(dfSummaryForbs,c("SS.y"="SS_OTC"))
+dfSummaryForbs<-dplyr::rename(dfSummaryForbs,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryForbs<-dplyr::rename(dfSummaryForbs,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryForbs<-dplyr::rename(dfSummaryForbs,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryForbs<-dplyr::rename(dfSummaryForbs,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryForbs<-dplyr::rename(dfSummaryForbs,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryForbs<-dplyr::rename(dfSummaryForbs,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDForbs <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -877,8 +877,8 @@ SMDForbs <-
     data = dfSummaryForbs 
   )
 
-SMDForbs<-plyr::rename(SMDForbs,c("yi"="Hedges_SMDForbs"))
-SMDForbs<-plyr::rename(SMDForbs,c("vi"="Hedges_SMDForbs_VARIANCE"))
+SMDForbs<-dplyr::rename(SMDForbs,any_of(c("Hedges_SMDForbs"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDForbs<-dplyr::rename(SMDForbs,any_of(c("Hedges_SMDForbs_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDForbs<-SMDForbs[-which(is.na(SMDForbs$Hedges_SMDForbs)),]
 
@@ -899,12 +899,12 @@ dfSummaryDecid_ShrubsCTL <- dfSummaryDecid_Shrubs  %>% dplyr::filter(Treatment==
 dfSummaryDecid_ShrubsOTC <- dfSummaryDecid_Shrubs  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryDecid_Shrubs <- full_join(dfSummaryDecid_ShrubsCTL, dfSummaryDecid_ShrubsOTC, by="Dataset_ID")
 
-dfSummaryDecid_Shrubs<-plyr::rename(dfSummaryDecid_Shrubs,c("MEAN.x"="MEAN_CTL"))
-dfSummaryDecid_Shrubs<-plyr::rename(dfSummaryDecid_Shrubs,c("MEAN.y"="MEAN_OTC"))
-dfSummaryDecid_Shrubs<-plyr::rename(dfSummaryDecid_Shrubs,c("SDEV.x"="SDEV_CTL"))
-dfSummaryDecid_Shrubs<-plyr::rename(dfSummaryDecid_Shrubs,c("SDEV.y"="SDEV_OTC"))
-dfSummaryDecid_Shrubs<-plyr::rename(dfSummaryDecid_Shrubs,c("SS.x"="SS_CTL"))
-dfSummaryDecid_Shrubs<-plyr::rename(dfSummaryDecid_Shrubs,c("SS.y"="SS_OTC"))
+dfSummaryDecid_Shrubs<-dplyr::rename(dfSummaryDecid_Shrubs,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryDecid_Shrubs<-dplyr::rename(dfSummaryDecid_Shrubs,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryDecid_Shrubs<-dplyr::rename(dfSummaryDecid_Shrubs,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryDecid_Shrubs<-dplyr::rename(dfSummaryDecid_Shrubs,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryDecid_Shrubs<-dplyr::rename(dfSummaryDecid_Shrubs,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryDecid_Shrubs<-dplyr::rename(dfSummaryDecid_Shrubs,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDDecid_Shrubs <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -916,8 +916,8 @@ SMDDecid_Shrubs <-
     data = dfSummaryDecid_Shrubs 
   )
 
-SMDDecid_Shrubs<-plyr::rename(SMDDecid_Shrubs,c("yi"="Hedges_SMDDecid_Shrubs"))
-SMDDecid_Shrubs<-plyr::rename(SMDDecid_Shrubs,c("vi"="Hedges_SMDDecid_Shrubs_VARIANCE"))
+SMDDecid_Shrubs<-dplyr::rename(SMDDecid_Shrubs,any_of(c("Hedges_SMDDecid_Shrubs"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDDecid_Shrubs<-dplyr::rename(SMDDecid_Shrubs,any_of(c("Hedges_SMDDecid_Shrubs_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 CheckNA<-which(is.na(SMDDecid_Shrubs$Hedges_SMDDecid_Shrubs))
 if(length(CheckNA)>0) {
@@ -941,12 +941,12 @@ dfSummaryEvergr_ShrubsCTL <- dfSummaryEvergr_Shrubs  %>% dplyr::filter(Treatment
 dfSummaryEvergr_ShrubsOTC <- dfSummaryEvergr_Shrubs  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryEvergr_Shrubs <- full_join(dfSummaryEvergr_ShrubsCTL, dfSummaryEvergr_ShrubsOTC, by="Dataset_ID")
 
-dfSummaryEvergr_Shrubs<-plyr::rename(dfSummaryEvergr_Shrubs,c("MEAN.x"="MEAN_CTL"))
-dfSummaryEvergr_Shrubs<-plyr::rename(dfSummaryEvergr_Shrubs,c("MEAN.y"="MEAN_OTC"))
-dfSummaryEvergr_Shrubs<-plyr::rename(dfSummaryEvergr_Shrubs,c("SDEV.x"="SDEV_CTL"))
-dfSummaryEvergr_Shrubs<-plyr::rename(dfSummaryEvergr_Shrubs,c("SDEV.y"="SDEV_OTC"))
-dfSummaryEvergr_Shrubs<-plyr::rename(dfSummaryEvergr_Shrubs,c("SS.x"="SS_CTL"))
-dfSummaryEvergr_Shrubs<-plyr::rename(dfSummaryEvergr_Shrubs,c("SS.y"="SS_OTC"))
+dfSummaryEvergr_Shrubs<-dplyr::rename(dfSummaryEvergr_Shrubs,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryEvergr_Shrubs<-dplyr::rename(dfSummaryEvergr_Shrubs,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryEvergr_Shrubs<-dplyr::rename(dfSummaryEvergr_Shrubs,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryEvergr_Shrubs<-dplyr::rename(dfSummaryEvergr_Shrubs,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryEvergr_Shrubs<-dplyr::rename(dfSummaryEvergr_Shrubs,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryEvergr_Shrubs<-dplyr::rename(dfSummaryEvergr_Shrubs,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDEvergr_Shrubs <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -958,8 +958,8 @@ SMDEvergr_Shrubs <-
     data = dfSummaryEvergr_Shrubs 
   )
 
-SMDEvergr_Shrubs<-plyr::rename(SMDEvergr_Shrubs,c("yi"="Hedges_SMDEvergr_Shrubs"))
-SMDEvergr_Shrubs<-plyr::rename(SMDEvergr_Shrubs,c("vi"="Hedges_SMDEvergr_Shrubs_VARIANCE"))
+SMDEvergr_Shrubs<-dplyr::rename(SMDEvergr_Shrubs,any_of(c("Hedges_SMDEvergr_Shrubs"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDEvergr_Shrubs<-dplyr::rename(SMDEvergr_Shrubs,any_of(c("Hedges_SMDEvergr_Shrubs_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(SMDEvergr_Shrubs$Hedges_SMDEvergr_Shrubs))
@@ -985,12 +985,12 @@ dfSummaryMossesCTL <- dfSummaryMosses  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryMossesOTC <- dfSummaryMosses  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryMosses <- full_join(dfSummaryMossesCTL, dfSummaryMossesOTC, by="Dataset_ID")
 
-dfSummaryMosses<-plyr::rename(dfSummaryMosses,c("MEAN.x"="MEAN_CTL"))
-dfSummaryMosses<-plyr::rename(dfSummaryMosses,c("MEAN.y"="MEAN_OTC"))
-dfSummaryMosses<-plyr::rename(dfSummaryMosses,c("SDEV.x"="SDEV_CTL"))
-dfSummaryMosses<-plyr::rename(dfSummaryMosses,c("SDEV.y"="SDEV_OTC"))
-dfSummaryMosses<-plyr::rename(dfSummaryMosses,c("SS.x"="SS_CTL"))
-dfSummaryMosses<-plyr::rename(dfSummaryMosses,c("SS.y"="SS_OTC"))
+dfSummaryMosses<-dplyr::rename(dfSummaryMosses,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMosses<-dplyr::rename(dfSummaryMosses,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMosses<-dplyr::rename(dfSummaryMosses,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMosses<-dplyr::rename(dfSummaryMosses,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMosses<-dplyr::rename(dfSummaryMosses,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMosses<-dplyr::rename(dfSummaryMosses,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDMosses <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -1002,8 +1002,8 @@ SMDMosses <-
     data = dfSummaryMosses 
   )
 
-SMDMosses<-plyr::rename(SMDMosses,c("yi"="Hedges_SMDMosses"))
-SMDMosses<-plyr::rename(SMDMosses,c("vi"="Hedges_SMDMosses_VARIANCE"))
+SMDMosses<-dplyr::rename(SMDMosses,any_of(c("Hedges_SMDMosses"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDMosses<-dplyr::rename(SMDMosses,any_of(c("Hedges_SMDMosses_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(SMDMosses$Hedges_SMDMosses))
@@ -1031,12 +1031,12 @@ dfSummaryLichensCTL <- dfSummaryLichens  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryLichensOTC <- dfSummaryLichens  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryLichens <- full_join(dfSummaryLichensCTL, dfSummaryLichensOTC, by="Dataset_ID")
 
-dfSummaryLichens<-plyr::rename(dfSummaryLichens,c("MEAN.x"="MEAN_CTL"))
-dfSummaryLichens<-plyr::rename(dfSummaryLichens,c("MEAN.y"="MEAN_OTC"))
-dfSummaryLichens<-plyr::rename(dfSummaryLichens,c("SDEV.x"="SDEV_CTL"))
-dfSummaryLichens<-plyr::rename(dfSummaryLichens,c("SDEV.y"="SDEV_OTC"))
-dfSummaryLichens<-plyr::rename(dfSummaryLichens,c("SS.x"="SS_CTL"))
-dfSummaryLichens<-plyr::rename(dfSummaryLichens,c("SS.y"="SS_OTC"))
+dfSummaryLichens<-dplyr::rename(dfSummaryLichens,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryLichens<-dplyr::rename(dfSummaryLichens,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryLichens<-dplyr::rename(dfSummaryLichens,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryLichens<-dplyr::rename(dfSummaryLichens,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryLichens<-dplyr::rename(dfSummaryLichens,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryLichens<-dplyr::rename(dfSummaryLichens,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDLichens <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -1048,8 +1048,8 @@ SMDLichens <-
     data = dfSummaryLichens 
   )
 
-SMDLichens<-plyr::rename(SMDLichens,c("yi"="Hedges_SMDLichens"))
-SMDLichens<-plyr::rename(SMDLichens,c("vi"="Hedges_SMDLichens_VARIANCE"))
+SMDLichens<-dplyr::rename(SMDLichens,any_of(c("Hedges_SMDLichens"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDLichens<-dplyr::rename(SMDLichens,any_of(c("Hedges_SMDLichens_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDLichens<-SMDLichens[-which(is.na(SMDLichens$Hedges_SMDLichens)),]
 
@@ -1070,12 +1070,12 @@ dfSummaryBMCTL <- dfSummaryBM  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryBMOTC <- dfSummaryBM  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryBM <- full_join(dfSummaryBMCTL, dfSummaryBMOTC, by="Dataset_ID")
 
-dfSummaryBM<-plyr::rename(dfSummaryBM,c("MEAN.x"="MEAN_CTL"))
-dfSummaryBM<-plyr::rename(dfSummaryBM,c("MEAN.y"="MEAN_OTC"))
-dfSummaryBM<-plyr::rename(dfSummaryBM,c("SDEV.x"="SDEV_CTL"))
-dfSummaryBM<-plyr::rename(dfSummaryBM,c("SDEV.y"="SDEV_OTC"))
-dfSummaryBM<-plyr::rename(dfSummaryBM,c("SS.x"="SS_CTL"))
-dfSummaryBM<-plyr::rename(dfSummaryBM,c("SS.y"="SS_OTC"))
+dfSummaryBM<-dplyr::rename(dfSummaryBM,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBM<-dplyr::rename(dfSummaryBM,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBM<-dplyr::rename(dfSummaryBM,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBM<-dplyr::rename(dfSummaryBM,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBM<-dplyr::rename(dfSummaryBM,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBM<-dplyr::rename(dfSummaryBM,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDBM <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -1087,8 +1087,8 @@ SMDBM <-
     data = dfSummaryBM 
   )
 
-SMDBM<-plyr::rename(SMDBM,c("yi"="Hedges_SMDBM"))
-SMDBM<-plyr::rename(SMDBM,c("vi"="Hedges_SMDBM_VARIANCE"))
+SMDBM<-dplyr::rename(SMDBM,any_of(c("Hedges_SMDBM"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDBM<-dplyr::rename(SMDBM,any_of(c("Hedges_SMDBM_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(SMDBM$Hedges_SMDBM))
@@ -1118,12 +1118,12 @@ dfSummaryMean_HCTL <- dfSummaryMean_H  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryMean_HOTC <- dfSummaryMean_H  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryMean_H <- full_join(dfSummaryMean_HCTL, dfSummaryMean_HOTC, by="Dataset_ID")
 
-dfSummaryMean_H<-plyr::rename(dfSummaryMean_H,c("MEAN.x"="MEAN_CTL"))
-dfSummaryMean_H<-plyr::rename(dfSummaryMean_H,c("MEAN.y"="MEAN_OTC"))
-dfSummaryMean_H<-plyr::rename(dfSummaryMean_H,c("SDEV.x"="SDEV_CTL"))
-dfSummaryMean_H<-plyr::rename(dfSummaryMean_H,c("SDEV.y"="SDEV_OTC"))
-dfSummaryMean_H<-plyr::rename(dfSummaryMean_H,c("SS.x"="SS_CTL"))
-dfSummaryMean_H<-plyr::rename(dfSummaryMean_H,c("SS.y"="SS_OTC"))
+dfSummaryMean_H<-dplyr::rename(dfSummaryMean_H,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMean_H<-dplyr::rename(dfSummaryMean_H,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMean_H<-dplyr::rename(dfSummaryMean_H,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMean_H<-dplyr::rename(dfSummaryMean_H,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMean_H<-dplyr::rename(dfSummaryMean_H,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMean_H<-dplyr::rename(dfSummaryMean_H,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDMean_H <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -1135,8 +1135,8 @@ SMDMean_H <-
     data = dfSummaryMean_H 
   )
 
-SMDMean_H<-plyr::rename(SMDMean_H,c("yi"="Hedges_SMDMean_H"))
-SMDMean_H<-plyr::rename(SMDMean_H,c("vi"="Hedges_SMDMean_H_VARIANCE"))
+SMDMean_H<-dplyr::rename(SMDMean_H,any_of(c("Hedges_SMDMean_H"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDMean_H<-dplyr::rename(SMDMean_H,any_of(c("Hedges_SMDMean_H_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(SMDMean_H$Hedges_SMDMean_H))
@@ -1189,12 +1189,12 @@ dfSummaryBacterial_BM_WeightCTL <- dfSummaryBacterial_BM_Weight  %>% dplyr::filt
 dfSummaryBacterial_BM_WeightOTC <- dfSummaryBacterial_BM_Weight  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryBacterial_BM_Weight <- full_join(dfSummaryBacterial_BM_WeightCTL, dfSummaryBacterial_BM_WeightOTC, by="Dataset_ID")
 
-dfSummaryBacterial_BM_Weight<-plyr::rename(dfSummaryBacterial_BM_Weight,c("MEAN.x"="MEAN_CTL"))
-dfSummaryBacterial_BM_Weight<-plyr::rename(dfSummaryBacterial_BM_Weight,c("MEAN.y"="MEAN_OTC"))
-dfSummaryBacterial_BM_Weight<-plyr::rename(dfSummaryBacterial_BM_Weight,c("SDEV.x"="SDEV_CTL"))
-dfSummaryBacterial_BM_Weight<-plyr::rename(dfSummaryBacterial_BM_Weight,c("SDEV.y"="SDEV_OTC"))
-dfSummaryBacterial_BM_Weight<-plyr::rename(dfSummaryBacterial_BM_Weight,c("SS.x"="SS_CTL"))
-dfSummaryBacterial_BM_Weight<-plyr::rename(dfSummaryBacterial_BM_Weight,c("SS.y"="SS_OTC"))
+dfSummaryBacterial_BM_Weight<-dplyr::rename(dfSummaryBacterial_BM_Weight,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBacterial_BM_Weight<-dplyr::rename(dfSummaryBacterial_BM_Weight,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBacterial_BM_Weight<-dplyr::rename(dfSummaryBacterial_BM_Weight,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBacterial_BM_Weight<-dplyr::rename(dfSummaryBacterial_BM_Weight,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBacterial_BM_Weight<-dplyr::rename(dfSummaryBacterial_BM_Weight,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBacterial_BM_Weight<-dplyr::rename(dfSummaryBacterial_BM_Weight,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDBacterial_BM_Weight <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -1206,8 +1206,8 @@ SMDBacterial_BM_Weight <-
     data = dfSummaryBacterial_BM_Weight 
   )
 
-SMDBacterial_BM_Weight<-plyr::rename(SMDBacterial_BM_Weight,c("yi"="Hedges_SMDBacterial_BM_Weight"))
-SMDBacterial_BM_Weight<-plyr::rename(SMDBacterial_BM_Weight,c("vi"="Hedges_SMDBacterial_BM_Weight_VARIANCE"))
+SMDBacterial_BM_Weight<-dplyr::rename(SMDBacterial_BM_Weight,any_of(c("Hedges_SMDBacterial_BM_Weight"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDBacterial_BM_Weight<-dplyr::rename(SMDBacterial_BM_Weight,any_of(c("Hedges_SMDBacterial_BM_Weight_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(SMDBacterial_BM_Weight$Hedges_SMDBacterial_BM_Weight))
@@ -1233,12 +1233,12 @@ dfSummaryFungal_BM_WeightCTL <- dfSummaryFungal_BM_Weight  %>% dplyr::filter(Tre
 dfSummaryFungal_BM_WeightOTC <- dfSummaryFungal_BM_Weight  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryFungal_BM_Weight <- full_join(dfSummaryFungal_BM_WeightCTL, dfSummaryFungal_BM_WeightOTC, by="Dataset_ID")
 
-dfSummaryFungal_BM_Weight<-plyr::rename(dfSummaryFungal_BM_Weight,c("MEAN.x"="MEAN_CTL"))
-dfSummaryFungal_BM_Weight<-plyr::rename(dfSummaryFungal_BM_Weight,c("MEAN.y"="MEAN_OTC"))
-dfSummaryFungal_BM_Weight<-plyr::rename(dfSummaryFungal_BM_Weight,c("SDEV.x"="SDEV_CTL"))
-dfSummaryFungal_BM_Weight<-plyr::rename(dfSummaryFungal_BM_Weight,c("SDEV.y"="SDEV_OTC"))
-dfSummaryFungal_BM_Weight<-plyr::rename(dfSummaryFungal_BM_Weight,c("SS.x"="SS_CTL"))
-dfSummaryFungal_BM_Weight<-plyr::rename(dfSummaryFungal_BM_Weight,c("SS.y"="SS_OTC"))
+dfSummaryFungal_BM_Weight<-dplyr::rename(dfSummaryFungal_BM_Weight,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFungal_BM_Weight<-dplyr::rename(dfSummaryFungal_BM_Weight,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFungal_BM_Weight<-dplyr::rename(dfSummaryFungal_BM_Weight,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFungal_BM_Weight<-dplyr::rename(dfSummaryFungal_BM_Weight,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFungal_BM_Weight<-dplyr::rename(dfSummaryFungal_BM_Weight,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFungal_BM_Weight<-dplyr::rename(dfSummaryFungal_BM_Weight,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDFungal_BM_Weight <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -1250,8 +1250,8 @@ SMDFungal_BM_Weight <-
     data = dfSummaryFungal_BM_Weight 
   )
 
-SMDFungal_BM_Weight<-plyr::rename(SMDFungal_BM_Weight,c("yi"="Hedges_SMDFungal_BM_Weight"))
-SMDFungal_BM_Weight<-plyr::rename(SMDFungal_BM_Weight,c("vi"="Hedges_SMDFungal_BM_Weight_VARIANCE"))
+SMDFungal_BM_Weight<-dplyr::rename(SMDFungal_BM_Weight,any_of(c("Hedges_SMDFungal_BM_Weight"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDFungal_BM_Weight<-dplyr::rename(SMDFungal_BM_Weight,any_of(c("Hedges_SMDFungal_BM_Weight_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(SMDFungal_BM_Weight$Hedges_SMDFungal_BM_Weight))
@@ -1280,12 +1280,12 @@ dfSummaryFB_RatioCTL <- dfSummaryFB_Ratio  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryFB_RatioOTC <- dfSummaryFB_Ratio  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryFB_Ratio <- full_join(dfSummaryFB_RatioCTL, dfSummaryFB_RatioOTC, by="Dataset_ID")
 
-dfSummaryFB_Ratio<-plyr::rename(dfSummaryFB_Ratio,c("MEAN.x"="MEAN_CTL"))
-dfSummaryFB_Ratio<-plyr::rename(dfSummaryFB_Ratio,c("MEAN.y"="MEAN_OTC"))
-dfSummaryFB_Ratio<-plyr::rename(dfSummaryFB_Ratio,c("SDEV.x"="SDEV_CTL"))
-dfSummaryFB_Ratio<-plyr::rename(dfSummaryFB_Ratio,c("SDEV.y"="SDEV_OTC"))
-dfSummaryFB_Ratio<-plyr::rename(dfSummaryFB_Ratio,c("SS.x"="SS_CTL"))
-dfSummaryFB_Ratio<-plyr::rename(dfSummaryFB_Ratio,c("SS.y"="SS_OTC"))
+dfSummaryFB_Ratio<-dplyr::rename(dfSummaryFB_Ratio,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFB_Ratio<-dplyr::rename(dfSummaryFB_Ratio,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFB_Ratio<-dplyr::rename(dfSummaryFB_Ratio,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFB_Ratio<-dplyr::rename(dfSummaryFB_Ratio,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFB_Ratio<-dplyr::rename(dfSummaryFB_Ratio,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFB_Ratio<-dplyr::rename(dfSummaryFB_Ratio,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 SMDFB_Ratio <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -1297,8 +1297,8 @@ SMDFB_Ratio <-
     data = dfSummaryFB_Ratio 
   )
 
-SMDFB_Ratio<-plyr::rename(SMDFB_Ratio,c("yi"="Hedges_SMDFB_Ratio"))
-SMDFB_Ratio<-plyr::rename(SMDFB_Ratio,c("vi"="Hedges_SMDFB_Ratio_VARIANCE"))
+SMDFB_Ratio<-dplyr::rename(SMDFB_Ratio,any_of(c("Hedges_SMDFB_Ratio"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+SMDFB_Ratio<-dplyr::rename(SMDFB_Ratio,any_of(c("Hedges_SMDFB_Ratio_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(SMDFB_Ratio$Hedges_SMDFB_Ratio))
@@ -1365,99 +1365,99 @@ SMDFB_Ratio$Dataset_ID<-as.factor(SMDFB_Ratio$Dataset_ID)
 ```{r Merge climate, soil, vegetation, microbial drivers into 1 df: do merge}
 drivers<-read.csv("Dataset_ID.csv")
 
-drivers<-plyr::rename(drivers,c("ï..Dataset_ID"="Dataset_ID"))
+drivers<-dplyr::rename(drivers,any_of(c("Dataset_ID"="ï..Dataset_ID")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 drivers$Dataset_ID<-as.factor(drivers$Dataset_ID)
 
 drivers<-full_join(drivers, dfSummary_AT[ , c("Dataset_ID", "MEAN_CTL")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("MEAN_CTL"="AirTemp_CTL"))
+drivers<-dplyr::rename(drivers,any_of(c("AirTemp_CTL"="MEAN_CTL")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 drivers<-full_join(drivers, SMDAT[ , c("Dataset_ID", "Hedges_SMDAT")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDAT"="SMD_AT"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_AT"="Hedges_SMDAT")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 drivers<-full_join(drivers, dfSummary_ST[ , c("Dataset_ID", "MEAN_CTL")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("MEAN_CTL"="SoilTemp_CTL"))
+drivers<-dplyr::rename(drivers,any_of(c("SoilTemp_CTL"="MEAN_CTL")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 drivers<-full_join(drivers, SMDST[ , c("Dataset_ID", "Hedges_SMDST")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDST"="SMD_ST"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_ST"="Hedges_SMDST")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 drivers<-full_join(drivers, dfSummary_SM[ , c("Dataset_ID", "MEAN_CTL")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("MEAN_CTL"="SoilMoist_CTL"))
+drivers<-dplyr::rename(drivers,any_of(c("SoilMoist_CTL"="MEAN_CTL")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 drivers<-full_join(drivers, SMDSM[ , c("Dataset_ID", "Hedges_SMDSM")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDSM"="SMD_SM"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_SM"="Hedges_SMDSM")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 
 
 
 drivers<-full_join(drivers, dfSummarySOM_Org[ , c("Dataset_ID", "MEAN_CTL")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("MEAN_CTL"="SOM_Org_CTL"))
+drivers<-dplyr::rename(drivers,any_of(c("SOM_Org_CTL"="MEAN_CTL")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 drivers<-full_join(drivers, SMDSOM_Org[ , c("Dataset_ID", "Hedges_SMDSOM_Org")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDSOM_Org"="SMD_SOM_Org"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_SOM_Org"="Hedges_SMDSOM_Org")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 # 
 # drivers<-full_join(drivers, dfSummarySOM_Min[ , c("Dataset_ID", "MEAN_CTL")], by=c("Dataset_ID"))
-# drivers<-plyr::rename(drivers,c("MEAN_CTL"="SOM_Min_CTL"))
+# drivers<-dplyr::rename(drivers,any_of(c("SOM_Min_CTL"="MEAN_CTL")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 # drivers<-full_join(drivers, SMDSOM_Min[ , c("Dataset_ID", "Hedges_SMDSOM_Min")], by=c("Dataset_ID"))
-# drivers<-plyr::rename(drivers,c("Hedges_SMDSOM_Min"="SMD_SOM_Min"))
+# drivers<-dplyr::rename(drivers,any_of(c("SMD_SOM_Min"="Hedges_SMDSOM_Min")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 drivers<-full_join(drivers, dfSummarySOC_Org[ , c("Dataset_ID", "MEAN_CTL")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("MEAN_CTL"="SOC_Org_CTL"))
+drivers<-dplyr::rename(drivers,any_of(c("SOC_Org_CTL"="MEAN_CTL")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 drivers<-full_join(drivers, SMDSOC_Org[ , c("Dataset_ID", "Hedges_SMDSOC_Org")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDSOC_Org"="SMD_SOC_Org"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_SOC_Org"="Hedges_SMDSOC_Org")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 drivers<-full_join(drivers, dfSummarySOC_Min[ , c("Dataset_ID", "MEAN_CTL")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("MEAN_CTL"="SOC_Min_CTL"))
+drivers<-dplyr::rename(drivers,any_of(c("SOC_Min_CTL"="MEAN_CTL")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 drivers<-full_join(drivers, SMDSOC_Min[ , c("Dataset_ID", "Hedges_SMDSOC_Min")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDSOC_Min"="SMD_SOC_Min"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_SOC_Min"="Hedges_SMDSOC_Min")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 drivers<-full_join(drivers, dfSummarySON_Org[ , c("Dataset_ID", "MEAN_CTL")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("MEAN_CTL"="SON_Org_CTL"))
+drivers<-dplyr::rename(drivers,any_of(c("SON_Org_CTL"="MEAN_CTL")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 drivers<-full_join(drivers, SMDSON_Org[ , c("Dataset_ID", "Hedges_SMDSON_Org")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDSON_Org"="SMD_SON_Org"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_SON_Org"="Hedges_SMDSON_Org")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 drivers<-full_join(drivers, dfSummarySON_Min[ , c("Dataset_ID", "MEAN_CTL")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("MEAN_CTL"="SON_Min_CTL"))
+drivers<-dplyr::rename(drivers,any_of(c("SON_Min_CTL"="MEAN_CTL")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 drivers<-full_join(drivers, SMDSON_Min[ , c("Dataset_ID", "Hedges_SMDSON_Min")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDSON_Min"="SMD_SON_Min"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_SON_Min"="Hedges_SMDSON_Min")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 
 
 drivers<-full_join(drivers, dfSummaryCN_Org[ , c("Dataset_ID", "MEAN_CTL")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("MEAN_CTL"="CN_Org_CTL"))
+drivers<-dplyr::rename(drivers,any_of(c("CN_Org_CTL"="MEAN_CTL")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 drivers<-full_join(drivers, SMDCN_Org[ , c("Dataset_ID", "Hedges_SMDCN_Org")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDCN_Org"="SMD_CN_Org"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_CN_Org"="Hedges_SMDCN_Org")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 drivers<-full_join(drivers, dfSummaryCN_Min[ , c("Dataset_ID", "MEAN_CTL")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("MEAN_CTL"="CN_Min_CTL"))
+drivers<-dplyr::rename(drivers,any_of(c("CN_Min_CTL"="MEAN_CTL")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 drivers<-full_join(drivers, SMDCN_Min[ , c("Dataset_ID", "Hedges_SMDCN_Min")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDCN_Min"="SMD_CN_Min"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_CN_Min"="Hedges_SMDCN_Min")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 drivers<-full_join(drivers, dfSummarypH_Org[ , c("Dataset_ID", "MEAN_CTL")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("MEAN_CTL"="pH_Org_CTL"))
+drivers<-dplyr::rename(drivers,any_of(c("pH_Org_CTL"="MEAN_CTL")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 drivers<-full_join(drivers, SMDpH_Org[ , c("Dataset_ID", "Hedges_SMDpH_Org")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDpH_Org"="SMD_pH_Org"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_pH_Org"="Hedges_SMDpH_Org")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 # 
 # drivers<-full_join(drivers, dfSummarypH_Min[ , c("Dataset_ID", "MEAN_CTL")], by=c("Dataset_ID"))
-# drivers<-plyr::rename(drivers,c("MEAN_CTL"="pH_Min_CTL"))
+# drivers<-dplyr::rename(drivers,any_of(c("pH_Min_CTL"="MEAN_CTL")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 # drivers<-full_join(drivers, SMDpH_Min[ , c("Dataset_ID", "Hedges_SMDpH_Min")], by=c("Dataset_ID"))
-# drivers<-plyr::rename(drivers,c("Hedges_SMDpH_Min"="SMD_pH_Min"))
+# drivers<-dplyr::rename(drivers,any_of(c("SMD_pH_Min"="Hedges_SMDpH_Min")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 drivers<-full_join(drivers, dfSummaryBD_Org[ , c("Dataset_ID", "MEAN_CTL")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("MEAN_CTL"="BD_Org_CTL"))
+drivers<-dplyr::rename(drivers,any_of(c("BD_Org_CTL"="MEAN_CTL")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 drivers<-full_join(drivers, SMDBD_Org[ , c("Dataset_ID", "Hedges_SMDBD_Org")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDBD_Org"="SMD_BD_Org"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_BD_Org"="Hedges_SMDBD_Org")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 drivers<-full_join(drivers, dfSummaryBD_Min[ , c("Dataset_ID", "MEAN_CTL")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("MEAN_CTL"="BD_Min_CTL"))
+drivers<-dplyr::rename(drivers,any_of(c("BD_Min_CTL"="MEAN_CTL")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 drivers<-full_join(drivers, SMDBD_Min[ , c("Dataset_ID", "Hedges_SMDBD_Min")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDBD_Min"="SMD_BD_Min"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_BD_Min"="Hedges_SMDBD_Min")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 
 drivers<-full_join(drivers, dfSummaryOL_D_Plot[ , c("Dataset_ID", "MEAN_CTL")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("MEAN_CTL"="OL_D_Plot_CTL"))
+drivers<-dplyr::rename(drivers,any_of(c("OL_D_Plot_CTL"="MEAN_CTL")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 drivers<-full_join(drivers, SMDOL_D_Plot[ , c("Dataset_ID", "Hedges_SMDOL_D_Plot")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDOL_D_Plot"="SMD_OL_D_Plot"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_OL_D_Plot"="Hedges_SMDOL_D_Plot")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 
@@ -1469,39 +1469,39 @@ drivers<-plyr::rename(drivers,c("Hedges_SMDOL_D_Plot"="SMD_OL_D_Plot"))
 
 
 drivers<-full_join(drivers, SMDGraminoids[ , c("Dataset_ID", "Hedges_SMDGraminoids")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDGraminoids"="SMD_Graminoids"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_Graminoids"="Hedges_SMDGraminoids")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 drivers<-full_join(drivers, SMDForbs[ , c("Dataset_ID", "Hedges_SMDForbs")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDForbs"="SMD_Forbs"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_Forbs"="Hedges_SMDForbs")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 drivers<-full_join(drivers, SMDDecid_Shrubs[ , c("Dataset_ID", "Hedges_SMDDecid_Shrubs")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDDecid_Shrubs"="SMD_Decid_Shrubs"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_Decid_Shrubs"="Hedges_SMDDecid_Shrubs")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 drivers<-full_join(drivers, SMDEvergr_Shrubs[ , c("Dataset_ID", "Hedges_SMDEvergr_Shrubs")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDEvergr_Shrubs"="SMD_Evergr_Shrubs"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_Evergr_Shrubs"="Hedges_SMDEvergr_Shrubs")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 drivers<-full_join(drivers, SMDMosses[ , c("Dataset_ID", "Hedges_SMDMosses")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDMosses"="SMD_Mosses"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_Mosses"="Hedges_SMDMosses")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 drivers<-full_join(drivers, SMDLichens[ , c("Dataset_ID", "Hedges_SMDLichens")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDLichens"="SMD_Lichens"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_Lichens"="Hedges_SMDLichens")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 drivers<-full_join(drivers, SMDBM[ , c("Dataset_ID", "Hedges_SMDBM")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDBM"="SMD_BM"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_BM"="Hedges_SMDBM")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 drivers<-full_join(drivers, SMDMean_H[ , c("Dataset_ID", "Hedges_SMDMean_H")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDMean_H"="SMD_Mean_H"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_Mean_H"="Hedges_SMDMean_H")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 
 drivers<-full_join(drivers, SMDBacterial_BM_Weight[ , c("Dataset_ID", "Hedges_SMDBacterial_BM_Weight")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDBacterial_BM_Weight"="SMD_Bacterial_BM_Weight"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_Bacterial_BM_Weight"="Hedges_SMDBacterial_BM_Weight")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 drivers<-full_join(drivers, SMDFungal_BM_Weight[ , c("Dataset_ID", "Hedges_SMDFungal_BM_Weight")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDFungal_BM_Weight"="SMD_Fungal_BM_Weight"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_Fungal_BM_Weight"="Hedges_SMDFungal_BM_Weight")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 drivers<-full_join(drivers, SMDFB_Ratio[ , c("Dataset_ID", "Hedges_SMDFB_Ratio")], by=c("Dataset_ID"))
-drivers<-plyr::rename(drivers,c("Hedges_SMDFB_Ratio"="SMD_FB_Ratio"))
+drivers<-dplyr::rename(drivers,any_of(c("SMD_FB_Ratio"="Hedges_SMDFB_Ratio")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 names(drivers)
@@ -1561,12 +1561,12 @@ dfSummary_ATCTL <- dfSummary_AT  %>% dplyr::filter(Treatment=="CTL")
 dfSummary_ATOTC <- dfSummary_AT  %>% dplyr::filter(Treatment=="OTC")
 dfSummary_AT <- full_join(dfSummary_ATCTL, dfSummary_ATOTC, by="Dataset_ID")
 
-dfSummary_AT<-plyr::rename(dfSummary_AT,c("MEAN.x"="MEAN_CTL"))
-dfSummary_AT<-plyr::rename(dfSummary_AT,c("MEAN.y"="MEAN_OTC"))
-dfSummary_AT<-plyr::rename(dfSummary_AT,c("SDEV.x"="SDEV_CTL"))
-dfSummary_AT<-plyr::rename(dfSummary_AT,c("SDEV.y"="SDEV_OTC"))
-dfSummary_AT<-plyr::rename(dfSummary_AT,c("SS.x"="SS_CTL"))
-dfSummary_AT<-plyr::rename(dfSummary_AT,c("SS.y"="SS_OTC"))
+dfSummary_AT<-dplyr::rename(dfSummary_AT,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_AT<-dplyr::rename(dfSummary_AT,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_AT<-dplyr::rename(dfSummary_AT,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_AT<-dplyr::rename(dfSummary_AT,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_AT<-dplyr::rename(dfSummary_AT,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_AT<-dplyr::rename(dfSummary_AT,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 # Calculate actual effect sizes per dataset (Raw RMD)
 RMDAT <-
@@ -1579,8 +1579,8 @@ RMDAT <-
     data = dfSummary_AT 
   )
 
-RMDAT<-plyr::rename(RMDAT,c("yi"="RMDAT"))
-RMDAT<-plyr::rename(RMDAT,c("vi"="RMDAT_VARIANCE"))
+RMDAT<-dplyr::rename(RMDAT,any_of(c("RMDAT"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDAT<-dplyr::rename(RMDAT,any_of(c("RMDAT_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 Mean_RMDAT<-mean(RMDAT$RMDAT)
 Mean_RMDAT
@@ -1601,12 +1601,12 @@ dfSummary_STCTL <- dfSummary_ST  %>% dplyr::filter(Treatment=="CTL")
 dfSummary_STOTC <- dfSummary_ST  %>% dplyr::filter(Treatment=="OTC")
 dfSummary_ST <- full_join(dfSummary_STCTL, dfSummary_STOTC, by="Dataset_ID")
 
-dfSummary_ST<-plyr::rename(dfSummary_ST,c("MEAN.x"="MEAN_CTL"))
-dfSummary_ST<-plyr::rename(dfSummary_ST,c("MEAN.y"="MEAN_OTC"))
-dfSummary_ST<-plyr::rename(dfSummary_ST,c("SDEV.x"="SDEV_CTL"))
-dfSummary_ST<-plyr::rename(dfSummary_ST,c("SDEV.y"="SDEV_OTC"))
-dfSummary_ST<-plyr::rename(dfSummary_ST,c("SS.x"="SS_CTL"))
-dfSummary_ST<-plyr::rename(dfSummary_ST,c("SS.y"="SS_OTC"))
+dfSummary_ST<-dplyr::rename(dfSummary_ST,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_ST<-dplyr::rename(dfSummary_ST,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_ST<-dplyr::rename(dfSummary_ST,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_ST<-dplyr::rename(dfSummary_ST,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_ST<-dplyr::rename(dfSummary_ST,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_ST<-dplyr::rename(dfSummary_ST,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDST <-
   escalc("MD", m1i = MEAN_OTC,
@@ -1618,8 +1618,8 @@ RMDST <-
     data = dfSummary_ST 
   )
 
-RMDST<-plyr::rename(RMDST,c("yi"="RMDST"))
-RMDST<-plyr::rename(RMDST,c("vi"="RMDST_VARIANCE"))
+RMDST<-dplyr::rename(RMDST,any_of(c("RMDST"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDST<-dplyr::rename(RMDST,any_of(c("RMDST_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 Mean_RMDST<-mean(RMDST$RMDST)
 Mean_RMDST
@@ -1640,12 +1640,12 @@ dfSummary_SMCTL <- dfSummary_SM  %>% dplyr::filter(Treatment=="CTL")
 dfSummary_SMOTC <- dfSummary_SM  %>% dplyr::filter(Treatment=="OTC")
 dfSummary_SM <- full_join(dfSummary_SMCTL, dfSummary_SMOTC, by="Dataset_ID")
 
-dfSummary_SM<-plyr::rename(dfSummary_SM,c("MEAN.x"="MEAN_CTL"))
-dfSummary_SM<-plyr::rename(dfSummary_SM,c("MEAN.y"="MEAN_OTC"))
-dfSummary_SM<-plyr::rename(dfSummary_SM,c("SDEV.x"="SDEV_CTL"))
-dfSummary_SM<-plyr::rename(dfSummary_SM,c("SDEV.y"="SDEV_OTC"))
-dfSummary_SM<-plyr::rename(dfSummary_SM,c("SS.x"="SS_CTL"))
-dfSummary_SM<-plyr::rename(dfSummary_SM,c("SS.y"="SS_OTC"))
+dfSummary_SM<-dplyr::rename(dfSummary_SM,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_SM<-dplyr::rename(dfSummary_SM,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_SM<-dplyr::rename(dfSummary_SM,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_SM<-dplyr::rename(dfSummary_SM,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_SM<-dplyr::rename(dfSummary_SM,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummary_SM<-dplyr::rename(dfSummary_SM,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDSM <-
   escalc("MD", m1i = MEAN_OTC,
@@ -1657,8 +1657,8 @@ RMDSM <-
     data = dfSummary_SM 
   )
 
-RMDSM<-plyr::rename(RMDSM,c("yi"="RMDSM"))
-RMDSM<-plyr::rename(RMDSM,c("vi"="RMDSM_VARIANCE"))
+RMDSM<-dplyr::rename(RMDSM,any_of(c("RMDSM"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDSM<-dplyr::rename(RMDSM,any_of(c("RMDSM_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 Mean_RMDSM<-mean(RMDSM$RMDSM)
 Mean_RMDSM
@@ -1693,12 +1693,12 @@ dfSummarySOM_OrgCTL <- dfSummarySOM_Org  %>% dplyr::filter(Treatment=="CTL")
 dfSummarySOM_OrgOTC <- dfSummarySOM_Org  %>% dplyr::filter(Treatment=="OTC")
 dfSummarySOM_Org <- full_join(dfSummarySOM_OrgCTL, dfSummarySOM_OrgOTC, by="Dataset_ID")
 
-dfSummarySOM_Org<-plyr::rename(dfSummarySOM_Org,c("MEAN.x"="MEAN_CTL"))
-dfSummarySOM_Org<-plyr::rename(dfSummarySOM_Org,c("MEAN.y"="MEAN_OTC"))
-dfSummarySOM_Org<-plyr::rename(dfSummarySOM_Org,c("SDEV.x"="SDEV_CTL"))
-dfSummarySOM_Org<-plyr::rename(dfSummarySOM_Org,c("SDEV.y"="SDEV_OTC"))
-dfSummarySOM_Org<-plyr::rename(dfSummarySOM_Org,c("SS.x"="SS_CTL"))
-dfSummarySOM_Org<-plyr::rename(dfSummarySOM_Org,c("SS.y"="SS_OTC"))
+dfSummarySOM_Org<-dplyr::rename(dfSummarySOM_Org,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOM_Org<-dplyr::rename(dfSummarySOM_Org,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOM_Org<-dplyr::rename(dfSummarySOM_Org,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOM_Org<-dplyr::rename(dfSummarySOM_Org,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOM_Org<-dplyr::rename(dfSummarySOM_Org,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOM_Org<-dplyr::rename(dfSummarySOM_Org,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDSOM_Org <-
   escalc("MD", m1i = MEAN_OTC,
@@ -1710,8 +1710,8 @@ RMDSOM_Org <-
     data = dfSummarySOM_Org 
   )
 
-RMDSOM_Org<-plyr::rename(RMDSOM_Org,c("yi"="RMDSOM_Org"))
-RMDSOM_Org<-plyr::rename(RMDSOM_Org,c("vi"="RMDSOM_Org_VARIANCE"))
+RMDSOM_Org<-dplyr::rename(RMDSOM_Org,any_of(c("RMDSOM_Org"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDSOM_Org<-dplyr::rename(RMDSOM_Org,any_of(c("RMDSOM_Org_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 CheckNA<-which(is.na(RMDSOM_Org$RMDSOM_Org))
 if(length(CheckNA)>0) {
@@ -1736,12 +1736,12 @@ RMDSOM_Org$CI_ub<-RMDSOM_Org$RMDSOM_Org+1.96*sqrt(RMDSOM_Org$RMDSOM_Org_VARIANCE
 # dfSummarySOM_MinOTC <- dfSummarySOM_Min  %>% dplyr::filter(Treatment=="OTC")
 # dfSummarySOM_Min <- full_join(dfSummarySOM_MinCTL, dfSummarySOM_MinOTC, by="Dataset_ID")
 # 
-# dfSummarySOM_Min<-plyr::rename(dfSummarySOM_Min,c("MEAN.x"="MEAN_CTL"))
-# dfSummarySOM_Min<-plyr::rename(dfSummarySOM_Min,c("MEAN.y"="MEAN_OTC"))
-# dfSummarySOM_Min<-plyr::rename(dfSummarySOM_Min,c("SDEV.x"="SDEV_CTL"))
-# dfSummarySOM_Min<-plyr::rename(dfSummarySOM_Min,c("SDEV.y"="SDEV_OTC"))
-# dfSummarySOM_Min<-plyr::rename(dfSummarySOM_Min,c("SS.x"="SS_CTL"))
-# dfSummarySOM_Min<-plyr::rename(dfSummarySOM_Min,c("SS.y"="SS_OTC"))
+# dfSummarySOM_Min<-dplyr::rename(dfSummarySOM_Min,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarySOM_Min<-dplyr::rename(dfSummarySOM_Min,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarySOM_Min<-dplyr::rename(dfSummarySOM_Min,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarySOM_Min<-dplyr::rename(dfSummarySOM_Min,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarySOM_Min<-dplyr::rename(dfSummarySOM_Min,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarySOM_Min<-dplyr::rename(dfSummarySOM_Min,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 # 
 # RMDSOM_Min <-
 #   escalc("MD", m1i = MEAN_OTC,
@@ -1753,8 +1753,8 @@ RMDSOM_Org$CI_ub<-RMDSOM_Org$RMDSOM_Org+1.96*sqrt(RMDSOM_Org$RMDSOM_Org_VARIANCE
 #     data = dfSummarySOM_Min 
 #   )
 # 
-# RMDSOM_Min<-plyr::rename(RMDSOM_Min,c("yi"="RMDSOM_Min"))
-# RMDSOM_Min<-plyr::rename(RMDSOM_Min,c("vi"="RMDSOM_Min_VARIANCE"))
+# RMDSOM_Min<-dplyr::rename(RMDSOM_Min,any_of(c("RMDSOM_Min"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# RMDSOM_Min<-dplyr::rename(RMDSOM_Min,any_of(c("RMDSOM_Min_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 # 
 # CheckNA<-which(is.na(RMDSOM_Min$RMDSOM_Min))
 # if(length(CheckNA)>0) {
@@ -1785,12 +1785,12 @@ dfSummarySOC_OrgCTL <- dfSummarySOC_Org  %>% dplyr::filter(Treatment=="CTL")
 dfSummarySOC_OrgOTC <- dfSummarySOC_Org  %>% dplyr::filter(Treatment=="OTC")
 dfSummarySOC_Org <- full_join(dfSummarySOC_OrgCTL, dfSummarySOC_OrgOTC, by="Dataset_ID")
 
-dfSummarySOC_Org<-plyr::rename(dfSummarySOC_Org,c("MEAN.x"="MEAN_CTL"))
-dfSummarySOC_Org<-plyr::rename(dfSummarySOC_Org,c("MEAN.y"="MEAN_OTC"))
-dfSummarySOC_Org<-plyr::rename(dfSummarySOC_Org,c("SDEV.x"="SDEV_CTL"))
-dfSummarySOC_Org<-plyr::rename(dfSummarySOC_Org,c("SDEV.y"="SDEV_OTC"))
-dfSummarySOC_Org<-plyr::rename(dfSummarySOC_Org,c("SS.x"="SS_CTL"))
-dfSummarySOC_Org<-plyr::rename(dfSummarySOC_Org,c("SS.y"="SS_OTC"))
+dfSummarySOC_Org<-dplyr::rename(dfSummarySOC_Org,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Org<-dplyr::rename(dfSummarySOC_Org,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Org<-dplyr::rename(dfSummarySOC_Org,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Org<-dplyr::rename(dfSummarySOC_Org,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Org<-dplyr::rename(dfSummarySOC_Org,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Org<-dplyr::rename(dfSummarySOC_Org,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDSOC_Org <-
   escalc("MD", m1i = MEAN_OTC,
@@ -1802,8 +1802,8 @@ RMDSOC_Org <-
     data = dfSummarySOC_Org 
   )
 
-RMDSOC_Org<-plyr::rename(RMDSOC_Org,c("yi"="RMDSOC_Org"))
-RMDSOC_Org<-plyr::rename(RMDSOC_Org,c("vi"="RMDSOC_Org_VARIANCE"))
+RMDSOC_Org<-dplyr::rename(RMDSOC_Org,any_of(c("RMDSOC_Org"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDSOC_Org<-dplyr::rename(RMDSOC_Org,any_of(c("RMDSOC_Org_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 CheckNA<-which(is.na(RMDSOC_Org$RMDSOC_Org))
 rowtoremove<-as.numeric(CheckNA)
@@ -1830,12 +1830,12 @@ dfSummarySOC_MinCTL <- dfSummarySOC_Min  %>% dplyr::filter(Treatment=="CTL")
 dfSummarySOC_MinOTC <- dfSummarySOC_Min  %>% dplyr::filter(Treatment=="OTC")
 dfSummarySOC_Min <- full_join(dfSummarySOC_MinCTL, dfSummarySOC_MinOTC, by="Dataset_ID")
 
-dfSummarySOC_Min<-plyr::rename(dfSummarySOC_Min,c("MEAN.x"="MEAN_CTL"))
-dfSummarySOC_Min<-plyr::rename(dfSummarySOC_Min,c("MEAN.y"="MEAN_OTC"))
-dfSummarySOC_Min<-plyr::rename(dfSummarySOC_Min,c("SDEV.x"="SDEV_CTL"))
-dfSummarySOC_Min<-plyr::rename(dfSummarySOC_Min,c("SDEV.y"="SDEV_OTC"))
-dfSummarySOC_Min<-plyr::rename(dfSummarySOC_Min,c("SS.x"="SS_CTL"))
-dfSummarySOC_Min<-plyr::rename(dfSummarySOC_Min,c("SS.y"="SS_OTC"))
+dfSummarySOC_Min<-dplyr::rename(dfSummarySOC_Min,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Min<-dplyr::rename(dfSummarySOC_Min,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Min<-dplyr::rename(dfSummarySOC_Min,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Min<-dplyr::rename(dfSummarySOC_Min,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Min<-dplyr::rename(dfSummarySOC_Min,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySOC_Min<-dplyr::rename(dfSummarySOC_Min,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDSOC_Min <-
   escalc("MD", m1i = MEAN_OTC,
@@ -1847,8 +1847,8 @@ RMDSOC_Min <-
     data = dfSummarySOC_Min 
   )
 
-RMDSOC_Min<-plyr::rename(RMDSOC_Min,c("yi"="RMDSOC_Min"))
-RMDSOC_Min<-plyr::rename(RMDSOC_Min,c("vi"="RMDSOC_Min_VARIANCE"))
+RMDSOC_Min<-dplyr::rename(RMDSOC_Min,any_of(c("RMDSOC_Min"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDSOC_Min<-dplyr::rename(RMDSOC_Min,any_of(c("RMDSOC_Min_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(RMDSOC_Min$RMDSOC_Min))
@@ -1878,12 +1878,12 @@ dfSummarySON_OrgCTL <- dfSummarySON_Org  %>% dplyr::filter(Treatment=="CTL")
 dfSummarySON_OrgOTC <- dfSummarySON_Org  %>% dplyr::filter(Treatment=="OTC")
 dfSummarySON_Org <- full_join(dfSummarySON_OrgCTL, dfSummarySON_OrgOTC, by="Dataset_ID")
 
-dfSummarySON_Org<-plyr::rename(dfSummarySON_Org,c("MEAN.x"="MEAN_CTL"))
-dfSummarySON_Org<-plyr::rename(dfSummarySON_Org,c("MEAN.y"="MEAN_OTC"))
-dfSummarySON_Org<-plyr::rename(dfSummarySON_Org,c("SDEV.x"="SDEV_CTL"))
-dfSummarySON_Org<-plyr::rename(dfSummarySON_Org,c("SDEV.y"="SDEV_OTC"))
-dfSummarySON_Org<-plyr::rename(dfSummarySON_Org,c("SS.x"="SS_CTL"))
-dfSummarySON_Org<-plyr::rename(dfSummarySON_Org,c("SS.y"="SS_OTC"))
+dfSummarySON_Org<-dplyr::rename(dfSummarySON_Org,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Org<-dplyr::rename(dfSummarySON_Org,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Org<-dplyr::rename(dfSummarySON_Org,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Org<-dplyr::rename(dfSummarySON_Org,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Org<-dplyr::rename(dfSummarySON_Org,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Org<-dplyr::rename(dfSummarySON_Org,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDSON_Org <-
   escalc("MD", m1i = MEAN_OTC,
@@ -1895,8 +1895,8 @@ RMDSON_Org <-
     data = dfSummarySON_Org 
   )
 
-RMDSON_Org<-plyr::rename(RMDSON_Org,c("yi"="RMDSON_Org"))
-RMDSON_Org<-plyr::rename(RMDSON_Org,c("vi"="RMDSON_Org_VARIANCE"))
+RMDSON_Org<-dplyr::rename(RMDSON_Org,any_of(c("RMDSON_Org"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDSON_Org<-dplyr::rename(RMDSON_Org,any_of(c("RMDSON_Org_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(RMDSON_Org$RMDSON_Org))
@@ -1924,12 +1924,12 @@ dfSummarySON_MinCTL <- dfSummarySON_Min  %>% dplyr::filter(Treatment=="CTL")
 dfSummarySON_MinOTC <- dfSummarySON_Min  %>% dplyr::filter(Treatment=="OTC")
 dfSummarySON_Min <- full_join(dfSummarySON_MinCTL, dfSummarySON_MinOTC, by="Dataset_ID")
 
-dfSummarySON_Min<-plyr::rename(dfSummarySON_Min,c("MEAN.x"="MEAN_CTL"))
-dfSummarySON_Min<-plyr::rename(dfSummarySON_Min,c("MEAN.y"="MEAN_OTC"))
-dfSummarySON_Min<-plyr::rename(dfSummarySON_Min,c("SDEV.x"="SDEV_CTL"))
-dfSummarySON_Min<-plyr::rename(dfSummarySON_Min,c("SDEV.y"="SDEV_OTC"))
-dfSummarySON_Min<-plyr::rename(dfSummarySON_Min,c("SS.x"="SS_CTL"))
-dfSummarySON_Min<-plyr::rename(dfSummarySON_Min,c("SS.y"="SS_OTC"))
+dfSummarySON_Min<-dplyr::rename(dfSummarySON_Min,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Min<-dplyr::rename(dfSummarySON_Min,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Min<-dplyr::rename(dfSummarySON_Min,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Min<-dplyr::rename(dfSummarySON_Min,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Min<-dplyr::rename(dfSummarySON_Min,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarySON_Min<-dplyr::rename(dfSummarySON_Min,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDSON_Min <-
   escalc("MD", m1i = MEAN_OTC,
@@ -1941,8 +1941,8 @@ RMDSON_Min <-
     data = dfSummarySON_Min 
   )
 
-RMDSON_Min<-plyr::rename(RMDSON_Min,c("yi"="RMDSON_Min"))
-RMDSON_Min<-plyr::rename(RMDSON_Min,c("vi"="RMDSON_Min_VARIANCE"))
+RMDSON_Min<-dplyr::rename(RMDSON_Min,any_of(c("RMDSON_Min"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDSON_Min<-dplyr::rename(RMDSON_Min,any_of(c("RMDSON_Min_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(RMDSON_Min$RMDSON_Min))
@@ -1969,12 +1969,12 @@ dfSummaryCN_OrgCTL <- dfSummaryCN_Org  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryCN_OrgOTC <- dfSummaryCN_Org  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryCN_Org <- full_join(dfSummaryCN_OrgCTL, dfSummaryCN_OrgOTC, by="Dataset_ID")
 
-dfSummaryCN_Org<-plyr::rename(dfSummaryCN_Org,c("MEAN.x"="MEAN_CTL"))
-dfSummaryCN_Org<-plyr::rename(dfSummaryCN_Org,c("MEAN.y"="MEAN_OTC"))
-dfSummaryCN_Org<-plyr::rename(dfSummaryCN_Org,c("SDEV.x"="SDEV_CTL"))
-dfSummaryCN_Org<-plyr::rename(dfSummaryCN_Org,c("SDEV.y"="SDEV_OTC"))
-dfSummaryCN_Org<-plyr::rename(dfSummaryCN_Org,c("SS.x"="SS_CTL"))
-dfSummaryCN_Org<-plyr::rename(dfSummaryCN_Org,c("SS.y"="SS_OTC"))
+dfSummaryCN_Org<-dplyr::rename(dfSummaryCN_Org,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Org<-dplyr::rename(dfSummaryCN_Org,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Org<-dplyr::rename(dfSummaryCN_Org,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Org<-dplyr::rename(dfSummaryCN_Org,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Org<-dplyr::rename(dfSummaryCN_Org,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Org<-dplyr::rename(dfSummaryCN_Org,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDCN_Org <-
   escalc("MD", m1i = MEAN_OTC,
@@ -1986,8 +1986,8 @@ RMDCN_Org <-
     data = dfSummaryCN_Org 
   )
 
-RMDCN_Org<-plyr::rename(RMDCN_Org,c("yi"="RMDCN_Org"))
-RMDCN_Org<-plyr::rename(RMDCN_Org,c("vi"="RMDCN_Org_VARIANCE"))
+RMDCN_Org<-dplyr::rename(RMDCN_Org,any_of(c("RMDCN_Org"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDCN_Org<-dplyr::rename(RMDCN_Org,any_of(c("RMDCN_Org_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(RMDCN_Org$RMDCN_Org))
@@ -2013,12 +2013,12 @@ dfSummaryCN_MinCTL <- dfSummaryCN_Min  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryCN_MinOTC <- dfSummaryCN_Min  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryCN_Min <- full_join(dfSummaryCN_MinCTL, dfSummaryCN_MinOTC, by="Dataset_ID")
 
-dfSummaryCN_Min<-plyr::rename(dfSummaryCN_Min,c("MEAN.x"="MEAN_CTL"))
-dfSummaryCN_Min<-plyr::rename(dfSummaryCN_Min,c("MEAN.y"="MEAN_OTC"))
-dfSummaryCN_Min<-plyr::rename(dfSummaryCN_Min,c("SDEV.x"="SDEV_CTL"))
-dfSummaryCN_Min<-plyr::rename(dfSummaryCN_Min,c("SDEV.y"="SDEV_OTC"))
-dfSummaryCN_Min<-plyr::rename(dfSummaryCN_Min,c("SS.x"="SS_CTL"))
-dfSummaryCN_Min<-plyr::rename(dfSummaryCN_Min,c("SS.y"="SS_OTC"))
+dfSummaryCN_Min<-dplyr::rename(dfSummaryCN_Min,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Min<-dplyr::rename(dfSummaryCN_Min,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Min<-dplyr::rename(dfSummaryCN_Min,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Min<-dplyr::rename(dfSummaryCN_Min,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Min<-dplyr::rename(dfSummaryCN_Min,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryCN_Min<-dplyr::rename(dfSummaryCN_Min,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDCN_Min <-
   escalc("MD", m1i = MEAN_OTC,
@@ -2030,8 +2030,8 @@ RMDCN_Min <-
     data = dfSummaryCN_Min 
   )
 
-RMDCN_Min<-plyr::rename(RMDCN_Min,c("yi"="RMDCN_Min"))
-RMDCN_Min<-plyr::rename(RMDCN_Min,c("vi"="RMDCN_Min_VARIANCE"))
+RMDCN_Min<-dplyr::rename(RMDCN_Min,any_of(c("RMDCN_Min"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDCN_Min<-dplyr::rename(RMDCN_Min,any_of(c("RMDCN_Min_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(RMDCN_Min$RMDCN_Min))
@@ -2062,12 +2062,12 @@ dfSummarypH_OrgCTL <- dfSummarypH_Org  %>% dplyr::filter(Treatment=="CTL")
 dfSummarypH_OrgOTC <- dfSummarypH_Org  %>% dplyr::filter(Treatment=="OTC")
 dfSummarypH_Org <- full_join(dfSummarypH_OrgCTL, dfSummarypH_OrgOTC, by="Dataset_ID")
 
-dfSummarypH_Org<-plyr::rename(dfSummarypH_Org,c("MEAN.x"="MEAN_CTL"))
-dfSummarypH_Org<-plyr::rename(dfSummarypH_Org,c("MEAN.y"="MEAN_OTC"))
-dfSummarypH_Org<-plyr::rename(dfSummarypH_Org,c("SDEV.x"="SDEV_CTL"))
-dfSummarypH_Org<-plyr::rename(dfSummarypH_Org,c("SDEV.y"="SDEV_OTC"))
-dfSummarypH_Org<-plyr::rename(dfSummarypH_Org,c("SS.x"="SS_CTL"))
-dfSummarypH_Org<-plyr::rename(dfSummarypH_Org,c("SS.y"="SS_OTC"))
+dfSummarypH_Org<-dplyr::rename(dfSummarypH_Org,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarypH_Org<-dplyr::rename(dfSummarypH_Org,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarypH_Org<-dplyr::rename(dfSummarypH_Org,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarypH_Org<-dplyr::rename(dfSummarypH_Org,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarypH_Org<-dplyr::rename(dfSummarypH_Org,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummarypH_Org<-dplyr::rename(dfSummarypH_Org,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDpH_Org <-
   escalc("MD", m1i = MEAN_OTC,
@@ -2079,8 +2079,8 @@ RMDpH_Org <-
     data = dfSummarypH_Org 
   )
 
-RMDpH_Org<-plyr::rename(RMDpH_Org,c("yi"="RMDpH_Org"))
-RMDpH_Org<-plyr::rename(RMDpH_Org,c("vi"="RMDpH_Org_VARIANCE"))
+RMDpH_Org<-dplyr::rename(RMDpH_Org,any_of(c("RMDpH_Org"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDpH_Org<-dplyr::rename(RMDpH_Org,any_of(c("RMDpH_Org_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(RMDpH_Org$RMDpH_Org))
@@ -2109,12 +2109,12 @@ RMDpH_Org$CI_ub<-RMDpH_Org$RMDpH_Org+1.96*sqrt(RMDpH_Org$RMDpH_Org_VARIANCE)
 # dfSummarypH_MinOTC <- dfSummarypH_Min  %>% dplyr::filter(Treatment=="OTC")
 # dfSummarypH_Min <- full_join(dfSummarypH_MinCTL, dfSummarypH_MinOTC, by="Dataset_ID")
 # 
-# dfSummarypH_Min<-plyr::rename(dfSummarypH_Min,c("MEAN.x"="MEAN_CTL"))
-# dfSummarypH_Min<-plyr::rename(dfSummarypH_Min,c("MEAN.y"="MEAN_OTC"))
-# dfSummarypH_Min<-plyr::rename(dfSummarypH_Min,c("SDEV.x"="SDEV_CTL"))
-# dfSummarypH_Min<-plyr::rename(dfSummarypH_Min,c("SDEV.y"="SDEV_OTC"))
-# dfSummarypH_Min<-plyr::rename(dfSummarypH_Min,c("SS.x"="SS_CTL"))
-# dfSummarypH_Min<-plyr::rename(dfSummarypH_Min,c("SS.y"="SS_OTC"))
+# dfSummarypH_Min<-dplyr::rename(dfSummarypH_Min,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarypH_Min<-dplyr::rename(dfSummarypH_Min,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarypH_Min<-dplyr::rename(dfSummarypH_Min,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarypH_Min<-dplyr::rename(dfSummarypH_Min,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarypH_Min<-dplyr::rename(dfSummarypH_Min,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# dfSummarypH_Min<-dplyr::rename(dfSummarypH_Min,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 # 
 # RMDpH_Min <-
 #   escalc("MD", m1i = MEAN_OTC,
@@ -2126,8 +2126,8 @@ RMDpH_Org$CI_ub<-RMDpH_Org$RMDpH_Org+1.96*sqrt(RMDpH_Org$RMDpH_Org_VARIANCE)
 #     data = dfSummarypH_Min 
 #   )
 # 
-# RMDpH_Min<-plyr::rename(RMDpH_Min,c("yi"="RMDpH_Min"))
-# RMDpH_Min<-plyr::rename(RMDpH_Min,c("vi"="RMDpH_Min_VARIANCE"))
+# RMDpH_Min<-dplyr::rename(RMDpH_Min,any_of(c("RMDpH_Min"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+# RMDpH_Min<-dplyr::rename(RMDpH_Min,any_of(c("RMDpH_Min_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 # 
 # 
 # CheckNA<-which(is.na(RMDpH_Min$RMDpH_Min))
@@ -2158,12 +2158,12 @@ dfSummaryBD_OrgCTL <- dfSummaryBD_Org  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryBD_OrgOTC <- dfSummaryBD_Org  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryBD_Org <- full_join(dfSummaryBD_OrgCTL, dfSummaryBD_OrgOTC, by="Dataset_ID")
 
-dfSummaryBD_Org<-plyr::rename(dfSummaryBD_Org,c("MEAN.x"="MEAN_CTL"))
-dfSummaryBD_Org<-plyr::rename(dfSummaryBD_Org,c("MEAN.y"="MEAN_OTC"))
-dfSummaryBD_Org<-plyr::rename(dfSummaryBD_Org,c("SDEV.x"="SDEV_CTL"))
-dfSummaryBD_Org<-plyr::rename(dfSummaryBD_Org,c("SDEV.y"="SDEV_OTC"))
-dfSummaryBD_Org<-plyr::rename(dfSummaryBD_Org,c("SS.x"="SS_CTL"))
-dfSummaryBD_Org<-plyr::rename(dfSummaryBD_Org,c("SS.y"="SS_OTC"))
+dfSummaryBD_Org<-dplyr::rename(dfSummaryBD_Org,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Org<-dplyr::rename(dfSummaryBD_Org,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Org<-dplyr::rename(dfSummaryBD_Org,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Org<-dplyr::rename(dfSummaryBD_Org,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Org<-dplyr::rename(dfSummaryBD_Org,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Org<-dplyr::rename(dfSummaryBD_Org,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDBD_Org <-
   escalc("MD", m1i = MEAN_OTC,
@@ -2175,8 +2175,8 @@ RMDBD_Org <-
     data = dfSummaryBD_Org 
   )
 
-RMDBD_Org<-plyr::rename(RMDBD_Org,c("yi"="RMDBD_Org"))
-RMDBD_Org<-plyr::rename(RMDBD_Org,c("vi"="RMDBD_Org_VARIANCE"))
+RMDBD_Org<-dplyr::rename(RMDBD_Org,any_of(c("RMDBD_Org"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDBD_Org<-dplyr::rename(RMDBD_Org,any_of(c("RMDBD_Org_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(RMDBD_Org$RMDBD_Org))
@@ -2204,12 +2204,12 @@ dfSummaryBD_MinCTL <- dfSummaryBD_Min  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryBD_MinOTC <- dfSummaryBD_Min  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryBD_Min <- full_join(dfSummaryBD_MinCTL, dfSummaryBD_MinOTC, by="Dataset_ID")
 
-dfSummaryBD_Min<-plyr::rename(dfSummaryBD_Min,c("MEAN.x"="MEAN_CTL"))
-dfSummaryBD_Min<-plyr::rename(dfSummaryBD_Min,c("MEAN.y"="MEAN_OTC"))
-dfSummaryBD_Min<-plyr::rename(dfSummaryBD_Min,c("SDEV.x"="SDEV_CTL"))
-dfSummaryBD_Min<-plyr::rename(dfSummaryBD_Min,c("SDEV.y"="SDEV_OTC"))
-dfSummaryBD_Min<-plyr::rename(dfSummaryBD_Min,c("SS.x"="SS_CTL"))
-dfSummaryBD_Min<-plyr::rename(dfSummaryBD_Min,c("SS.y"="SS_OTC"))
+dfSummaryBD_Min<-dplyr::rename(dfSummaryBD_Min,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Min<-dplyr::rename(dfSummaryBD_Min,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Min<-dplyr::rename(dfSummaryBD_Min,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Min<-dplyr::rename(dfSummaryBD_Min,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Min<-dplyr::rename(dfSummaryBD_Min,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBD_Min<-dplyr::rename(dfSummaryBD_Min,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDBD_Min <-
   escalc("MD", m1i = MEAN_OTC,
@@ -2221,8 +2221,8 @@ RMDBD_Min <-
     data = dfSummaryBD_Min 
   )
 
-RMDBD_Min<-plyr::rename(RMDBD_Min,c("yi"="RMDBD_Min"))
-RMDBD_Min<-plyr::rename(RMDBD_Min,c("vi"="RMDBD_Min_VARIANCE"))
+RMDBD_Min<-dplyr::rename(RMDBD_Min,any_of(c("RMDBD_Min"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDBD_Min<-dplyr::rename(RMDBD_Min,any_of(c("RMDBD_Min_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(RMDBD_Min$RMDBD_Min))
@@ -2242,7 +2242,7 @@ RMDBD_Min$CI_ub<-RMDBD_Min$RMDBD_Min+1.96*sqrt(RMDBD_Min$RMDBD_Min_VARIANCE)
 
 # ############### OL_D_Plot ###############
 # 
-df_PLOT_LEVEL<-plyr::rename(df_PLOT_LEVEL,c("OL_D"="OL_D_Plot")) #rename to avoid confusion with site vs plot level
+df_PLOT_LEVEL<-dplyr::rename(df_PLOT_LEVEL,any_of(c("OL_D_Plot"="OL_D"))) #rename to avoid confusion with site vs plot level  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 df_PLOT_LEVEL_OL_D_Plot<-df_PLOT_LEVEL[-which(is.na(df_PLOT_LEVEL$OL_D_Plot)),]
 
@@ -2252,12 +2252,12 @@ dfSummaryOL_D_PlotCTL <- dfSummaryOL_D_Plot  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryOL_D_PlotOTC <- dfSummaryOL_D_Plot  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryOL_D_Plot <- full_join(dfSummaryOL_D_PlotCTL, dfSummaryOL_D_PlotOTC, by="Dataset_ID")
 
-dfSummaryOL_D_Plot<-plyr::rename(dfSummaryOL_D_Plot,c("MEAN.x"="MEAN_CTL"))
-dfSummaryOL_D_Plot<-plyr::rename(dfSummaryOL_D_Plot,c("MEAN.y"="MEAN_OTC"))
-dfSummaryOL_D_Plot<-plyr::rename(dfSummaryOL_D_Plot,c("SDEV.x"="SDEV_CTL"))
-dfSummaryOL_D_Plot<-plyr::rename(dfSummaryOL_D_Plot,c("SDEV.y"="SDEV_OTC"))
-dfSummaryOL_D_Plot<-plyr::rename(dfSummaryOL_D_Plot,c("SS.x"="SS_CTL"))
-dfSummaryOL_D_Plot<-plyr::rename(dfSummaryOL_D_Plot,c("SS.y"="SS_OTC"))
+dfSummaryOL_D_Plot<-dplyr::rename(dfSummaryOL_D_Plot,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryOL_D_Plot<-dplyr::rename(dfSummaryOL_D_Plot,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryOL_D_Plot<-dplyr::rename(dfSummaryOL_D_Plot,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryOL_D_Plot<-dplyr::rename(dfSummaryOL_D_Plot,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryOL_D_Plot<-dplyr::rename(dfSummaryOL_D_Plot,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryOL_D_Plot<-dplyr::rename(dfSummaryOL_D_Plot,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDOL_D_Plot <-
   escalc("MD", m1i = MEAN_OTC,
@@ -2269,8 +2269,8 @@ RMDOL_D_Plot <-
     data = dfSummaryOL_D_Plot
   )
 
-RMDOL_D_Plot<-plyr::rename(RMDOL_D_Plot,c("yi"="RMDOL_D_Plot"))
-RMDOL_D_Plot<-plyr::rename(RMDOL_D_Plot,c("vi"="RMDOL_D_Plot_VARIANCE"))
+RMDOL_D_Plot<-dplyr::rename(RMDOL_D_Plot,any_of(c("RMDOL_D_Plot"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDOL_D_Plot<-dplyr::rename(RMDOL_D_Plot,any_of(c("RMDOL_D_Plot_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 # RMDOL_D_Plot<-RMDOL_D_Plot[-which(is.na(RMDOL_D_Plot$RMDOL_D_Plot)),]
 
@@ -2329,12 +2329,12 @@ dfSummaryGraminoidsCTL <- dfSummaryGraminoids  %>% dplyr::filter(Treatment=="CTL
 dfSummaryGraminoidsOTC <- dfSummaryGraminoids  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryGraminoids <- full_join(dfSummaryGraminoidsCTL, dfSummaryGraminoidsOTC, by="Dataset_ID")
 
-dfSummaryGraminoids<-plyr::rename(dfSummaryGraminoids,c("MEAN.x"="MEAN_CTL"))
-dfSummaryGraminoids<-plyr::rename(dfSummaryGraminoids,c("MEAN.y"="MEAN_OTC"))
-dfSummaryGraminoids<-plyr::rename(dfSummaryGraminoids,c("SDEV.x"="SDEV_CTL"))
-dfSummaryGraminoids<-plyr::rename(dfSummaryGraminoids,c("SDEV.y"="SDEV_OTC"))
-dfSummaryGraminoids<-plyr::rename(dfSummaryGraminoids,c("SS.x"="SS_CTL"))
-dfSummaryGraminoids<-plyr::rename(dfSummaryGraminoids,c("SS.y"="SS_OTC"))
+dfSummaryGraminoids<-dplyr::rename(dfSummaryGraminoids,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryGraminoids<-dplyr::rename(dfSummaryGraminoids,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryGraminoids<-dplyr::rename(dfSummaryGraminoids,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryGraminoids<-dplyr::rename(dfSummaryGraminoids,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryGraminoids<-dplyr::rename(dfSummaryGraminoids,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryGraminoids<-dplyr::rename(dfSummaryGraminoids,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDGraminoids <-
   escalc("MD", m1i = MEAN_OTC,
@@ -2346,8 +2346,8 @@ RMDGraminoids <-
     data = dfSummaryGraminoids 
   )
 
-RMDGraminoids<-plyr::rename(RMDGraminoids,c("yi"="RMDGraminoids"))
-RMDGraminoids<-plyr::rename(RMDGraminoids,c("vi"="RMDGraminoids_VARIANCE"))
+RMDGraminoids<-dplyr::rename(RMDGraminoids,any_of(c("RMDGraminoids"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDGraminoids<-dplyr::rename(RMDGraminoids,any_of(c("RMDGraminoids_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 CheckNA<-which(is.na(RMDGraminoids$RMDGraminoids))
 if(length(CheckNA)>0) {
@@ -2371,12 +2371,12 @@ dfSummaryForbsCTL <- dfSummaryForbs  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryForbsOTC <- dfSummaryForbs  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryForbs <- full_join(dfSummaryForbsCTL, dfSummaryForbsOTC, by="Dataset_ID")
 
-dfSummaryForbs<-plyr::rename(dfSummaryForbs,c("MEAN.x"="MEAN_CTL"))
-dfSummaryForbs<-plyr::rename(dfSummaryForbs,c("MEAN.y"="MEAN_OTC"))
-dfSummaryForbs<-plyr::rename(dfSummaryForbs,c("SDEV.x"="SDEV_CTL"))
-dfSummaryForbs<-plyr::rename(dfSummaryForbs,c("SDEV.y"="SDEV_OTC"))
-dfSummaryForbs<-plyr::rename(dfSummaryForbs,c("SS.x"="SS_CTL"))
-dfSummaryForbs<-plyr::rename(dfSummaryForbs,c("SS.y"="SS_OTC"))
+dfSummaryForbs<-dplyr::rename(dfSummaryForbs,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryForbs<-dplyr::rename(dfSummaryForbs,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryForbs<-dplyr::rename(dfSummaryForbs,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryForbs<-dplyr::rename(dfSummaryForbs,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryForbs<-dplyr::rename(dfSummaryForbs,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryForbs<-dplyr::rename(dfSummaryForbs,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDForbs <-
   escalc("MD", m1i = MEAN_OTC,
@@ -2388,8 +2388,8 @@ RMDForbs <-
     data = dfSummaryForbs 
   )
 
-RMDForbs<-plyr::rename(RMDForbs,c("yi"="RMDForbs"))
-RMDForbs<-plyr::rename(RMDForbs,c("vi"="RMDForbs_VARIANCE"))
+RMDForbs<-dplyr::rename(RMDForbs,any_of(c("RMDForbs"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDForbs<-dplyr::rename(RMDForbs,any_of(c("RMDForbs_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 CheckNA<-which(is.na(RMDForbs$RMDForbs))
 if(length(CheckNA)>0) {
@@ -2413,12 +2413,12 @@ dfSummaryDecid_ShrubsCTL <- dfSummaryDecid_Shrubs  %>% dplyr::filter(Treatment==
 dfSummaryDecid_ShrubsOTC <- dfSummaryDecid_Shrubs  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryDecid_Shrubs <- full_join(dfSummaryDecid_ShrubsCTL, dfSummaryDecid_ShrubsOTC, by="Dataset_ID")
 
-dfSummaryDecid_Shrubs<-plyr::rename(dfSummaryDecid_Shrubs,c("MEAN.x"="MEAN_CTL"))
-dfSummaryDecid_Shrubs<-plyr::rename(dfSummaryDecid_Shrubs,c("MEAN.y"="MEAN_OTC"))
-dfSummaryDecid_Shrubs<-plyr::rename(dfSummaryDecid_Shrubs,c("SDEV.x"="SDEV_CTL"))
-dfSummaryDecid_Shrubs<-plyr::rename(dfSummaryDecid_Shrubs,c("SDEV.y"="SDEV_OTC"))
-dfSummaryDecid_Shrubs<-plyr::rename(dfSummaryDecid_Shrubs,c("SS.x"="SS_CTL"))
-dfSummaryDecid_Shrubs<-plyr::rename(dfSummaryDecid_Shrubs,c("SS.y"="SS_OTC"))
+dfSummaryDecid_Shrubs<-dplyr::rename(dfSummaryDecid_Shrubs,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryDecid_Shrubs<-dplyr::rename(dfSummaryDecid_Shrubs,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryDecid_Shrubs<-dplyr::rename(dfSummaryDecid_Shrubs,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryDecid_Shrubs<-dplyr::rename(dfSummaryDecid_Shrubs,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryDecid_Shrubs<-dplyr::rename(dfSummaryDecid_Shrubs,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryDecid_Shrubs<-dplyr::rename(dfSummaryDecid_Shrubs,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDDecid_Shrubs <-
   escalc("MD", m1i = MEAN_OTC,
@@ -2430,8 +2430,8 @@ RMDDecid_Shrubs <-
     data = dfSummaryDecid_Shrubs 
   )
 
-RMDDecid_Shrubs<-plyr::rename(RMDDecid_Shrubs,c("yi"="RMDDecid_Shrubs"))
-RMDDecid_Shrubs<-plyr::rename(RMDDecid_Shrubs,c("vi"="RMDDecid_Shrubs_VARIANCE"))
+RMDDecid_Shrubs<-dplyr::rename(RMDDecid_Shrubs,any_of(c("RMDDecid_Shrubs"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDDecid_Shrubs<-dplyr::rename(RMDDecid_Shrubs,any_of(c("RMDDecid_Shrubs_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 CheckNA<-which(is.na(RMDDecid_Shrubs$RMDDecid_Shrubs))
 if(length(CheckNA)>0) {
@@ -2455,12 +2455,12 @@ dfSummaryEvergr_ShrubsCTL <- dfSummaryEvergr_Shrubs  %>% dplyr::filter(Treatment
 dfSummaryEvergr_ShrubsOTC <- dfSummaryEvergr_Shrubs  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryEvergr_Shrubs <- full_join(dfSummaryEvergr_ShrubsCTL, dfSummaryEvergr_ShrubsOTC, by="Dataset_ID")
 
-dfSummaryEvergr_Shrubs<-plyr::rename(dfSummaryEvergr_Shrubs,c("MEAN.x"="MEAN_CTL"))
-dfSummaryEvergr_Shrubs<-plyr::rename(dfSummaryEvergr_Shrubs,c("MEAN.y"="MEAN_OTC"))
-dfSummaryEvergr_Shrubs<-plyr::rename(dfSummaryEvergr_Shrubs,c("SDEV.x"="SDEV_CTL"))
-dfSummaryEvergr_Shrubs<-plyr::rename(dfSummaryEvergr_Shrubs,c("SDEV.y"="SDEV_OTC"))
-dfSummaryEvergr_Shrubs<-plyr::rename(dfSummaryEvergr_Shrubs,c("SS.x"="SS_CTL"))
-dfSummaryEvergr_Shrubs<-plyr::rename(dfSummaryEvergr_Shrubs,c("SS.y"="SS_OTC"))
+dfSummaryEvergr_Shrubs<-dplyr::rename(dfSummaryEvergr_Shrubs,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryEvergr_Shrubs<-dplyr::rename(dfSummaryEvergr_Shrubs,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryEvergr_Shrubs<-dplyr::rename(dfSummaryEvergr_Shrubs,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryEvergr_Shrubs<-dplyr::rename(dfSummaryEvergr_Shrubs,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryEvergr_Shrubs<-dplyr::rename(dfSummaryEvergr_Shrubs,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryEvergr_Shrubs<-dplyr::rename(dfSummaryEvergr_Shrubs,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDEvergr_Shrubs <-
   escalc("MD", m1i = MEAN_OTC,
@@ -2472,8 +2472,8 @@ RMDEvergr_Shrubs <-
     data = dfSummaryEvergr_Shrubs 
   )
 
-RMDEvergr_Shrubs<-plyr::rename(RMDEvergr_Shrubs,c("yi"="RMDEvergr_Shrubs"))
-RMDEvergr_Shrubs<-plyr::rename(RMDEvergr_Shrubs,c("vi"="RMDEvergr_Shrubs_VARIANCE"))
+RMDEvergr_Shrubs<-dplyr::rename(RMDEvergr_Shrubs,any_of(c("RMDEvergr_Shrubs"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDEvergr_Shrubs<-dplyr::rename(RMDEvergr_Shrubs,any_of(c("RMDEvergr_Shrubs_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(RMDEvergr_Shrubs$RMDEvergr_Shrubs))
@@ -2499,12 +2499,12 @@ dfSummaryMossesCTL <- dfSummaryMosses  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryMossesOTC <- dfSummaryMosses  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryMosses <- full_join(dfSummaryMossesCTL, dfSummaryMossesOTC, by="Dataset_ID")
 
-dfSummaryMosses<-plyr::rename(dfSummaryMosses,c("MEAN.x"="MEAN_CTL"))
-dfSummaryMosses<-plyr::rename(dfSummaryMosses,c("MEAN.y"="MEAN_OTC"))
-dfSummaryMosses<-plyr::rename(dfSummaryMosses,c("SDEV.x"="SDEV_CTL"))
-dfSummaryMosses<-plyr::rename(dfSummaryMosses,c("SDEV.y"="SDEV_OTC"))
-dfSummaryMosses<-plyr::rename(dfSummaryMosses,c("SS.x"="SS_CTL"))
-dfSummaryMosses<-plyr::rename(dfSummaryMosses,c("SS.y"="SS_OTC"))
+dfSummaryMosses<-dplyr::rename(dfSummaryMosses,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMosses<-dplyr::rename(dfSummaryMosses,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMosses<-dplyr::rename(dfSummaryMosses,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMosses<-dplyr::rename(dfSummaryMosses,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMosses<-dplyr::rename(dfSummaryMosses,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMosses<-dplyr::rename(dfSummaryMosses,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDMosses <-
   escalc("MD", m1i = MEAN_OTC,
@@ -2516,8 +2516,8 @@ RMDMosses <-
     data = dfSummaryMosses 
   )
 
-RMDMosses<-plyr::rename(RMDMosses,c("yi"="RMDMosses"))
-RMDMosses<-plyr::rename(RMDMosses,c("vi"="RMDMosses_VARIANCE"))
+RMDMosses<-dplyr::rename(RMDMosses,any_of(c("RMDMosses"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDMosses<-dplyr::rename(RMDMosses,any_of(c("RMDMosses_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(RMDSOM_Org$RMDSOM_Org))
@@ -2545,12 +2545,12 @@ dfSummaryLichensCTL <- dfSummaryLichens  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryLichensOTC <- dfSummaryLichens  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryLichens <- full_join(dfSummaryLichensCTL, dfSummaryLichensOTC, by="Dataset_ID")
 
-dfSummaryLichens<-plyr::rename(dfSummaryLichens,c("MEAN.x"="MEAN_CTL"))
-dfSummaryLichens<-plyr::rename(dfSummaryLichens,c("MEAN.y"="MEAN_OTC"))
-dfSummaryLichens<-plyr::rename(dfSummaryLichens,c("SDEV.x"="SDEV_CTL"))
-dfSummaryLichens<-plyr::rename(dfSummaryLichens,c("SDEV.y"="SDEV_OTC"))
-dfSummaryLichens<-plyr::rename(dfSummaryLichens,c("SS.x"="SS_CTL"))
-dfSummaryLichens<-plyr::rename(dfSummaryLichens,c("SS.y"="SS_OTC"))
+dfSummaryLichens<-dplyr::rename(dfSummaryLichens,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryLichens<-dplyr::rename(dfSummaryLichens,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryLichens<-dplyr::rename(dfSummaryLichens,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryLichens<-dplyr::rename(dfSummaryLichens,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryLichens<-dplyr::rename(dfSummaryLichens,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryLichens<-dplyr::rename(dfSummaryLichens,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDLichens <-
   escalc("MD", m1i = MEAN_OTC,
@@ -2562,8 +2562,8 @@ RMDLichens <-
     data = dfSummaryLichens 
   )
 
-RMDLichens<-plyr::rename(RMDLichens,c("yi"="RMDLichens"))
-RMDLichens<-plyr::rename(RMDLichens,c("vi"="RMDLichens_VARIANCE"))
+RMDLichens<-dplyr::rename(RMDLichens,any_of(c("RMDLichens"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDLichens<-dplyr::rename(RMDLichens,any_of(c("RMDLichens_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 CheckNA<-which(is.na(RMDLichens$RMDLichens))
 if(length(CheckNA)>0) {
@@ -2586,12 +2586,12 @@ dfSummaryBMCTL <- dfSummaryBM  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryBMOTC <- dfSummaryBM  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryBM <- full_join(dfSummaryBMCTL, dfSummaryBMOTC, by="Dataset_ID")
 
-dfSummaryBM<-plyr::rename(dfSummaryBM,c("MEAN.x"="MEAN_CTL"))
-dfSummaryBM<-plyr::rename(dfSummaryBM,c("MEAN.y"="MEAN_OTC"))
-dfSummaryBM<-plyr::rename(dfSummaryBM,c("SDEV.x"="SDEV_CTL"))
-dfSummaryBM<-plyr::rename(dfSummaryBM,c("SDEV.y"="SDEV_OTC"))
-dfSummaryBM<-plyr::rename(dfSummaryBM,c("SS.x"="SS_CTL"))
-dfSummaryBM<-plyr::rename(dfSummaryBM,c("SS.y"="SS_OTC"))
+dfSummaryBM<-dplyr::rename(dfSummaryBM,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBM<-dplyr::rename(dfSummaryBM,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBM<-dplyr::rename(dfSummaryBM,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBM<-dplyr::rename(dfSummaryBM,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBM<-dplyr::rename(dfSummaryBM,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBM<-dplyr::rename(dfSummaryBM,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDBM <-
   escalc("MD", m1i = MEAN_OTC,
@@ -2603,8 +2603,8 @@ RMDBM <-
     data = dfSummaryBM 
   )
 
-RMDBM<-plyr::rename(RMDBM,c("yi"="RMDBM"))
-RMDBM<-plyr::rename(RMDBM,c("vi"="RMDBM_VARIANCE"))
+RMDBM<-dplyr::rename(RMDBM,any_of(c("RMDBM"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDBM<-dplyr::rename(RMDBM,any_of(c("RMDBM_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(RMDBM$RMDBM))
@@ -2635,12 +2635,12 @@ dfSummaryMean_HCTL <- dfSummaryMean_H  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryMean_HOTC <- dfSummaryMean_H  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryMean_H <- full_join(dfSummaryMean_HCTL, dfSummaryMean_HOTC, by="Dataset_ID")
 
-dfSummaryMean_H<-plyr::rename(dfSummaryMean_H,c("MEAN.x"="MEAN_CTL"))
-dfSummaryMean_H<-plyr::rename(dfSummaryMean_H,c("MEAN.y"="MEAN_OTC"))
-dfSummaryMean_H<-plyr::rename(dfSummaryMean_H,c("SDEV.x"="SDEV_CTL"))
-dfSummaryMean_H<-plyr::rename(dfSummaryMean_H,c("SDEV.y"="SDEV_OTC"))
-dfSummaryMean_H<-plyr::rename(dfSummaryMean_H,c("SS.x"="SS_CTL"))
-dfSummaryMean_H<-plyr::rename(dfSummaryMean_H,c("SS.y"="SS_OTC"))
+dfSummaryMean_H<-dplyr::rename(dfSummaryMean_H,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMean_H<-dplyr::rename(dfSummaryMean_H,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMean_H<-dplyr::rename(dfSummaryMean_H,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMean_H<-dplyr::rename(dfSummaryMean_H,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMean_H<-dplyr::rename(dfSummaryMean_H,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryMean_H<-dplyr::rename(dfSummaryMean_H,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDMean_H <-
   escalc("MD", m1i = MEAN_OTC,
@@ -2652,8 +2652,8 @@ RMDMean_H <-
     data = dfSummaryMean_H 
   )
 
-RMDMean_H<-plyr::rename(RMDMean_H,c("yi"="RMDMean_H"))
-RMDMean_H<-plyr::rename(RMDMean_H,c("vi"="RMDMean_H_VARIANCE"))
+RMDMean_H<-dplyr::rename(RMDMean_H,any_of(c("RMDMean_H"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDMean_H<-dplyr::rename(RMDMean_H,any_of(c("RMDMean_H_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(RMDMean_H$RMDMean_H))
@@ -2706,12 +2706,12 @@ dfSummaryBacterial_BM_WeightCTL <- dfSummaryBacterial_BM_Weight  %>% dplyr::filt
 dfSummaryBacterial_BM_WeightOTC <- dfSummaryBacterial_BM_Weight  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryBacterial_BM_Weight <- full_join(dfSummaryBacterial_BM_WeightCTL, dfSummaryBacterial_BM_WeightOTC, by="Dataset_ID")
 
-dfSummaryBacterial_BM_Weight<-plyr::rename(dfSummaryBacterial_BM_Weight,c("MEAN.x"="MEAN_CTL"))
-dfSummaryBacterial_BM_Weight<-plyr::rename(dfSummaryBacterial_BM_Weight,c("MEAN.y"="MEAN_OTC"))
-dfSummaryBacterial_BM_Weight<-plyr::rename(dfSummaryBacterial_BM_Weight,c("SDEV.x"="SDEV_CTL"))
-dfSummaryBacterial_BM_Weight<-plyr::rename(dfSummaryBacterial_BM_Weight,c("SDEV.y"="SDEV_OTC"))
-dfSummaryBacterial_BM_Weight<-plyr::rename(dfSummaryBacterial_BM_Weight,c("SS.x"="SS_CTL"))
-dfSummaryBacterial_BM_Weight<-plyr::rename(dfSummaryBacterial_BM_Weight,c("SS.y"="SS_OTC"))
+dfSummaryBacterial_BM_Weight<-dplyr::rename(dfSummaryBacterial_BM_Weight,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBacterial_BM_Weight<-dplyr::rename(dfSummaryBacterial_BM_Weight,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBacterial_BM_Weight<-dplyr::rename(dfSummaryBacterial_BM_Weight,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBacterial_BM_Weight<-dplyr::rename(dfSummaryBacterial_BM_Weight,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBacterial_BM_Weight<-dplyr::rename(dfSummaryBacterial_BM_Weight,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryBacterial_BM_Weight<-dplyr::rename(dfSummaryBacterial_BM_Weight,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDBacterial_BM_Weight <-
   escalc("MD", m1i = MEAN_OTC,
@@ -2723,8 +2723,8 @@ RMDBacterial_BM_Weight <-
     data = dfSummaryBacterial_BM_Weight 
   )
 
-RMDBacterial_BM_Weight<-plyr::rename(RMDBacterial_BM_Weight,c("yi"="RMDBacterial_BM_Weight"))
-RMDBacterial_BM_Weight<-plyr::rename(RMDBacterial_BM_Weight,c("vi"="RMDBacterial_BM_Weight_VARIANCE"))
+RMDBacterial_BM_Weight<-dplyr::rename(RMDBacterial_BM_Weight,any_of(c("RMDBacterial_BM_Weight"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDBacterial_BM_Weight<-dplyr::rename(RMDBacterial_BM_Weight,any_of(c("RMDBacterial_BM_Weight_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(RMDBacterial_BM_Weight$RMDBacterial_BM_Weight))
@@ -2750,12 +2750,12 @@ dfSummaryFungal_BM_WeightCTL <- dfSummaryFungal_BM_Weight  %>% dplyr::filter(Tre
 dfSummaryFungal_BM_WeightOTC <- dfSummaryFungal_BM_Weight  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryFungal_BM_Weight <- full_join(dfSummaryFungal_BM_WeightCTL, dfSummaryFungal_BM_WeightOTC, by="Dataset_ID")
 
-dfSummaryFungal_BM_Weight<-plyr::rename(dfSummaryFungal_BM_Weight,c("MEAN.x"="MEAN_CTL"))
-dfSummaryFungal_BM_Weight<-plyr::rename(dfSummaryFungal_BM_Weight,c("MEAN.y"="MEAN_OTC"))
-dfSummaryFungal_BM_Weight<-plyr::rename(dfSummaryFungal_BM_Weight,c("SDEV.x"="SDEV_CTL"))
-dfSummaryFungal_BM_Weight<-plyr::rename(dfSummaryFungal_BM_Weight,c("SDEV.y"="SDEV_OTC"))
-dfSummaryFungal_BM_Weight<-plyr::rename(dfSummaryFungal_BM_Weight,c("SS.x"="SS_CTL"))
-dfSummaryFungal_BM_Weight<-plyr::rename(dfSummaryFungal_BM_Weight,c("SS.y"="SS_OTC"))
+dfSummaryFungal_BM_Weight<-dplyr::rename(dfSummaryFungal_BM_Weight,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFungal_BM_Weight<-dplyr::rename(dfSummaryFungal_BM_Weight,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFungal_BM_Weight<-dplyr::rename(dfSummaryFungal_BM_Weight,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFungal_BM_Weight<-dplyr::rename(dfSummaryFungal_BM_Weight,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFungal_BM_Weight<-dplyr::rename(dfSummaryFungal_BM_Weight,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFungal_BM_Weight<-dplyr::rename(dfSummaryFungal_BM_Weight,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDFungal_BM_Weight <-
   escalc("MD", m1i = MEAN_OTC,
@@ -2767,8 +2767,8 @@ RMDFungal_BM_Weight <-
     data = dfSummaryFungal_BM_Weight 
   )
 
-RMDFungal_BM_Weight<-plyr::rename(RMDFungal_BM_Weight,c("yi"="RMDFungal_BM_Weight"))
-RMDFungal_BM_Weight<-plyr::rename(RMDFungal_BM_Weight,c("vi"="RMDFungal_BM_Weight_VARIANCE"))
+RMDFungal_BM_Weight<-dplyr::rename(RMDFungal_BM_Weight,any_of(c("RMDFungal_BM_Weight"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDFungal_BM_Weight<-dplyr::rename(RMDFungal_BM_Weight,any_of(c("RMDFungal_BM_Weight_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(RMDFungal_BM_Weight$RMDFungal_BM_Weight))
@@ -2797,12 +2797,12 @@ dfSummaryFB_RatioCTL <- dfSummaryFB_Ratio  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryFB_RatioOTC <- dfSummaryFB_Ratio  %>% dplyr::filter(Treatment=="OTC")
 dfSummaryFB_Ratio <- full_join(dfSummaryFB_RatioCTL, dfSummaryFB_RatioOTC, by="Dataset_ID")
 
-dfSummaryFB_Ratio<-plyr::rename(dfSummaryFB_Ratio,c("MEAN.x"="MEAN_CTL"))
-dfSummaryFB_Ratio<-plyr::rename(dfSummaryFB_Ratio,c("MEAN.y"="MEAN_OTC"))
-dfSummaryFB_Ratio<-plyr::rename(dfSummaryFB_Ratio,c("SDEV.x"="SDEV_CTL"))
-dfSummaryFB_Ratio<-plyr::rename(dfSummaryFB_Ratio,c("SDEV.y"="SDEV_OTC"))
-dfSummaryFB_Ratio<-plyr::rename(dfSummaryFB_Ratio,c("SS.x"="SS_CTL"))
-dfSummaryFB_Ratio<-plyr::rename(dfSummaryFB_Ratio,c("SS.y"="SS_OTC"))
+dfSummaryFB_Ratio<-dplyr::rename(dfSummaryFB_Ratio,any_of(c("MEAN_CTL"="MEAN.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFB_Ratio<-dplyr::rename(dfSummaryFB_Ratio,any_of(c("MEAN_OTC"="MEAN.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFB_Ratio<-dplyr::rename(dfSummaryFB_Ratio,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFB_Ratio<-dplyr::rename(dfSummaryFB_Ratio,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFB_Ratio<-dplyr::rename(dfSummaryFB_Ratio,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+dfSummaryFB_Ratio<-dplyr::rename(dfSummaryFB_Ratio,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 RMDFB_Ratio <-
   escalc("MD", m1i = MEAN_OTC,
@@ -2814,8 +2814,8 @@ RMDFB_Ratio <-
     data = dfSummaryFB_Ratio 
   )
 
-RMDFB_Ratio<-plyr::rename(RMDFB_Ratio,c("yi"="RMDFB_Ratio"))
-RMDFB_Ratio<-plyr::rename(RMDFB_Ratio,c("vi"="RMDFB_Ratio_VARIANCE"))
+RMDFB_Ratio<-dplyr::rename(RMDFB_Ratio,any_of(c("RMDFB_Ratio"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+RMDFB_Ratio<-dplyr::rename(RMDFB_Ratio,any_of(c("RMDFB_Ratio_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
 CheckNA<-which(is.na(RMDFB_Ratio$RMDFB_Ratio))

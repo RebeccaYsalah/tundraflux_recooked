@@ -10,12 +10,12 @@ editor_options:
 #load data
 ```{r load data, include=FALSE}
 library("ggplot2")
-library("plyr")
+# library("plyr")  # CHANGES: plyr not available for R 4.6 - only rename() was used, now dplyr::rename()
 library("dplyr")
 library("car")
 library("tidyr")
 library("readxl")
-library("reshape2")
+# library("reshape2")  # CHANGES: reshape2 not available for R 4.6 - no reshape2 functions are used
 library("tidyverse")
 library("ggrepel")
 library("tibble")
@@ -29,7 +29,7 @@ library("metafor")
 df<-read.csv("df_2.csv")
 
 #rename
-df<-plyr::rename(df,c("ï..Dataset_ID"="Dataset_ID"))
+df<-dplyr::rename(df,any_of(c("Dataset_ID"="ï..Dataset_ID")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #change data types
 df$Dataset_ID<-as.factor(df$Dataset_ID)
@@ -319,7 +319,7 @@ ggplot() +
   geom_point(data=df, mapping=aes(x=DS_ID, y=Hedges_SMD), size=2, shape=21, fill="black") +
   # scale_x_discrete(breaks = every_nth(n = 4))+#, guide = guide_axis(n.dodge = 2))+
   scale_y_continuous(limits = c(-2.2,3.4), breaks=c(-2,-1,0,1,2,3))+
-  geom_errorbar(data=df, mapping=aes(x=DS_ID, ymin=CI_lb, ymax=CI_ub), width=0.08, size=1, color="black") +  #the estimates of the model + error bars
+  geom_errorbar(data=df, mapping=aes(x=DS_ID, ymin=CI_lb, ymax=CI_ub), width=0.08, linewidth=1, color="black") +  #the estimates of the model + error bars  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
   # ggtitle("Warming-induced changes in respiration (Hedges SMD +- 95%CI): Individual datasets") +
 
 #
@@ -329,13 +329,13 @@ ggplot() +
 
   ylab("ER Hedges SMD") +
   xlab("Datasets")+
- geom_hline(yintercept=0.8, linetype="dashed", color = "black", size=0.4)+
-  geom_hline(yintercept=0.5, linetype="dashed", color = "black", size=0.4)+
-  geom_hline(yintercept=0.2, linetype="dashed", color = "black", size=0.4)+
-  geom_hline(yintercept=0, linetype="dashed", color = "black", size=2)+
-  geom_hline(yintercept=-0.2, linetype="dashed", color = "black", size=0.4)+
-  geom_hline(yintercept=-0.5, linetype="dashed", color = "black", size=0.4)+
-  geom_hline(yintercept=-0.8, linetype="dashed", color = "black", size=0.4)+
+ geom_hline(yintercept=0.8, linetype="dashed", color = "black", linewidth=0.4)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0.5, linetype="dashed", color = "black", linewidth=0.4)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0.2, linetype="dashed", color = "black", linewidth=0.4)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=0, linetype="dashed", color = "black", linewidth=2)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.2, linetype="dashed", color = "black", linewidth=0.4)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.5, linetype="dashed", color = "black", linewidth=0.4)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_hline(yintercept=-0.8, linetype="dashed", color = "black", linewidth=0.4)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
   theme_classic()+
   theme(text = element_text(size = 15), plot.title = element_text(hjust = 0.5), plot.margin=unit(c(1.2,1.2,1.2,1.2),"cm"), axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.5), axis.title = element_text(size = rel(1.8)), axis.text.y=element_text(size=rel(1.8)))+ #Top Right Bottom Left
 
@@ -344,40 +344,40 @@ ggplot() +
   annotate("text", x=70, y=-2, label= "SMD<0: Respiration ↓ with warming", size=6, colour="black") +
 
 
-  geom_vline(xintercept=1, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=5, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=9, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=13, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=17, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=21, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=25, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=29, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=33, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=37, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=41, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=45, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=49, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=53, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=57, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=61, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=65, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=69, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=73, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=77, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=81, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=85, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=89, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=93, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=97, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=101, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=105, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=109, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=113, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=117, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=121, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=125, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=129, linetype="dashed", color = "lightgrey", size=0.15)+
-  geom_vline(xintercept=133, linetype="dashed", color = "lightgrey", size=0.15)
+  geom_vline(xintercept=1, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=5, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=9, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=13, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=17, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=21, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=25, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=29, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=33, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=37, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=41, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=45, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=49, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=53, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=57, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=61, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=65, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=69, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=73, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=77, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=81, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=85, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=89, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=93, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=97, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=101, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=105, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=109, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=113, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=117, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=121, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=125, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=129, linetype="dashed", color = "lightgrey", linewidth=0.15)+  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
+  geom_vline(xintercept=133, linetype="dashed", color = "lightgrey", linewidth=0.15)  # CHANGES: ggplot2 >=3.4 uses linewidth instead of size for lines
 
 dev.off()
 

@@ -12,7 +12,7 @@ library(readr) # read in data
 library(dplyr)# handle data
 library(ggplot2) # plot data
 library(patchwork) # combine graphs
-library(Rmisc)
+# library(Rmisc)  # CHANGES: Rmisc depends on plyr (not available for R 4.6); not needed - summarySE replaced with dplyr
 
 # load ER partitioning data
 data <- read_csv("df_3.csv")

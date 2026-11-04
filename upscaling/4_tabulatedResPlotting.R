@@ -105,7 +105,7 @@ if (file.exists("data_out/resp_plant_CRS3995_1km.tif")) {
   # read all 34 GCM forced plant respiration maps
   resp_plant <- foreach::foreach(y = 1:length(files_resp_plant), 
                                  .combine='c',
-                                 .packages=c('dplyr','terra','sf', 'raster', 'ncdf4')) %dopar%
+                                 .packages=c('dplyr','terra','sf', 'ncdf4')) %dopar%  # CHANGES: dropped retired 'raster' package (terra only)
     {
       
       nc_data <- ncdf4::nc_open(paste0('data_in/plant_respiration/', files_resp_plant[y]))
@@ -116,15 +116,18 @@ if (file.exists("data_out/resp_plant_CRS3995_1km.tif")) {
       lon <- ncdf4::ncvar_get(nc_data, "longitude")
       lat <- ncdf4::ncvar_get(nc_data, "latitude", verbose = F)
       
-      r <- raster::raster(t(resp_p_gb[,,1]), xmn=min(lon), xmx=max(lon), ymn=min(lat), ymx=max(lat), 
-                          crs=sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs+ towgs84=0,0,0"))
-      r <- flip(r, direction='y')
+      # CHANGES: raster::raster()/sp::CRS() replaced by terra::rast() (raster/sp are superseded by terra)
+      r <- terra::rast(t(resp_p_gb[,,1]),
+                       extent = terra::ext(min(lon), max(lon), min(lat), max(lat)),
+                       crs = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0")
+      r <- terra::flip(r, direction = 'vertical')  # CHANGES: terra::flip uses 'vertical' instead of 'y'
+      terra::wrap(r)  # CHANGES: SpatRaster must be wrapped to be returned from a parallel worker
       
     }
   
   # median over all 34 GCMs
   
-  r_resp_plant <- median(rast(raster::stack(resp_plant)), na.rm = T)
+  r_resp_plant <- median(rast(lapply(resp_plant, terra::unwrap)), na.rm = T)  # CHANGES: replaces raster::stack(); unwrap the terra objects from the workers
   
   # function to fill NA areas with closest value
   fillmode <- function(v, na.rm) {
@@ -298,20 +301,19 @@ f_mappingTMAP <- function(r_index, index_label, colorpal, breakvals,
   
   # create tmap object
   index_map <- tm_shape(r_index, bbox = bboxSet) +
-    tm_raster(style = "fixed", # draw gradient instead of classified
-              palette = colorpal,
-              breaks = breakvals,
-              title = index_label,
-              midpoint = color_midpoint,
-              #legend.reverse = TRUE,
-              legend.is.portrait = FALSE) +
+    # CHANGES: tmap v4 syntax - style/palette/breaks/midpoint move to col.scale, title/orientation to col.legend
+    tm_raster(col.scale = tm_scale_intervals(style = "fixed", # draw gradient instead of classified
+                                             values = colorpal,
+                                             breaks = breakvals,
+                                             midpoint = color_midpoint),
+              col.legend = tm_legend(title = index_label,
+                                     #reverse = TRUE,
+                                     orientation = "landscape",
+                                     position = tm_pos_out("center", "bottom"),  # CHANGES: replaces legend.outside/legend.outside.position
+                                     bg.color = "white")) +
     tm_shape(polygonFile, bbox = bboxSet) +
     tm_borders(col=NA,lwd = 0.5) +
-    tm_layout(main.title.position = "left",
-              legend.bg.color = TRUE,
-              legend.outside = TRUE,
-              legend.outside.position = "bottom",
-              frame = FALSE)
+    tm_layout(frame = FALSE)  # CHANGES: tmap v4 - main.title/legend.* options removed from tm_layout (legend set in tm_legend above)
   
   return (index_map)
   
@@ -424,17 +426,13 @@ zonesTundraAlpine <- maskTundraAlpine
 zonesTundraAlpine[maskTundra>0] = 2
 
 plt_zone <- tm_shape(zonesTundraAlpine, bbox = bboxTundraAlpine) +
-  tm_raster(style = "cat",
-            palette = zonesPalette)+
+  tm_raster(col.scale = tm_scale_categorical(values = zonesPalette),  # CHANGES: tmap v4 syntax (style/palette -> col.scale)
+            col.legend = tm_legend(position = tm_pos_out("center", "bottom"), bg.color = "white"))+
   tm_shape(shp_cntrySml_crs3995, bbox = bboxTundraAlpine) +
   tm_borders(col=NA,lwd = 0.5) +
   tm_shape(read_sf("data_out/sitesExtractedValues_v5.gpkg"), bbox = bboxTundraAlpine) +
-  tm_dots(col='red',size = 0.1) +
-  tm_layout(main.title.position = "left",
-            legend.bg.color = TRUE,
-            legend.outside = TRUE,
-            legend.outside.position = "bottom",
-            frame = FALSE)
+  tm_dots(fill='red',size = 0.1) +  # CHANGES: tmap v4 uses fill instead of col for dot colour
+  tm_layout(frame = FALSE)  # CHANGES: tmap v4 - legend.* options moved to tm_legend()
 
 tmap_save(plt_zone,'figures/fig_zonesTundraAlpine.pdf',units = 'mm', width = 120, height = 120  )
 

@@ -10,12 +10,12 @@ editor_options:
 #load data
 ```{r load data, include=FALSE}
 library("ggplot2")
-library("plyr")
+# library("plyr")  # CHANGES: plyr not available for R 4.6 - only rename() was used, now dplyr::rename()
 library("dplyr")
 library("car")
 library("tidyr")
 library("readxl")
-library("reshape2")
+# library("reshape2")  # CHANGES: reshape2 not available for R 4.6 - no reshape2 functions are used
 library("tidyverse")
 library("ggrepel")
 library("tibble")
@@ -33,11 +33,11 @@ df_ST<-read.csv("SMDST.csv")
 df_SM<-read.csv("SMDSM.csv")
 
 #rename
-df<-plyr::rename(df,c("ï..Dataset_ID"="Dataset_ID"))
+df<-dplyr::rename(df,any_of(c("Dataset_ID"="ï..Dataset_ID")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
-df_AT<-plyr::rename(df_AT,c("X"="Observation_ID"))
-df_ST<-plyr::rename(df_ST,c("X"="Observation_ID"))
-df_SM<-plyr::rename(df_SM,c("X"="Observation_ID"))
+df_AT<-dplyr::rename(df_AT,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+df_ST<-dplyr::rename(df_ST,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+df_SM<-dplyr::rename(df_SM,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #change data types
 df$Dataset_ID<-as.factor(df$Dataset_ID)
@@ -176,7 +176,7 @@ P <- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
 
 # First run full script df_1b to get the csv files
 df_AT_RMD<-read.csv("RMDAT.csv")
-df_AT_RMD<-plyr::rename(df_AT_RMD,c("X"="Observation_ID"))
+df_AT_RMD<-dplyr::rename(df_AT_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]
@@ -192,7 +192,7 @@ summary(model1_RMD)
 
 # First run full script df_1b to get the csv files
 df_ST_RMD<-read.csv("RMDST.csv")
-df_ST_RMD<-plyr::rename(df_ST_RMD,c("X"="Observation_ID"))
+df_ST_RMD<-dplyr::rename(df_ST_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]
@@ -209,7 +209,7 @@ summary(model1_RMD)
 
 # First run full script df_1b to get the csv files
 df_SM_RMD<-read.csv("RMDSM.csv")
-df_SM_RMD<-plyr::rename(df_SM_RMD,c("X"="Observation_ID"))
+df_SM_RMD<-dplyr::rename(df_SM_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]

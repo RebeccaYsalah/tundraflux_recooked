@@ -102,7 +102,7 @@ p_CN_SOC <- ggplot() +
 # Create convex hull
 x1 <- dfCO2$SON_Min_CTL
 y1 <- dfCO2$CN_calc
-xdf <- data_frame(x1, y1)
+xdf <- tibble(x1, y1)  # CHANGES: data_frame() is deprecated in tibble/dplyr, use tibble()
 ConVexHull <- convhulln(cbind(dfCO2$SON_Min_CTL, dfCO2$CN_calc), 'FA')
 h_df <- data.frame(
   do.call(
