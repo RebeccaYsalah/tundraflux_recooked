@@ -40,7 +40,7 @@ library("tibble")
 
 DS_final<-read.csv(file.path(data_dir, "df_1.csv"))
 DS_final<-DS_final[,-c(1)]
-
+head(DS_final) # CHANGES: added
 ```
 
 
@@ -78,7 +78,7 @@ SMD<-dplyr::rename(SMD,any_of(c("Hedges_SMD"="yi")))  # CHANGES: plyr::rename ->
 SMD<-dplyr::rename(SMD,any_of(c("Hedges_SMD_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 Mean_SMD<-mean(SMD$Hedges_SMD)
-# Mean_SMD
+Mean_SMD
 
 ```
 
@@ -126,16 +126,13 @@ Mean_RR<-mean(ROM$ROM)
 ```
 
 ```{r summary, echo=FALSE}
-dfSummary<-full_join(SMD, MD, by=c("Dataset_ID", "Treatment.x", "Treatment.y"))
-dfSummary<-full_join(dfSummary, ROM, by=c("Dataset_ID", "Treatment.x", "Treatment.y"))
-
-dfSummary<-dplyr::rename(dfSummary,any_of(c("MEAN_CTL"="MEAN_CTL.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
-dfSummary<-dplyr::rename(dfSummary,any_of(c("MEAN_OTC"="MEAN_OTC.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
-dfSummary<-dplyr::rename(dfSummary,any_of(c("SDEV_CTL"="SDEV_CTL.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
-dfSummary<-dplyr::rename(dfSummary,any_of(c("SDEV_OTC"="SDEV_OTC.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
-dfSummary<-dplyr::rename(dfSummary,any_of(c("SS_CTL"="SS_CTL.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
-dfSummary<-dplyr::rename(dfSummary,any_of(c("SS_OTC"="SS_OTC.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
-dfSummary<-dfSummary[,-c(12:17, 20:25)]
+# CHANGES: SMD, MD and ROM share the same input columns, so join on all of them.
+# This avoids .x/.y duplicates entirely, so the renames and positional column drop are no longer needed.
+# (plyr::rename silently allowed duplicate names; dplyr::rename does not.)
+join_cols <- c("Dataset_ID", "Treatment.x", "Treatment.y",
+               "MEAN_CTL", "SDEV_CTL", "SS_CTL", "MEAN_OTC", "SDEV_OTC", "SS_OTC")
+dfSummary<-full_join(SMD, MD, by=join_cols)
+dfSummary<-full_join(dfSummary, ROM, by=join_cols)
 
 SMD$CI_lb<-SMD$Hedges_SMD-1.96*sqrt(SMD$Hedges_SMD_VARIANCE)
 SMD$CI_ub<-SMD$Hedges_SMD+1.96*sqrt(SMD$Hedges_SMD_VARIANCE)
