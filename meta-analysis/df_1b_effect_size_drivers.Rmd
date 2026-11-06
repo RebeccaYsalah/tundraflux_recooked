@@ -36,7 +36,7 @@ library("tibble")
 library(here)  # CHANGES: added
 source(here("config.R"))  # CHANGES: added
 
-DS_final<-read.csv("df_1.csv")
+DS_final<-read.csv(file.path(data_dir, "df_1.csv"))
 DS_final<-DS_final[,-c(1)]
 
 
@@ -173,13 +173,13 @@ SMDSM$CI_lb<-SMDSM$Hedges_SMDSM-1.96*sqrt(SMDSM$Hedges_SMDSM_VARIANCE)
 SMDSM$CI_ub<-SMDSM$Hedges_SMDSM+1.96*sqrt(SMDSM$Hedges_SMDSM_VARIANCE)
 
 
-write.csv(dfSummary_AT, "dfSummaryAT.csv")
-write.csv(dfSummary_ST, "dfSummaryST.csv")
-write.csv(dfSummary_SM, "dfSummarySM.csv")
+write.csv(dfSummary_AT, file.path(output_data_dir, "dfSummaryAT.csv"))
+write.csv(dfSummary_ST, file.path(output_data_dir, "dfSummaryST.csv"))
+write.csv(dfSummary_SM, file.path(output_data_dir, "dfSummarySM.csv"))
 
-write.csv(SMDAT, "SMDAT.csv")
-write.csv(SMDST, "SMDST.csv")
-write.csv(SMDSM, "SMDSM.csv")
+write.csv(SMDAT, file.path(output_data_dir, "SMDAT.csv"))
+write.csv(SMDST, file.path(output_data_dir, "SMDST.csv"))
+write.csv(SMDSM, file.path(output_data_dir, "SMDSM.csv"))
 
 # df_PLOT_LEVEL  %>% dplyr::filter(Dataset_ID=="SWE_12_ER_2001")
 
@@ -790,19 +790,19 @@ SMDOL_D_Plot$CI_ub<-SMDOL_D_Plot$Hedges_SMDOL_D_Plot+1.96*sqrt(SMDOL_D_Plot$Hedg
 # write.csv(dfSummarySON_Min, "dfSummarySON_Min.csv")
 # write.csv(dfSummarySON_Org, "dfSummarySON_Org.csv")
 #
-write.csv(SMDBD_Min, "SMDBD_Min.csv")
-write.csv(SMDBD_Org, "SMDBD_Org.csv")
-write.csv(SMDCN_Min, "SMDCN_Min.csv")
-write.csv(SMDCN_Org, "SMDCN_Org.csv")
-write.csv(SMDOL_D_Plot, "SMDOL_D_Plot.csv")
+write.csv(SMDBD_Min, file.path(output_data_dir, "SMDBD_Min.csv"))
+write.csv(SMDBD_Org, file.path(output_data_dir, "SMDBD_Org.csv"))
+write.csv(SMDCN_Min, file.path(output_data_dir, "SMDCN_Min.csv"))
+write.csv(SMDCN_Org, file.path(output_data_dir, "SMDCN_Org.csv"))
+write.csv(SMDOL_D_Plot, file.path(output_data_dir, "SMDOL_D_Plot.csv"))
 # write.csv(SMDpH_Min, "SMDpH_Min.csv")
-write.csv(SMDpH_Org, "SMDpH_Org.csv")
-write.csv(SMDSOC_Min, "SMDSOC_Min.csv")
-write.csv(SMDSOC_Org, "SMDSOC_Org.csv")
+write.csv(SMDpH_Org, file.path(output_data_dir, "SMDpH_Org.csv"))
+write.csv(SMDSOC_Min, file.path(output_data_dir, "SMDSOC_Min.csv"))
+write.csv(SMDSOC_Org, file.path(output_data_dir, "SMDSOC_Org.csv"))
 # write.csv(SMDSOM_Min, "SMDSOM_Min.csv")
-write.csv(SMDSOM_Org, "SMDSOM_Org.csv")
-write.csv(SMDSON_Min, "SMDSON_Min.csv")
-write.csv(SMDSON_Org, "SMDSON_Org.csv")
+write.csv(SMDSOM_Org, file.path(output_data_dir, "SMDSOM_Org.csv"))
+write.csv(SMDSON_Min, file.path(output_data_dir, "SMDSON_Min.csv"))
+write.csv(SMDSON_Org, file.path(output_data_dir, "SMDSON_Org.csv"))
 
 ```
 
@@ -1153,24 +1153,24 @@ SMDMean_H$CI_ub<-SMDMean_H$Hedges_SMDMean_H+1.96*sqrt(SMDMean_H$Hedges_SMDMean_H
 
 
 # 
-write.csv(dfSummaryMean_H, "dfSummaryMean_H.csv")
-write.csv(dfSummaryBM, "dfSummaryBM.csv")
-write.csv(dfSummaryGraminoids, "dfSummaryGraminoids.csv")
-write.csv(dfSummaryForbs, "dfSummaryForbs.csv")
-write.csv(dfSummaryEvergr_Shrubs, "dfSummaryEvergr_Shrubs.csv")
-write.csv(dfSummaryDecid_Shrubs, "dfSummaryDecid_Shrubs.csv")
-write.csv(dfSummaryMosses, "dfSummaryMosses.csv")
-write.csv(dfSummaryLichens, "dfSummaryLichens.csv")
+write.csv(dfSummaryMean_H, file.path(output_data_dir, "dfSummaryMean_H.csv"))
+write.csv(dfSummaryBM, file.path(output_data_dir, "dfSummaryBM.csv"))
+write.csv(dfSummaryGraminoids, file.path(output_data_dir, "dfSummaryGraminoids.csv"))
+write.csv(dfSummaryForbs, file.path(output_data_dir, "dfSummaryForbs.csv"))
+write.csv(dfSummaryEvergr_Shrubs, file.path(output_data_dir, "dfSummaryEvergr_Shrubs.csv"))
+write.csv(dfSummaryDecid_Shrubs, file.path(output_data_dir, "dfSummaryDecid_Shrubs.csv"))
+write.csv(dfSummaryMosses, file.path(output_data_dir, "dfSummaryMosses.csv"))
+write.csv(dfSummaryLichens, file.path(output_data_dir, "dfSummaryLichens.csv"))
 #
 #
-write.csv(SMDGraminoids, "SMDGraminoids.csv")
-write.csv(SMDForbs, "SMDForbs.csv")
-write.csv(SMDDecid_Shrubs, "SMDDecid_Shrubs.csv")
-write.csv(SMDEvergr_Shrubs, "SMDEvergr_Shrubs.csv")
-write.csv(SMDMosses, "SMDMosses.csv")
-write.csv(SMDLichens, "SMDLichens.csv")
-write.csv(SMDBM, "SMDBM.csv")
-write.csv(SMDMean_H, "SMDMean_H.csv")
+write.csv(SMDGraminoids, file.path(output_data_dir, "SMDGraminoids.csv"))
+write.csv(SMDForbs, file.path(output_data_dir, "SMDForbs.csv"))
+write.csv(SMDDecid_Shrubs, file.path(output_data_dir, "SMDDecid_Shrubs.csv"))
+write.csv(SMDEvergr_Shrubs, file.path(output_data_dir, "SMDEvergr_Shrubs.csv"))
+write.csv(SMDMosses, file.path(output_data_dir, "SMDMosses.csv"))
+write.csv(SMDLichens, file.path(output_data_dir, "SMDLichens.csv"))
+write.csv(SMDBM, file.path(output_data_dir, "SMDBM.csv"))
+write.csv(SMDMean_H, file.path(output_data_dir, "SMDMean_H.csv"))
 # #
 
 
@@ -1315,13 +1315,13 @@ SMDFB_Ratio$CI_lb<-SMDFB_Ratio$Hedges_SMDFB_Ratio-1.96*sqrt(SMDFB_Ratio$Hedges_S
 SMDFB_Ratio$CI_ub<-SMDFB_Ratio$Hedges_SMDFB_Ratio+1.96*sqrt(SMDFB_Ratio$Hedges_SMDFB_Ratio_VARIANCE)
 
 # 
-write.csv(dfSummaryBacterial_BM_Weight, "dfSummaryBacterial_BM_Weight.csv")
-write.csv(dfSummaryFungal_BM_Weight, "dfSummaryFungal_BM_Weight.csv")
-write.csv(dfSummaryFB_Ratio, "dfSummaryFB_Ratio.csv")
+write.csv(dfSummaryBacterial_BM_Weight, file.path(output_data_dir, "dfSummaryBacterial_BM_Weight.csv"))
+write.csv(dfSummaryFungal_BM_Weight, file.path(output_data_dir, "dfSummaryFungal_BM_Weight.csv"))
+write.csv(dfSummaryFB_Ratio, file.path(output_data_dir, "dfSummaryFB_Ratio.csv"))
 
-write.csv(SMDBacterial_BM_Weight, "SMDBacterial_BM_Weight.csv")
-write.csv(SMDFungal_BM_Weight, "SMDFungal_BM_Weight.csv")
-write.csv(SMDFB_Ratio, "SMDFB_Ratio.csv")
+write.csv(SMDBacterial_BM_Weight, file.path(output_data_dir, "SMDBacterial_BM_Weight.csv"))
+write.csv(SMDFungal_BM_Weight, file.path(output_data_dir, "SMDFungal_BM_Weight.csv"))
+write.csv(SMDFB_Ratio, file.path(output_data_dir, "SMDFB_Ratio.csv"))
 
 ```
 
@@ -1365,7 +1365,7 @@ SMDFB_Ratio$Dataset_ID<-as.factor(SMDFB_Ratio$Dataset_ID)
 ```
 
 ```{r Merge climate, soil, vegetation, microbial drivers into 1 df: do merge}
-drivers<-read.csv("Dataset_ID.csv")
+drivers<-read.csv(file.path(data_dir, "Dataset_ID.csv"))
 
 drivers<-dplyr::rename(drivers,any_of(c("Dataset_ID"="ï..Dataset_ID")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 drivers$Dataset_ID<-as.factor(drivers$Dataset_ID)
@@ -1537,15 +1537,15 @@ SMDBD_Min$Hedges_SMDBD_Min[which(SMDBD_Min$Dataset_ID =="SVA_6_ER_2004")]<-NA
 SMDBD_Min$Hedges_SMDBD_Min[which(SMDBD_Min$Dataset_ID =="SVA_6_ER_2005")]<-NA
 SMDBD_Min$Hedges_SMDBD_Min[which(SMDBD_Min$Dataset_ID =="SVA_6_ER_2007")]<-NA
 
-write.csv(SMDBD_Min, "SMDBD_Min.csv")
-write.csv(SMDBD_Org, "SMDBD_Org.csv")
+write.csv(SMDBD_Min, file.path(output_data_dir, "SMDBD_Min.csv"))
+write.csv(SMDBD_Org, file.path(output_data_dir, "SMDBD_Org.csv"))
 
 
 
 
 
 
-write.csv(drivers, "drivers.csv")
+write.csv(drivers, file.path(output_data_dir, "drivers.csv"))
 
 ```
 
@@ -1673,9 +1673,9 @@ RMDSM$CI_ub<-RMDSM$RMDSM+1.96*sqrt(RMDSM$RMDSM_VARIANCE)
 # write.csv(dfSummary_ST, "dfSummaryST.csv")
 # write.csv(dfSummary_SM, "dfSummarySM.csv")
 
-write.csv(RMDAT, "RMDAT.csv")
-write.csv(RMDST, "RMDST.csv")
-write.csv(RMDSM, "RMDSM.csv")
+write.csv(RMDAT, file.path(output_data_dir, "RMDAT.csv"))
+write.csv(RMDST, file.path(output_data_dir, "RMDST.csv"))
+write.csv(RMDSM, file.path(output_data_dir, "RMDSM.csv"))
 
 
 
@@ -2301,19 +2301,19 @@ RMDOL_D_Plot$CI_ub<-RMDOL_D_Plot$RMDOL_D_Plot+1.96*sqrt(RMDOL_D_Plot$RMDOL_D_Plo
 # write.csv(dfSummarySON_Min, "dfSummarySON_Min.csv")
 # write.csv(dfSummarySON_Org, "dfSummarySON_Org.csv")
 # # 
-write.csv(RMDBD_Min, "RMDBD_Min.csv")
-write.csv(RMDBD_Org, "RMDBD_Org.csv")
-write.csv(RMDCN_Min, "RMDCN_Min.csv")
-write.csv(RMDCN_Org, "RMDCN_Org.csv")
-write.csv(RMDOL_D_Plot, "RMDOL_D_Plot.csv")
+write.csv(RMDBD_Min, file.path(output_data_dir, "RMDBD_Min.csv"))
+write.csv(RMDBD_Org, file.path(output_data_dir, "RMDBD_Org.csv"))
+write.csv(RMDCN_Min, file.path(output_data_dir, "RMDCN_Min.csv"))
+write.csv(RMDCN_Org, file.path(output_data_dir, "RMDCN_Org.csv"))
+write.csv(RMDOL_D_Plot, file.path(output_data_dir, "RMDOL_D_Plot.csv"))
 # write.csv(RMDpH_Min, "RMDpH_Min.csv")
-write.csv(RMDpH_Org, "RMDpH_Org.csv")
-write.csv(RMDSOC_Min, "RMDSOC_Min.csv")
-write.csv(RMDSOC_Org, "RMDSOC_Org.csv")
+write.csv(RMDpH_Org, file.path(output_data_dir, "RMDpH_Org.csv"))
+write.csv(RMDSOC_Min, file.path(output_data_dir, "RMDSOC_Min.csv"))
+write.csv(RMDSOC_Org, file.path(output_data_dir, "RMDSOC_Org.csv"))
 # write.csv(RMDSOM_Min, "RMDSOM_Min.csv")
-write.csv(RMDSOM_Org, "RMDSOM_Org.csv")
-write.csv(RMDSON_Min, "RMDSON_Min.csv")
-write.csv(RMDSON_Org, "RMDSON_Org.csv")
+write.csv(RMDSOM_Org, file.path(output_data_dir, "RMDSOM_Org.csv"))
+write.csv(RMDSON_Min, file.path(output_data_dir, "RMDSON_Min.csv"))
+write.csv(RMDSON_Org, file.path(output_data_dir, "RMDSON_Org.csv"))
 
 ```
 
@@ -2680,14 +2680,14 @@ RMDMean_H$CI_ub<-RMDMean_H$RMDMean_H+1.96*sqrt(RMDMean_H$RMDMean_H_VARIANCE)
 # write.csv(dfSummaryLichens, "dfSummaryLichens.csv")
 # # 
 #
-write.csv(RMDGraminoids, "RMDGraminoids.csv")
-write.csv(RMDForbs, "RMDForbs.csv")
-write.csv(RMDDecid_Shrubs, "RMDDecid_Shrubs.csv")
-write.csv(RMDEvergr_Shrubs, "RMDEvergr_Shrubs.csv")
-write.csv(RMDMosses, "RMDMosses.csv")
-write.csv(RMDLichens, "RMDLichens.csv")
-write.csv(RMDBM, "RMDBM.csv")
-write.csv(RMDMean_H, "RMDMean_H.csv")
+write.csv(RMDGraminoids, file.path(output_data_dir, "RMDGraminoids.csv"))
+write.csv(RMDForbs, file.path(output_data_dir, "RMDForbs.csv"))
+write.csv(RMDDecid_Shrubs, file.path(output_data_dir, "RMDDecid_Shrubs.csv"))
+write.csv(RMDEvergr_Shrubs, file.path(output_data_dir, "RMDEvergr_Shrubs.csv"))
+write.csv(RMDMosses, file.path(output_data_dir, "RMDMosses.csv"))
+write.csv(RMDLichens, file.path(output_data_dir, "RMDLichens.csv"))
+write.csv(RMDBM, file.path(output_data_dir, "RMDBM.csv"))
+write.csv(RMDMean_H, file.path(output_data_dir, "RMDMean_H.csv"))
 # #
 
 
@@ -2832,13 +2832,13 @@ RMDFB_Ratio$CI_lb<-RMDFB_Ratio$RMDFB_Ratio-1.96*sqrt(RMDFB_Ratio$RMDFB_Ratio_VAR
 RMDFB_Ratio$CI_ub<-RMDFB_Ratio$RMDFB_Ratio+1.96*sqrt(RMDFB_Ratio$RMDFB_Ratio_VARIANCE)
 
 
-write.csv(dfSummaryBacterial_BM_Weight, "dfSummaryBacterial_BM_Weight.csv")
-write.csv(dfSummaryFungal_BM_Weight, "dfSummaryFungal_BM_Weight.csv")
-write.csv(dfSummaryFB_Ratio, "dfSummaryFB_Ratio.csv")
+write.csv(dfSummaryBacterial_BM_Weight, file.path(output_data_dir, "dfSummaryBacterial_BM_Weight.csv"))
+write.csv(dfSummaryFungal_BM_Weight, file.path(output_data_dir, "dfSummaryFungal_BM_Weight.csv"))
+write.csv(dfSummaryFB_Ratio, file.path(output_data_dir, "dfSummaryFB_Ratio.csv"))
 
-write.csv(RMDBacterial_BM_Weight, "RMDBacterial_BM_Weight.csv")
-write.csv(RMDFungal_BM_Weight, "RMDFungal_BM_Weight.csv")
-write.csv(RMDFB_Ratio, "RMDFB_Ratio.csv")
+write.csv(RMDBacterial_BM_Weight, file.path(output_data_dir, "RMDBacterial_BM_Weight.csv"))
+write.csv(RMDFungal_BM_Weight, file.path(output_data_dir, "RMDFungal_BM_Weight.csv"))
+write.csv(RMDFB_Ratio, file.path(output_data_dir, "RMDFB_Ratio.csv"))
 
 ```
 
