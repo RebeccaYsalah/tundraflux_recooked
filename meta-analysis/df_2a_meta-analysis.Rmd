@@ -25,10 +25,11 @@ library("esc")
 library("effsize")
 library("nlme") 
 library("metafor")
+
 library(here)  # CHANGES: added
 source(here("config.R"))  # CHANGES: added
 
-df<-read.csv("df_2.csv")
+df<-read.csv(file.path(data_dir, "df_2.csv")) # CHANGES added path
 
 #rename
 df<-dplyr::rename(df,any_of(c("Dataset_ID"="ï..Dataset_ID")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
@@ -285,9 +286,10 @@ summary(model2_ir)
 weights<-weights(model2) #already in the right order
 yi<-model2$yi #as doublecheck for order
 weights<-as.data.frame(cbind(weights,yi))
-write.csv(weights,"weights.csv")
+write.csv(weights, file.path(output_data_dir, "weights.csv"))
 
-df<-read.csv("Forestplot_horiz_weights_fig.csv") #added the mean pooled which should be changed to purple in the same csv, otherwise issues with factors in right order
+#added the mean pooled which should be changed to purple in the same csv, otherwise issues with factors in right order
+df<-read.csv(file.path(data_dir, "Forestplot_horiz_weights_fig.csv")) # CHANGES added data_dir
 
 
 ####rearrange!!
@@ -316,7 +318,7 @@ levels(df$DS_ID)
 levels(df$DS_ID_fig)
 
 
-pdf("Fig_2_raw.pdf", width=22, height=10)
+cairo_pdf(file.path(output_data_dir, "Fig_2_raw.pdf"), width = 22, height = 10)
 ggplot() +
   geom_point(data=df, mapping=aes(x=DS_ID, y=Hedges_SMD), size=2, shape=21, fill="black") +
   # scale_x_discrete(breaks = every_nth(n = 4))+#, guide = guide_axis(n.dodge = 2))+
