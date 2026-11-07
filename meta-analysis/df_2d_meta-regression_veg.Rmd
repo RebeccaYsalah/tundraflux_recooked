@@ -9,6 +9,7 @@ editor_options:
 
 #load data
 ```{r load data, include=FALSE}
+knitr::opts_chunk$set(error = TRUE)  # CHANGES: keep knitting past errors so all problems show in one run
 library("ggplot2")
 # library("plyr")  # CHANGES: plyr not available for R 4.6 - only rename() was used, now dplyr::rename()
 library("dplyr")
@@ -29,15 +30,15 @@ library("corrplot")
 library(here)  # CHANGES: added
 source(here("config.R"))  # CHANGES: added
 
-df<-read.csv("df_2.csv")
-df_Graminoids<-read.csv("SMDGraminoids.csv")
-df_Forbs<-read.csv("SMDForbs.csv")
-df_Decid_Shrubs<-read.csv("SMDDecid_Shrubs.csv")
-df_Evergr_Shrubs<-read.csv("SMDEvergr_Shrubs.csv")
-df_Mosses<-read.csv("SMDMosses.csv")
-df_Lichens<-read.csv("SMDLichens.csv")
-df_BM<-read.csv("SMDBM.csv")
-df_Mean_H<-read.csv("SMDMean_H.csv")
+df<-read.csv(file.path(data_dir, "df_2.csv")) # CHANGES: added data_dir path
+df_Graminoids<-read.csv(file.path(output_data_dir, "SMDGraminoids.csv")) # CHANGES: added output_data_dir path
+df_Forbs<-read.csv(file.path(output_data_dir, "SMDForbs.csv")) # CHANGES: added output_data_dir path
+df_Decid_Shrubs<-read.csv(file.path(output_data_dir, "SMDDecid_Shrubs.csv")) # CHANGES: added output_data_dir path
+df_Evergr_Shrubs<-read.csv(file.path(output_data_dir, "SMDEvergr_Shrubs.csv")) # CHANGES: added output_data_dir path
+df_Mosses<-read.csv(file.path(output_data_dir, "SMDMosses.csv")) # CHANGES: added output_data_dir path
+df_Lichens<-read.csv(file.path(output_data_dir, "SMDLichens.csv")) # CHANGES: added output_data_dir path
+df_BM<-read.csv(file.path(output_data_dir, "SMDBM.csv")) # CHANGES: added output_data_dir path
+df_Mean_H<-read.csv(file.path(output_data_dir, "SMDMean_H.csv")) # CHANGES: added output_data_dir path
 
 
 #rename + change data type
@@ -139,7 +140,7 @@ corrplot.mixed(cor2, tl.cex=0.7, main="Continuous drivers and response")
 dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]
 df_Graminoids <- df_Graminoids %>% inner_join(dfsub, by="Dataset_ID")
 df_Graminoids<- df_Graminoids %>% distinct(MEAN_CTL, SDEV_CTL, SS_CTL, MEAN_OTC, SDEV_OTC, SS_OTC, SS_OTC, .keep_all = TRUE)
-model1 <- rma.mv(Hedges_SMDGraminoids, Hedges_SMDGraminoids_VARIANCE, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", data=df_Graminoids)
+model1 <- rma.mv(Hedges_SMDGraminoids, Hedges_SMDGraminoids_VARIANCE, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", data=df_Graminoids, control=list(optimizer="optim"))  # CHANGES: added optimizer="optim" - nlminb did not converge (same fix as other scripts)
 summary(model1)
 ```
 
@@ -341,7 +342,7 @@ P <- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
 ##model output
 ```{r single models, echo=FALSE}
 
-RMAGRAMINOIDS<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", mods=~SMD_Graminoids)
+RMAGRAMINOIDS<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", mods=~SMD_Graminoids, control=list(optimizer="optim"))  # CHANGES: added optimizer="optim" - nlminb did not converge (same fix as other scripts)
 summary(RMAGRAMINOIDS)
 
 RMAFORBS<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", mods=~SMD_Forbs)
@@ -626,8 +627,8 @@ plot(x=df_sub$SMD_Mean_H, y=Err, xlab="Mean_H", ylab="Residuals")
 
 #### GRAMINOIDS ####
 
-RMAGRAMINOIDS.R<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", mods=~SMD_Lichens)
-RMAGRAMINOIDS.F<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, mods=~SMD_Lichens)
+RMAGRAMINOIDS.R<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", mods=~SMD_Graminoids, control=list(optimizer="optim"))  # CHANGES: added optimizer="optim" (nlminb did not converge); was mods=~SMD_Lichens (copy-paste error in original; Graminoids block must use SMD_Graminoids)
+RMAGRAMINOIDS.F<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, mods=~SMD_Graminoids)  # CHANGES: was mods=~SMD_Lichens (copy-paste error in original; Graminoids block must use SMD_Graminoids)
 
 c(100 * (vcov(RMAGRAMINOIDS.R)[1,1] - vcov(RMAGRAMINOIDS.F)[1,1]) / vcov(RMAGRAMINOIDS.R)[1,1],
   100 * (vcov(RMAGRAMINOIDS.R)[2,2] - vcov(RMAGRAMINOIDS.F)[2,2]) / vcov(RMAGRAMINOIDS.R)[2,2])
@@ -718,6 +719,7 @@ regplot.rma(RMAMEANH, mod="SMD_Mean_H", xlab="SMD_Mean_H", ylab="Hedges SMD")
 ### manuscript (only sign drivers)
 #### SMD_Graminoids
 ```{r SMD_Graminoids, echo=FALSE}
+if (exists("model")) rm(model)  # CHANGES: clear previous model so a failed fit cannot silently plot the Mean_H model under the Graminoids label
 
 
 
@@ -730,7 +732,7 @@ model<-rma.mv(Hedges_SMD,
                        data=df,
                        random = list(~ 1 | Exp_ID/Observation_ID, ~ Year | Exp_ID),
                        struct="CAR",
-                       mods= ~   SMD_Graminoids  )
+                       mods= ~   SMD_Graminoids, control=list(optimizer="optim"))  # CHANGES: added optimizer="optim" - nlminb did not converge (same fix as other scripts)
 # model
 
 
@@ -793,7 +795,7 @@ predict<-dplyr::rename(predict,any_of(c("newmods"="X.SMD_Graminoids")))  # CHANG
 
 
  ######### FIGURE #######
- pdf("Ext_Fig_3_e_raw.pdf", width=10, height=10)
+ pdf(file.path(output_data_dir, "Ext_Fig_3_e_raw.pdf"), width=10, height=10) # CHANGES: added output_data_dir path
 #ACTUAL DATA
 ggplot() +
   geom_point(data=df, mapping=aes(x=SMD_Graminoids, y=Hedges_SMD), size=(1/sqrt(df$Hedges_SMD_VARIANCE)), shape=21, fill=cbPalette[1]) +
@@ -913,7 +915,7 @@ predict<-dplyr::rename(predict,any_of(c("newmods"="X.SMD_BM")))  # CHANGES: plyr
 
 
  ######### FIGURE #######
- pdf("Ext_Fig_3_d_raw.pdf", width=10, height=10)
+ pdf(file.path(output_data_dir, "Ext_Fig_3_d_raw.pdf"), width=10, height=10) # CHANGES: added output_data_dir path
 #ACTUAL DATA
 ggplot() +
   geom_point(data=df, mapping=aes(x=SMD_BM, y=Hedges_SMD), size=(1/sqrt(df$Hedges_SMD_VARIANCE)), shape=21, fill=cbPalette[1]) +

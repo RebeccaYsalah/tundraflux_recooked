@@ -10,6 +10,7 @@ editor_options:
 #load data
 
 ```{r load data, include=FALSE}
+knitr::opts_chunk$set(error = TRUE)  # CHANGES: keep knitting past errors so all problems show in one run
 library("ggplot2")
 # library("plyr")  # CHANGES: plyr not available for R 4.6 - only rename() was used, now dplyr::rename()
 library("dplyr")
@@ -30,15 +31,15 @@ library("corrplot")
 library("MASS")
 library("meta")
 library("metafor")
-library("installr")
-library("crayon")
+# library("installr")  # CHANGES: commented out - not used anywhere in this script (installr is Windows-only)
+# library("crayon")  # CHANGES: commented out - not used anywhere in this script
 library("stringr")
 library("tibble")
-library("multcomp") #"for post hoc tests"
+# library("multcomp") #"for post hoc tests"  # CHANGES: commented out - package not installed and not used anywhere in this script
 library(here)  # CHANGES: added
 source(here("config.R"))  # CHANGES: added
 
-df<-read.csv("df_2.csv")
+df<-read.csv(file.path(data_dir, "df_2.csv")) # CHANGES: added data_dir path
 
 #rename
 df<-dplyr::rename(df,any_of(c("Dataset_ID"="ï..Dataset_ID")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
@@ -239,7 +240,7 @@ RMASONMINCTL<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, random=list(~ 1 |
 
 RMASONORGCTL<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", mods=~SON_Org_CTL)
 
-RMACNMINCTL<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", mods=~CN_Min_CTL)
+RMACNMINCTL<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", mods=~CN_Min_CTL, control=list(optimizer="optim"))  # CHANGES: added optimizer="optim" - nlminb did not converge (same fix as other scripts)
 
 RMACNORGCTL<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", mods=~CN_Org_CTL)
 
@@ -1259,7 +1260,7 @@ HighArcticupper<-HighArcticmean+1.96*HighArcticse
   
   
 ################
- pdf("Ext_Fig_2_a_raw.pdf", width=14, height=10)
+ pdf(file.path(output_data_dir, "Ext_Fig_2_a_raw.pdf"), width=14, height=10) # CHANGES: added output_data_dir path
 
 #ACTUAL DATA
 ggplot() +
@@ -1710,7 +1711,7 @@ N5<-length(which(df$Veg_Class=="Wetland"))
  
   
 ################
- pdf("Ext_Fig_2_d_raw.pdf", width=14, height=10)
+ pdf(file.path(output_data_dir, "Ext_Fig_2_d_raw.pdf"), width=14, height=10) # CHANGES: added output_data_dir path
 
 #ACTUAL DATA
 ggplot() +
@@ -1902,7 +1903,7 @@ Wetupper<-Wetmean+1.96*Wetse
   
   
 ################
- pdf("Ext_Fig_2_b_raw.pdf", width=14, height=10)
+ pdf(file.path(output_data_dir, "Ext_Fig_2_b_raw.pdf"), width=14, height=10) # CHANGES: added output_data_dir path
 
 #ACTUAL DATA
 ggplot() +
@@ -2076,7 +2077,7 @@ Highupper<-Highmean+1.96*Highse
  
   
 ################
- pdf("Ext_Fig_2_c_raw.pdf", width=14, height=10)
+ pdf(file.path(output_data_dir, "Ext_Fig_2_c_raw.pdf"), width=14, height=10) # CHANGES: added output_data_dir path
 
 #ACTUAL DATA
 ggplot() +
@@ -2243,6 +2244,7 @@ annotate("text",  x = 0, y = -1, label = eqn, parse = TRUE, hjust = 0, size=8  )
 
 ##### CN_Min_CTL
 ```{r CN_Min_CTL, echo=FALSE}
+if (exists("model")) rm(model)  # CHANGES: clear previous model so a failed fit cannot silently plot the Soil_C_stock model under the CN_Min_CTL label
 # df #just one factor so he will only use observations available for that factor (no need to subsect)
 
 model<-rma.mv(Hedges_SMD,
@@ -2250,7 +2252,7 @@ model<-rma.mv(Hedges_SMD,
                        data=df,
                        random = list(~ 1 | Exp_ID/Observation_ID, ~ Year | Exp_ID),
                        struct="CAR",
-                       mods= ~   CN_Min_CTL  )
+                       mods= ~   CN_Min_CTL, control=list(optimizer="optim"))  # CHANGES: added optimizer="optim" - nlminb did not converge (same fix as other scripts)
 # model
 
 
@@ -2313,7 +2315,7 @@ predict<-dplyr::rename(predict,any_of(c("newmods"="X.CN_Min_CTL")))   # CHANGES:
   
   
  ######### FIGURE #######
- pdf("Fig_5_b_raw.pdf", width=10, height=10)
+ pdf(file.path(output_data_dir, "Fig_5_b_raw.pdf"), width=10, height=10) # CHANGES: added output_data_dir path
 #ACTUAL DATA
 ggplot() +
   geom_point(data=df, mapping=aes(x=CN_Min_CTL, y=Hedges_SMD), size=(1/sqrt(df$Hedges_SMD_VARIANCE)), shape=21, fill=cbPalette[1]) +
@@ -2358,6 +2360,7 @@ dev.off()
 
 ##### SON_Min_CTL
 ```{r SON_Min_CTL, echo=FALSE}
+if (exists("model")) rm(model)  # CHANGES: clear previous model so a failed fit cannot silently plot the CN_Min_CTL model under the SON_Min_CTL label
 # df #just one factor so he will only use observations available for that factor (no need to subsect)
 
 model<-rma.mv(Hedges_SMD,
@@ -2428,7 +2431,7 @@ predict<-dplyr::rename(predict,any_of(c("newmods"="X.SON_Min_CTL")))   # CHANGES
   
   
  ######### FIGURE #######
- pdf("Fig_5_a_raw.pdf", width=10, height=10)
+ pdf(file.path(output_data_dir, "Fig_5_a_raw.pdf"), width=10, height=10) # CHANGES: added output_data_dir path
 #ACTUAL DATA
 ggplot() +
   geom_point(data=df, mapping=aes(x=SON_Min_CTL, y=Hedges_SMD), size=(1/sqrt(df$Hedges_SMD_VARIANCE)), shape=21, fill=cbPalette[1]) +

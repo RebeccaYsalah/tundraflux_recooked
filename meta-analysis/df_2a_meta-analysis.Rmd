@@ -86,7 +86,8 @@ anova.rma(model2,model1)
 ```
 
 ###Ratio Of Means ROM
-```{r model output Hedges, echo=FALSE,warning=FALSE}
+```{r model output Hedges 2, echo=FALSE,warning=FALSE}
+#CHANGE: chunk renamed from 'model output Hedges' to 'model output Hedges 2' (duplicate label)
 #model without CAR structure (temp autocorr)
 df$Year<-as.factor(df$Year)
 # str(df$Year)
@@ -238,7 +239,8 @@ summary(model2_robust)
 ```
 
 ###machine type
-```{r excluding largest datasets, echo=FALSE, warnings=FALSE}
+```{r excluding largest datasets 2, echo=FALSE, warnings=FALSE}
+#CHANGE: chunk renamed from 'excluding largest datasets' to 'excluding largest datasets 2' (duplicate label)
 df$Machine_Type<-as.factor(df$Machine_Type)
 dfsublaser <- df  %>% dplyr::filter(Machine_Type == "Laser") 
 dfsubir <- df  %>% dplyr::filter(Machine_Type == "IR") 

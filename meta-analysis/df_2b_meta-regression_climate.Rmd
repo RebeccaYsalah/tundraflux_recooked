@@ -28,11 +28,12 @@ library("metafor")
 library("corrplot")
 library(here)  # CHANGES: added
 source(here("config.R"))  # CHANGES: added
+data_dir
 
-df<-read.csv("df_2.csv")
-df_AT<-read.csv("SMDAT.csv")
-df_ST<-read.csv("SMDST.csv")
-df_SM<-read.csv("SMDSM.csv")
+df<-read.csv(file.path(data_dir, "df_2.csv"))
+df_AT<-read.csv(file.path(output_data_dir,"SMDAT.csv"))
+df_ST<-read.csv(file.path(output_data_dir,"SMDST.csv"))
+df_SM<-read.csv(file.path(output_data_dir,"SMDSM.csv"))
 
 #rename
 df<-dplyr::rename(df,any_of(c("Dataset_ID"="ï..Dataset_ID")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
@@ -66,6 +67,9 @@ df$Country<-as.factor(df$Country)
 tempAT<-df[-which(is.na(df$SMD_AT)),]
 tempST<-df[-which(is.na(df$SMD_ST)),]
 tempSM<-df[-which(is.na(df$SMD_SM)),]
+
+# plot side by side
+par(mfrow=c(1,3)) # CHANGES: added to make viewing easier
 
 hist(tempAT$SMD_AT, xlab="SMD_AT", ylab="Nr of Datasets", xlim=c(min(tempAT$SMD_AT)-2,max(tempAT$SMD_AT)+2))
 hist(tempST$SMD_ST, xlab="SMD_ST", ylab="Nr of Datasets", xlim=c(min(tempST$SMD_ST)-2,max(tempST$SMD_ST)+2))
@@ -174,10 +178,11 @@ P <- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
 
 ###RMD 
 ####Air temp AT
-```{r Air temp AT, echo=FALSE}
+```{r Air temp AT 2, echo=FALSE}
+#CHANGE: chunk renamed from 'Air temp AT' to 'Air temp AT 2' (duplicate label)
 
 # First run full script df_1b to get the csv files
-df_AT_RMD<-read.csv("RMDAT.csv")
+df_AT_RMD<-read.csv(file.path(output_data_dir, "RMDAT.csv")) # CHANGES: added output_data_dir path
 df_AT_RMD<-dplyr::rename(df_AT_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
@@ -190,10 +195,11 @@ summary(model1_RMD)
 ```
 
 ####Soil temp ST
-```{r Air temp ST, echo=FALSE}
+```{r Air temp ST 2, echo=FALSE}
+#CHANGE: chunk renamed from 'Air temp ST' to 'Air temp ST 2' (duplicate label)
 
 # First run full script df_1b to get the csv files
-df_ST_RMD<-read.csv("RMDST.csv")
+df_ST_RMD<-read.csv(file.path(output_data_dir,"RMDST.csv")) # CHANGES: added output_data_dir path
 df_ST_RMD<-dplyr::rename(df_ST_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
@@ -207,10 +213,12 @@ summary(model1_RMD)
 ```
 
 ####Soil moist SM
-```{r Soil moist SM, echo=FALSE}
+```{r Soil moist SM 2, echo=FALSE}
+#CHANGE: chunk renamed from 'Soil moist SM' to 'Soil moist SM 2' (duplicate label)
 
 # First run full script df_1b to get the csv files
-df_SM_RMD<-read.csv("RMDSM.csv")
+df_SM_RMD<-read.csv(file.path(output_data_dir,"RMDSM.csv")) # CHANGES: added output_data_dir path
+
 df_SM_RMD<-dplyr::rename(df_SM_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year

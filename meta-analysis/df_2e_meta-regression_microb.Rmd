@@ -9,6 +9,7 @@ editor_options:
 
 #load data
 ```{r load data, include=FALSE}
+knitr::opts_chunk$set(error = TRUE)  # CHANGES: keep knitting past errors so all problems show in one run
 library("ggplot2")
 # library("plyr")  # CHANGES: plyr not available for R 4.6 - only rename() was used, now dplyr::rename()
 library("dplyr")
@@ -29,10 +30,10 @@ library("corrplot")
 library(here)  # CHANGES: added
 source(here("config.R"))  # CHANGES: added
 
-df<-read.csv("df_2.csv")
-df_Bacterial_BM_Weight<-read.csv("SMDBacterial_BM_Weight.csv", sep=',', dec='.')
-df_Fungal_BM_Weight<-read.csv("SMDFungal_BM_Weight.csv", sep=',', dec='.')
-df_FB_Ratio<-read.csv("SMDFB_Ratio.csv", sep=',', dec='.')
+df<-read.csv(file.path(data_dir, "df_2.csv")) # CHANGES: added data_dir path
+df_Bacterial_BM_Weight<-read.csv(file.path(output_data_dir, "SMDBacterial_BM_Weight.csv"), sep=',', dec='.') # CHANGES: added output_data_dir path
+df_Fungal_BM_Weight<-read.csv(file.path(output_data_dir, "SMDFungal_BM_Weight.csv"), sep=',', dec='.') # CHANGES: added output_data_dir path
+df_FB_Ratio<-read.csv(file.path(output_data_dir, "SMDFB_Ratio.csv"), sep=',', dec='.') # CHANGES: added output_data_dir path
 
 
 #rename + change data type
@@ -134,10 +135,11 @@ summary(model1)
 
 ### RMD
 ##### Bacterial_BM_Weight
-```{r Bacterial_BM_Weight, echo=FALSE}
+```{r Bacterial_BM_Weight 2, echo=FALSE}
+#CHANGE: chunk renamed from 'Bacterial_BM_Weight' to 'Bacterial_BM_Weight 2' (duplicate label)
 
 # First run full script df_1b to get the csv files
-df_Bacterial_BM_Weight_RMD<-read.csv("RMDBacterial_BM_Weight.csv")
+df_Bacterial_BM_Weight_RMD<-read.csv(file.path(output_data_dir, "RMDBacterial_BM_Weight.csv")) # CHANGES: added output_data_dir path
 df_Bacterial_BM_Weight_RMD<-dplyr::rename(df_Bacterial_BM_Weight_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
@@ -150,10 +152,11 @@ summary(model1_RMD)
 ```
 
 ##### Fungal_BM_Weight
-```{r Fungal_BM_Weight, echo=FALSE}
+```{r Fungal_BM_Weight 2, echo=FALSE}
+#CHANGE: chunk renamed from 'Fungal_BM_Weight' to 'Fungal_BM_Weight 2' (duplicate label)
 
 # First run full script df_1b to get the csv files
-df_Fungal_BM_Weight_RMD<-read.csv("RMDFungal_BM_Weight.csv")
+df_Fungal_BM_Weight_RMD<-read.csv(file.path(output_data_dir, "RMDFungal_BM_Weight.csv")) # CHANGES: added output_data_dir path
 df_Fungal_BM_Weight_RMD<-dplyr::rename(df_Fungal_BM_Weight_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
@@ -168,10 +171,11 @@ summary(model1_RMD)
 
 
 ##### FB_Ratio
-```{r FB_Ratio, echo=FALSE}
+```{r FB_Ratio 2, echo=FALSE}
+#CHANGE: chunk renamed from 'FB_Ratio' to 'FB_Ratio 2' (duplicate label)
 
 # First run full script df_1b to get the csv files
-df_FB_Ratio_RMD<-read.csv("RMDFB_Ratio.csv")
+df_FB_Ratio_RMD<-read.csv(file.path(output_data_dir, "RMDFB_Ratio.csv")) # CHANGES: added output_data_dir path
 df_FB_Ratio_RMD<-dplyr::rename(df_FB_Ratio_RMD,any_of(c("Observation_ID"="X")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 #link the expid and year
@@ -279,7 +283,7 @@ r2_FB_Ratio #r2.loglik = used in manuscript
 # qqnorm(Err, ylab="residuals SMD Fungal_BM_Weight", xlab="scores") 
 # # profile.rma.mv(RMAAT)
 # # Residuals vs explanatory 
-# plot(x=df_Fungal_BM_Weight$Hedges_SMDFungal_BM_Weight, y=Err, xlab="SMD_Fungal_BM_Weight", ylab="Residuals")
+# plot(x=df_Fungal_BM_Weight$Hedges_SMDFungal_BM_Weight, y=Err, xlab="SMD_Fungal_BM_Weight", ylab="Residuals")  # CHANGES: commented out - rest of this validation block was already commented, so Err does not exist
 
 # 
 # #FB_Ratio
@@ -292,7 +296,7 @@ r2_FB_Ratio #r2.loglik = used in manuscript
 # qqnorm(Err, ylab="residuals SMD FB_Ratio", xlab="scores") 
 # # profile.rma.mv(RMAAT)
 # # Residuals vs explanatory 
-# plot(x=df_FB_Ratio$Hedges_SMDFB_Ratio, y=Err, xlab="SMD_FB_Ratio", ylab="Residuals")
+# plot(x=df_FB_Ratio$Hedges_SMDFB_Ratio, y=Err, xlab="SMD_FB_Ratio", ylab="Residuals")  # CHANGES: commented out - rest of this validation block was already commented, so Err does not exist
 
 
 ```

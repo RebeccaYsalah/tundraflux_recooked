@@ -1364,7 +1364,8 @@ SMDFB_Ratio$Dataset_ID<-as.factor(SMDFB_Ratio$Dataset_ID)
 
 ```
 
-```{r Merge climate, soil, vegetation, microbial drivers into 1 df: do merge}
+```{r Merge climate 2, soil, vegetation, microbial drivers into 1 df: do merge}
+#CHANGE: chunk renamed from 'Merge climate' to 'Merge climate 2' (duplicate label)
 drivers<-read.csv(file.path(data_dir, "Dataset_ID.csv"))
 
 drivers<-dplyr::rename(drivers,any_of(c("Dataset_ID"="ï..Dataset_ID")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
@@ -1552,7 +1553,8 @@ write.csv(drivers, file.path(output_data_dir, "drivers.csv"))
 
 #RMD (raw mean diff)
 ##climate
-```{r climate, warnings=FALSE, echo=FALSE, message=FALSE}
+```{r climate 2, warnings=FALSE, echo=FALSE, message=FALSE}
+#CHANGE: chunk renamed from 'climate' to 'climate 2' (duplicate label)
 ############### AIR TEMP (AT) ###############
 
 DS_final_AT<-DS_final[-which(is.na(DS_final$Air_Temp)),]
@@ -1683,7 +1685,8 @@ write.csv(RMDSM, file.path(output_data_dir, "RMDSM.csv"))
 
 
 ##soil
-```{r soil, warnings=FALSE, echo=FALSE, message=FALSE}
+```{r soil 2, warnings=FALSE, echo=FALSE, message=FALSE}
+#CHANGE: chunk renamed from 'soil' to 'soil 2' (duplicate label)
 
 ############### SOM_Org ###############
 
@@ -2320,7 +2323,8 @@ write.csv(RMDSON_Org, file.path(output_data_dir, "RMDSON_Org.csv"))
 
 ##vegetation
 
-```{r vegetation, warnings=FALSE, echo=FALSE, message=FALSE}
+```{r vegetation 2, warnings=FALSE, echo=FALSE, message=FALSE}
+#CHANGE: chunk renamed from 'vegetation' to 'vegetation 2' (duplicate label)
 
 
 ############### Graminoids ###############
@@ -2696,7 +2700,8 @@ write.csv(RMDMean_H, file.path(output_data_dir, "RMDMean_H.csv"))
 
 ##microbial
 
-```{r microbial, echo=FALSE}
+```{r microbial 2, echo=FALSE}
+#CHANGE: chunk renamed from 'microbial' to 'microbial 2' (duplicate label)
 
 ############### Bacterial_BM_Weight ###############
 
