@@ -13,7 +13,7 @@ editor_options:
 library("ggplot2")
 # library("plyr")  # CHANGES: plyr not available for R 4.6 - only rename() was used, now dplyr::rename()
 library("dplyr")
-library("car")
+library("car") # does not work for Bex
 library("tidyr")
 library("readxl")
 # library("reshape2")  # CHANGES: reshape2 not available for R 4.6 - no reshape2 functions are used
@@ -2526,6 +2526,7 @@ RMDMosses<-dplyr::rename(RMDMosses,any_of(c("RMDMosses"="yi")))  # CHANGES: plyr
 RMDMosses<-dplyr::rename(RMDMosses,any_of(c("RMDMosses_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
 
+### ATTENTION: Copy-Paste Bug: The NA check runs on RMDSOM_Org instead of RMDMosses. Any NA moss effect sizes stay in, and Mean_RMDMosses becomes NA
 CheckNA<-which(is.na(RMDSOM_Org$RMDSOM_Org))
 if(length(CheckNA)>0) {
 RMDSOM_Org<-RMDSOM_Org[-which(is.na(RMDSOM_Org$RMDSOM_Org)),]}

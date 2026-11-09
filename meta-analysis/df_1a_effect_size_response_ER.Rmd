@@ -23,7 +23,7 @@ source(here("config.R"))
 library("ggplot2")
 # library("plyr")  # CHANGES: plyr not available for R 4.6 - only rename() was used, now dplyr::rename()
 library("dplyr")
-library("car")
+library("car") # Not working for Bex
 library("tidyr")
 library("readxl")
 # library("reshape2")  # CHANGES: reshape2 not available for R 4.6 - no reshape2 functions are used
@@ -37,14 +37,13 @@ library("effsize")
 library("metafor")
 library("corrplot")
 library("MASS")
-library("meta")
+library("meta") # Not Working for Bex
 library("metafor")
 library("installr")
 library("crayon")
 library("stringr")
 library("tibble")
 
-DS_final<-read.csv(file.path(data_dir, "df_1.csv"))
 DS_final<-read.csv(file.path(data_dir, "df_1.csv"))
 DS_final<-DS_final[,-c(1)]
 head(DS_final) # CHANGES: added
