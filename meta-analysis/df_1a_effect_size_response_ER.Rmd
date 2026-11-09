@@ -7,6 +7,12 @@ editor_options:
   chunk_output_type: inline
 ---
 
+### -------------------------------------------------
+# CHANGES: Setting working directory and find data
+library(here)
+source(here("config.R"))
+### ----------------------------------------------------
+
 #load data
 ```{r load data, include=FALSE}
 
@@ -38,6 +44,7 @@ library("crayon")
 library("stringr")
 library("tibble")
 
+DS_final<-read.csv(file.path(data_dir, "df_1.csv"))
 DS_final<-read.csv(file.path(data_dir, "df_1.csv"))
 DS_final<-DS_final[,-c(1)]
 head(DS_final) # CHANGES: added
