@@ -35,24 +35,41 @@ dat$Code[is.na(dat$Code)] <- "SJM"
 
 
 # number of years as radius
-years<-dat %>% dplyr::count(Site_ID) 
+
+### ----------------------------------------------------
+# years <- dat %>% dplyr::count(Exp_ID) 
+
+# CHANGES:
+# Exp_ID is not a column, instead we're using Exp_ID
+years <- dat %>% dplyr::count(Exp_ID) 
+### ----------------------------------------------------
+
 #rename n in "number of experiments"
 #merge with dat
 dat<-full_join(dat,years)
 n<-as.numeric(dat$n)
 
-# observations per dite as color gradient
-obs<-dat %>% dplyr::group_by(Site_ID)  %>% 
+# observations per site as color gradient
+### ----------------------------------------------------
+# obs<-dat %>% dplyr::group_by(Exp_ID)  %>%  summarise(obs_sum = sum(Nr_Obs))
+# sumi<-dat %>% dplyr::group_by(Exp_ID)  %>% summarise(obs_sum = sum(Nr_Obs), n = n(), Longitude = unique(Longitude), Latitude = unique(Latitude),Country = unique(Country))
+
+# CHANGES:
+# Exp_ID is not a column, instead we're using Exp_ID
+obs<-dat %>% dplyr::group_by(Exp_ID)  %>% 
   summarise(obs_sum = sum(Nr_Obs))
 
-
-# observations per dite as color gradient
-sumi<-dat %>% dplyr::group_by(Site_ID)  %>% 
+# CHANGES:
+# in addition to the Side_ID issue, Longitude and Latitude don't exist, using Longitude and Latitude instead
+sumi<-dat %>% dplyr::group_by(Exp_ID)  %>% 
   summarise(obs_sum = sum(Nr_Obs),
             n = n(),
-            Longitude..DD. = unique(Longitude..DD.),
-            Latitude..DD. = unique(Latitude..DD.),
+            Longitude = unique(Longitude),
+            Latitude = unique(Latitude),
             Country = unique(Country))
+### ----------------------------------------------------
+
+
 #rename n in "number of experiments"
 #merge with dat
 dat<-full_join(dat,obs)
@@ -74,13 +91,30 @@ ggplot() +
   coord_map("ortho", orientation = c(90, 0, 0)) +
   scale_y_continuous(breaks = seq(30, 90, by = 10), labels = NULL) +
   
+  ### ----------------------------------------------------
   # Adds points
-  geom_point(data=dat, aes(x=Longitude..DD., y=Latitude..DD.,  
-                           group=paste(Site_ID,Country), 
-                           size=n, fill=Nr_Obs),
-             color="black", 
-             pch=21, 
-             alpha=0.5)+  
+  # geom_point(data=dat, aes(x=Longitude, y=Latitude,  
+  #                          group=paste(Exp_ID,Country), 
+  #                          size=n, fill=Nr_obs),
+  #            color="black", 
+  #            pch=21, 
+  #            alpha=0.5)+  
+
+  # CHANGES:
+  # Instead of the coloumn Nr_obs, we use the coloumn obs_sum in order to show the sum of data points over
+  # the whole experimental period instead of the max. number of observations per year per site. Because why
+  # would you choose to show that?
+
+  # Adds points
+  geom_point(data=dat, aes(x=Longitude, y=Latitude,
+                           group=paste(Exp_ID,Country),
+                           size=n, fill=obs_sum),
+             color="black",
+             pch=21,
+             alpha=0.5)+
+
+  ### ---------------------------------------------------
+
   scale_fill_viridis_c(name = "Number of observations", trans="log",option="magma",
                        breaks=c(50,500, 5000), labels=c(50,500, 5000), direction=-1)+ # add color gradient
   #scale_fill_gradient(name = "Number of years",trans="log",low = "blue", high = "red")+
@@ -119,19 +153,41 @@ ggplot() +
 
 # Australia
 
-ggplot() + geom_sf(data = worldmap, colour="white", fill="lightgray") +
-  coord_sf(xlim = c(110, 160), ylim = c(0, -50), expand = FALSE) +
-  geom_point(aes(x=dat$Longitude, y=dat$Latitude,  group=paste(dat$Site_ID,dat$Country), fill="ffb07a80", size=n), colour = "black", pch=21, alpha=0.5)+
-  theme(legend.position="none")+
-  theme(axis.text=element_text(size=20,color="black"),
-        axis.title=element_text(size=15))+
-  scale_x_continuous(breaks = c(120,140,160))+
-  scale_y_continuous(breaks = c(-40,-20,0,  by = 10))+
-  xlab("Longitude") + ylab("Latitude")
+### --------------------------------------
+# Old code:
+# ggplot() + geom_sf(data = worldmap, colour="white", fill="lightgray") +
+#   coord_sf(xlim = c(110, 160), ylim = c(0, -50), expand = FALSE) +
+#   geom_point(aes(x=dat$Longitude, y=dat$Latitude,  group=paste(dat$Exp_ID,dat$Country), fill="ffb07a80", size=n), colour = "black", pch=21, alpha=0.5)+
+#   theme(legend.position="none")+
+#   theme(axis.text=element_text(size=20,color="black"),
+#         axis.title=element_text(size=15))+
+#   scale_x_continuous(breaks = c(120,140,160))+
+#   scale_y_continuous(breaks = c(-40,-20,0,  by = 10))+
+#   xlab("Longitude") + ylab("Latitude")
+
+# Several issues: 
+# - worldmap is not called worldmap anymore but thismap
+# - error in geom_sf(): stat_sf() requires the following missing aesthetics: geometry
+
+
+ggplot() +
+  geom_polygon(data = thismap, aes(x = long, y = lat, group = group), colour = "white", fill = "lightgray") +
+  coord_fixed(xlim = c(110, 160), ylim = c(-50, 0), expand = FALSE) +
+  geom_point(data = dat, aes(x = Longitude, y = Latitude, size = n), fill = "#ffb07a80", colour = "black", pch = 21, alpha = 0.5) +
+  theme(legend.position = "none") +
+  theme(axis.text = element_text(size = 20, colour = "black"),
+    axis.title = element_text(size = 15)) +
+  scale_x_continuous(breaks = c(120, 140, 160)) +
+  scale_y_continuous(breaks = seq(-40, 0, by = 10)) +
+  xlab("Longitude") +
+  ylab("Latitude")
+
+### -----------------------------------------
 
 #### barplots for Figure 1 #####
-ph<-dat %>% dplyr::count(pH) %>%
-  ggplot(aes(x=pH, y=n, fill=pH))+
+ph<-dat %>% dplyr::count(pH_Class) %>%
+  
+  ggplot(aes(x=pH_Class, y=n, fill=pH_Class))+
   ggtitle("pH")+
   xlab("")+ylab("")+
   scale_y_continuous(limits=c(0,100),
