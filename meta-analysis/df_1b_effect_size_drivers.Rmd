@@ -49,7 +49,6 @@ DS_final$Treatment<-as.factor(DS_final$Treatment)
 
 df_PLOT_LEVEL<-DS_final %>%  distinct(Distinct_Plots, .keep_all = TRUE)   
 
-
 ```
 
 
@@ -63,6 +62,8 @@ DS_final_AT<-DS_final[-which(is.na(DS_final$Air_Temp)),]
 
 dfSummary_AT<-DS_final_AT %>% group_by(Dataset_ID, Treatment) %>% summarize(MEAN=mean(Air_Temp), SDEV=sd(Air_Temp), SS=n())
 
+# Comment by Flavia: n reaches from 16 to 1507, is that an issue?
+
 dfSummary_ATCTL <- dfSummary_AT  %>% dplyr::filter(Treatment=="CTL")
 dfSummary_ATOTC <- dfSummary_AT  %>% dplyr::filter(Treatment=="OTC")
 dfSummary_AT <- full_join(dfSummary_ATCTL, dfSummary_ATOTC, by="Dataset_ID")
@@ -73,6 +74,8 @@ dfSummary_AT<-dplyr::rename(dfSummary_AT,any_of(c("SDEV_CTL"="SDEV.x")))  # CHAN
 dfSummary_AT<-dplyr::rename(dfSummary_AT,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummary_AT<-dplyr::rename(dfSummary_AT,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummary_AT<-dplyr::rename(dfSummary_AT,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+
+# Comment by Flavia: I refuse to believe that the values for ALA_4 and GRE are true... above 20 °C on average seems crazy. 
 
 # Calculate actual effect sizes per dataset (Raw SMD)
 SMDAT <-
@@ -114,6 +117,8 @@ dfSummary_ST<-dplyr::rename(dfSummary_ST,any_of(c("SDEV_OTC"="SDEV.y")))  # CHAN
 dfSummary_ST<-dplyr::rename(dfSummary_ST,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummary_ST<-dplyr::rename(dfSummary_ST,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
+# Comment by Flavia: Soil temperatures for Canada look pretty high, idk if this is plausible
+
 SMDST <-
   escalc("SMD", m1i = MEAN_OTC,
     n1i = SS_OTC,
@@ -152,6 +157,8 @@ dfSummary_SM<-dplyr::rename(dfSummary_SM,any_of(c("SDEV_CTL"="SDEV.x")))  # CHAN
 dfSummary_SM<-dplyr::rename(dfSummary_SM,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummary_SM<-dplyr::rename(dfSummary_SM,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummary_SM<-dplyr::rename(dfSummary_SM,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+
+# Comment by Flavia: GRE_6_ER_2014 has a value of -159.5 in CTL. Sure thing.
 
 SMDSM <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -206,6 +213,8 @@ dfSummarySOM_Org<-dplyr::rename(dfSummarySOM_Org,any_of(c("SDEV_CTL"="SDEV.x")))
 dfSummarySOM_Org<-dplyr::rename(dfSummarySOM_Org,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummarySOM_Org<-dplyr::rename(dfSummarySOM_Org,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummarySOM_Org<-dplyr::rename(dfSummarySOM_Org,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+
+# Comment by Flavia: Greenland and Sweden only (two years x two sites x 6 observations). Both years of the same site have exactly the same values. Checked the data and it's for both years exactly the same values. If you sort df_PLOT_LEVEL_SOM_Org by Treatment and then by Dataset, you can see that the first value of 2013 is the same as the first of 2014 and so on. No trustworthy data!
 
 SMDSOM_Org <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -301,6 +310,8 @@ dfSummarySOC_Org<-dplyr::rename(dfSummarySOC_Org,any_of(c("SDEV_OTC"="SDEV.y")))
 dfSummarySOC_Org<-dplyr::rename(dfSummarySOC_Org,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummarySOC_Org<-dplyr::rename(dfSummarySOC_Org,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
+# comment by Flavia: exactly the same thing happened here as for SOM_Org (see line 217). No trustworthy data.
+
 SMDSOC_Org <-
   escalc("SMD", m1i = MEAN_OTC,
     n1i = SS_OTC,
@@ -344,6 +355,8 @@ dfSummarySOC_Min<-dplyr::rename(dfSummarySOC_Min,any_of(c("SDEV_CTL"="SDEV.x")))
 dfSummarySOC_Min<-dplyr::rename(dfSummarySOC_Min,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummarySOC_Min<-dplyr::rename(dfSummarySOC_Min,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummarySOC_Min<-dplyr::rename(dfSummarySOC_Min,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+
+# Comment by Flavia: same thing as in line 217 but for ALA_1 they change the values change every few years. No trustworthy data. 
 
 SMDSOC_Min <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -391,6 +404,8 @@ dfSummarySON_Org<-dplyr::rename(dfSummarySON_Org,any_of(c("SDEV_OTC"="SDEV.y")))
 dfSummarySON_Org<-dplyr::rename(dfSummarySON_Org,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummarySON_Org<-dplyr::rename(dfSummarySON_Org,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
+# Comment by Flavia: No trustworthy data (see line 217).
+
 SMDSON_Org <-
   escalc("SMD", m1i = MEAN_OTC,
     n1i = SS_OTC,
@@ -435,6 +450,8 @@ dfSummarySON_Min<-dplyr::rename(dfSummarySON_Min,any_of(c("SDEV_OTC"="SDEV.y")))
 dfSummarySON_Min<-dplyr::rename(dfSummarySON_Min,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummarySON_Min<-dplyr::rename(dfSummarySON_Min,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
+# Comment by Flavia: No trustworthy data (see line 217). Furthermore, only two sites.
+
 SMDSON_Min <-
   escalc("SMD", m1i = MEAN_OTC,
     n1i = SS_OTC,
@@ -478,6 +495,8 @@ dfSummaryCN_Org<-dplyr::rename(dfSummaryCN_Org,any_of(c("SDEV_OTC"="SDEV.y")))  
 dfSummaryCN_Org<-dplyr::rename(dfSummaryCN_Org,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryCN_Org<-dplyr::rename(dfSummaryCN_Org,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
+# Comment by Flavia: No trustworthy data (see line 217) despite SVA_1, SVA_2 and SVA_3
+
 SMDCN_Org <-
   escalc("SMD", m1i = MEAN_OTC,
     n1i = SS_OTC,
@@ -520,6 +539,8 @@ dfSummaryCN_Min<-dplyr::rename(dfSummaryCN_Min,any_of(c("SDEV_CTL"="SDEV.x")))  
 dfSummaryCN_Min<-dplyr::rename(dfSummaryCN_Min,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryCN_Min<-dplyr::rename(dfSummaryCN_Min,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryCN_Min<-dplyr::rename(dfSummaryCN_Min,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+
+# Comment by Flavia: No trustworthy data (see line 217). Furthermore, we have to talk about these extremely small sample sizes.
 
 SMDCN_Min <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -567,6 +588,8 @@ dfSummarypH_Org<-dplyr::rename(dfSummarypH_Org,any_of(c("SDEV_CTL"="SDEV.x")))  
 dfSummarypH_Org<-dplyr::rename(dfSummarypH_Org,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummarypH_Org<-dplyr::rename(dfSummarypH_Org,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummarypH_Org<-dplyr::rename(dfSummarypH_Org,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+
+# Comment by Flavia: No trustworthy data (see line 217) for Greenland.
 
 SMDpH_Org <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -661,6 +684,8 @@ dfSummaryBD_Org<-dplyr::rename(dfSummaryBD_Org,any_of(c("SDEV_OTC"="SDEV.y")))  
 dfSummaryBD_Org<-dplyr::rename(dfSummaryBD_Org,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryBD_Org<-dplyr::rename(dfSummaryBD_Org,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
+# Comment by Flavia: No trustworthy data (see line 217)
+
 SMDBD_Org <-
   escalc("SMD", m1i = MEAN_OTC,
     n1i = SS_OTC,
@@ -704,6 +729,8 @@ dfSummaryBD_Min<-dplyr::rename(dfSummaryBD_Min,any_of(c("SDEV_CTL"="SDEV.x")))  
 dfSummaryBD_Min<-dplyr::rename(dfSummaryBD_Min,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryBD_Min<-dplyr::rename(dfSummaryBD_Min,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryBD_Min<-dplyr::rename(dfSummaryBD_Min,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+
+# Comment by Flavia: No trustworthy data (see line 217)
 
 SMDBD_Min <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -750,6 +777,8 @@ dfSummaryOL_D_Plot<-dplyr::rename(dfSummaryOL_D_Plot,any_of(c("SDEV_CTL"="SDEV.x
 dfSummaryOL_D_Plot<-dplyr::rename(dfSummaryOL_D_Plot,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryOL_D_Plot<-dplyr::rename(dfSummaryOL_D_Plot,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryOL_D_Plot<-dplyr::rename(dfSummaryOL_D_Plot,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+
+# Comment by Flavia: No trustworthy data (see line 217)
 
 SMDOL_D_Plot <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -827,6 +856,8 @@ dfSummaryGraminoids<-dplyr::rename(dfSummaryGraminoids,any_of(c("SDEV_OTC"="SDEV
 dfSummaryGraminoids<-dplyr::rename(dfSummaryGraminoids,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryGraminoids<-dplyr::rename(dfSummaryGraminoids,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
+# Comment by Flavia: No trustworthy data (see line 217) for Alaska, Canada, GRE_1, GRE_6, SWE_16
+
 SMDGraminoids <-
   escalc("SMD", m1i = MEAN_OTC,
     n1i = SS_OTC,
@@ -869,6 +900,8 @@ dfSummaryForbs<-dplyr::rename(dfSummaryForbs,any_of(c("SDEV_OTC"="SDEV.y")))  # 
 dfSummaryForbs<-dplyr::rename(dfSummaryForbs,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryForbs<-dplyr::rename(dfSummaryForbs,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
+# Comment by Flavia: No trustworthy data (see line 217) for Alaska, Canada, GRE_1, GRE_6, SWE_16
+
 SMDForbs <-
   escalc("SMD", m1i = MEAN_OTC,
     n1i = SS_OTC,
@@ -907,6 +940,8 @@ dfSummaryDecid_Shrubs<-dplyr::rename(dfSummaryDecid_Shrubs,any_of(c("SDEV_CTL"="
 dfSummaryDecid_Shrubs<-dplyr::rename(dfSummaryDecid_Shrubs,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryDecid_Shrubs<-dplyr::rename(dfSummaryDecid_Shrubs,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryDecid_Shrubs<-dplyr::rename(dfSummaryDecid_Shrubs,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+
+# Comment by Flavia: No trustworthy data (see line 217) for Alaska, Canada, GRE_1, GRE_6, SWE_16
 
 SMDDecid_Shrubs <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -949,6 +984,8 @@ dfSummaryEvergr_Shrubs<-dplyr::rename(dfSummaryEvergr_Shrubs,any_of(c("SDEV_CTL"
 dfSummaryEvergr_Shrubs<-dplyr::rename(dfSummaryEvergr_Shrubs,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryEvergr_Shrubs<-dplyr::rename(dfSummaryEvergr_Shrubs,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryEvergr_Shrubs<-dplyr::rename(dfSummaryEvergr_Shrubs,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+
+# Comment by Flavia: No trustworthy data (see line 217) for Alaska, Canada, GRE_1, GRE_6, SWE_16
 
 SMDEvergr_Shrubs <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -993,6 +1030,8 @@ dfSummaryMosses<-dplyr::rename(dfSummaryMosses,any_of(c("SDEV_CTL"="SDEV.x")))  
 dfSummaryMosses<-dplyr::rename(dfSummaryMosses,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryMosses<-dplyr::rename(dfSummaryMosses,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryMosses<-dplyr::rename(dfSummaryMosses,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+
+# Comment by Flavia: No trustworthy data (see line 217) for Alaska, Canada, GRE_1 and GRE_6
 
 SMDMosses <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -1040,6 +1079,8 @@ dfSummaryLichens<-dplyr::rename(dfSummaryLichens,any_of(c("SDEV_OTC"="SDEV.y")))
 dfSummaryLichens<-dplyr::rename(dfSummaryLichens,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryLichens<-dplyr::rename(dfSummaryLichens,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
+# Comment by Flavia: No trustworthy data (see line 217) for Alaska, Canada, GRE_1, GRE_6
+
 SMDLichens <-
   escalc("SMD", m1i = MEAN_OTC,
     n1i = SS_OTC,
@@ -1078,6 +1119,8 @@ dfSummaryBM<-dplyr::rename(dfSummaryBM,any_of(c("SDEV_CTL"="SDEV.x")))  # CHANGE
 dfSummaryBM<-dplyr::rename(dfSummaryBM,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryBM<-dplyr::rename(dfSummaryBM,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryBM<-dplyr::rename(dfSummaryBM,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+
+# Comment by Flavia: No trustworthy data (see line 217) for Alaska, Canada, SVA_5 & SVA_6
 
 SMDBM <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -1126,6 +1169,8 @@ dfSummaryMean_H<-dplyr::rename(dfSummaryMean_H,any_of(c("SDEV_CTL"="SDEV.x")))  
 dfSummaryMean_H<-dplyr::rename(dfSummaryMean_H,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryMean_H<-dplyr::rename(dfSummaryMean_H,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryMean_H<-dplyr::rename(dfSummaryMean_H,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+
+# Comment by Flavia: No trustworthy data (see line 217) for SVA_4 and SWE_6
 
 SMDMean_H <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -1198,6 +1243,8 @@ dfSummaryBacterial_BM_Weight<-dplyr::rename(dfSummaryBacterial_BM_Weight,any_of(
 dfSummaryBacterial_BM_Weight<-dplyr::rename(dfSummaryBacterial_BM_Weight,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryBacterial_BM_Weight<-dplyr::rename(dfSummaryBacterial_BM_Weight,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
+# Comment by Flavia: No trustworthy data (see line 217)
+
 SMDBacterial_BM_Weight <-
   escalc("SMD", m1i = MEAN_OTC,
     n1i = SS_OTC,
@@ -1241,6 +1288,8 @@ dfSummaryFungal_BM_Weight<-dplyr::rename(dfSummaryFungal_BM_Weight,any_of(c("SDE
 dfSummaryFungal_BM_Weight<-dplyr::rename(dfSummaryFungal_BM_Weight,any_of(c("SDEV_OTC"="SDEV.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryFungal_BM_Weight<-dplyr::rename(dfSummaryFungal_BM_Weight,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryFungal_BM_Weight<-dplyr::rename(dfSummaryFungal_BM_Weight,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
+
+# Comment by Flavia: No trustworthy data (see line 217)
 
 SMDFungal_BM_Weight <-
   escalc("SMD", m1i = MEAN_OTC,
@@ -1289,6 +1338,8 @@ dfSummaryFB_Ratio<-dplyr::rename(dfSummaryFB_Ratio,any_of(c("SDEV_OTC"="SDEV.y")
 dfSummaryFB_Ratio<-dplyr::rename(dfSummaryFB_Ratio,any_of(c("SS_CTL"="SS.x")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 dfSummaryFB_Ratio<-dplyr::rename(dfSummaryFB_Ratio,any_of(c("SS_OTC"="SS.y")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
+# Comment by Flavia: No trustworthy data (see line 217)
+
 SMDFB_Ratio <-
   escalc("SMD", m1i = MEAN_OTC,
     n1i = SS_OTC,
@@ -1325,7 +1376,7 @@ write.csv(SMDFB_Ratio, file.path(output_data_dir, "SMDFB_Ratio.csv"))
 
 ```
 
-
+# Comment by Flavia: Basically all of what follows doesn't make any sense since the data is not trustworthy.
 
 ## overview df
 
@@ -1518,6 +1569,9 @@ drivers <- drivers[, col_order]
 
 #doublechecking values: final edits
 # remove SMD_BD_Org en Min for SVA_6_2003, 2004, 2005, 2007 (see doublechecks file) for analysis
+
+# Comment from Flavia: Where is this doublechecks file? I want to know why they removed the data.
+
 drivers$SMD_BD_Org[which(drivers$Dataset_ID =="SVA_6_ER_2003")]<-NA
 drivers$SMD_BD_Org[which(drivers$Dataset_ID =="SVA_6_ER_2004")]<-NA
 drivers$SMD_BD_Org[which(drivers$Dataset_ID =="SVA_6_ER_2005")]<-NA
@@ -1550,6 +1604,7 @@ write.csv(drivers, file.path(output_data_dir, "drivers.csv"))
 
 ```
 
+# Comment from Flavia: Basically all of the comments above apply for the following steps as well because the mistakes is already in the DS_final
 
 #RMD (raw mean diff)
 ##climate
