@@ -14,19 +14,30 @@ library(sf)
 library(readxl)
 library(ggpubr)
 library(geometry)
-library(here)  # CHANGES: added
-source(here("config.R"))  # CHANGES: added
 
-# set working directory as the path where this script is located
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+### ----------------------------------------------------------------------------
+# CHANGES: Setting working directory and find data
+library(here)
+source(here("config.R"))
+### ----------------------------------------------------------------------------
+
+
+
+### ----------------------------------------------------------------------------
+# CHANGES: Use our dirs instead to find fies
+
+# set working directory the path that this script is located in
+# setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 # Read the CSV file and select specific columns
-dfCO2 <- read.csv("data_in/df_2.csv") %>%
+dfCO2 <- read.csv(file.path(data_dir, "df_2.csv")) %>%
   as_tibble() %>%
   select(c(SOC_Min_CTL, SON_Min_CTL, CN_Min_CTL)) %>%
   mutate(CN_calc = SOC_Min_CTL / SON_Min_CTL) %>%
   drop_na() %>%
   distinct(.keep_all = TRUE)
+# ------------------------------------------------------------------------------
+  
 
 # Fit a linear regression model
 cnCorr <- lm(CN_Min_CTL ~ 0 + CN_calc, data = dfCO2)
@@ -53,7 +64,7 @@ invisible(sapply(boots, function(boot_k) curve(boot_k * x, lty = 2, add = TRUE, 
 curve(coef(cnCorr) * x, lty = 1, lwd = 2, add = TRUE)
 
 # Save the bootstrap results
-save(boots, file = 'data_out/CNboots.rdata')
+save(boots, file = file.path(output_data_dir, "CNboots.rdata")) # CHANGED to match our data structure
 
 # Plot the validation scatterplot
 validation <- ggscatter(dfCO2, x = "CN_Min_CTL", y = "CN_calc",
