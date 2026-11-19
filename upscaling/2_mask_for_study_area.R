@@ -26,11 +26,12 @@ source(here("config.R"))
 # NCSCDv2_Circumpolar_WGS84_SOCC30_1deg.tif  -> SOCC30_circumpolar_crs3995.tif (name in the script)
 
 #SOC_crs3995 <- rast("data_in/SOCC30_circumpolar_crs3995.tif")
-SOC_crs3995 <- rast(file.path(data_dir, "SOCC30_circumpolar_crs3995.tif")) # we don't have that file. Would have to download it from SoilGrids and do some preprocessing that is not given.
+SOC_crs4326 <- rast(file.path(data_dir, "SOCC30_circumpolar_crs3995.tif")) # we don't have that file. Would have to download it from SoilGrids and do some preprocessing that is not given.
 
 # set soil to 3995
+# crs3995 <- crs(SOC_crs3995) # did not work, maybe because of different file
 crs3995 <- "EPSG:3995"
-SOC_crs3995 <- project(SOC_crs3995, crs3995, method = "bilinear")
+SOC_crs3995 <- project(SOC_crs4326, crs3995, method = "bilinear")
 # ------------------------------------------------------------------------------
 
 # permafrost area
@@ -44,37 +45,34 @@ SOC_crs3995_ext <- extend(SOC_crs3995,pf_prob_crs3995)
 writeRaster(x = SOC_crs3995_ext, filename = file.path(output_data_dir,"SOC_crs3995_ext.tif"), gdal="COMPRESS=LZW",overwrite=T) # CHANGED to match our structure
 
 
-#-------------------------------------------------------------------------------
-# CHANGES: line doesnt work. Claude thinks its because of "project"
-# pf_prob_crs3995_soil <-  project(rast(file.path(data_dir,"UiO_PEX_PERPROB_5.0_20181128_2000_2016_NH/UiO_PEX_PERPROB_5.0_20181128_2000_2016_NH.tif")), SOC_crs3995_ext)
-
-pf_prob_crs3995_soil <- resample(
-  pf_prob_crs3995,
-  SOC_crs3995_ext,
-  method   = "bilinear",
-  filename = file.path(output_data_dir, "pf_prob_crs3995_soil.tif"),
-  gdal     = "COMPRESS=LZW",
-  overwrite = TRUE
-)
+pf_prob_crs3995_soil <-  project(rast(file.path(data_dir,"UiO_PEX_PERPROB_5.0_20181128_2000_2016_NH/UiO_PEX_PERPROB_5.0_20181128_2000_2016_NH.tif")), SOC_crs3995_ext)
 
 # Plot to see if it makes sense
 plot(pf_prob_crs3995_soil, main = "Permafrost probability (resampled to soil grid)")
-#-------------------------------------------------------------------------------
+
 
 pf_prob_crs3995_soil[pf_prob_crs3995_soil>0] = 1
-writeRaster(x = pf_prob_crs3995_soil, filename = file.path(output_data_dir, "pf_prob_crs3995.tif"), gdal="COMPRESS=LZW",overwrite=T) # CHANGED to match our structure
+writeRaster(x = pf_prob_crs3995_soil, filename = file.path(output_data_dir, "pf_prob_crs3995_soil.tif"), gdal="COMPRESS=LZW",overwrite=T) # CHANGED to match our structure
 pf_prob_crs3995 <- rast(file.path(output_data_dir, "pf_prob_crs3995.tif"))
 
 # land mask
 
-land_mask <- !is.na(rast("data_in/UiO_PEX_PERPROB_5.0_20181128_2000_2016_NH/UiO_PEX_PERPROB_5.0_20181128_2000_2016_NH.tif"))
+land_mask <- !is.na(rast(file.path(data_dir,"UiO_PEX_PERPROB_5.0_20181128_2000_2016_NH/UiO_PEX_PERPROB_5.0_20181128_2000_2016_NH.tif")))
 land_mask_crs3995 <-  project(land_mask, SOC_crs3995_ext)
 
+# new:
+plot(land_mask_crs3995, main = "Land Mask")
+
+
 # tundra mask
+#-------------------------------------------------------------------------------
+# CHANGES: link leads nowhere
+# http://137.229.50.172/geodata/arcticAtlasMaster.gdb  
 
-# http://137.229.50.172/geodata/arcticAtlasMaster.gdb
+# new link: https://data.arcticatlas.org/geodata/cp/ -> cp_veg_la_shp
+#-------------------------------------------------------------------------------
 
-maskTundra <- vect("data_in/cp_veg_la_shp/cp_veg_la.shp") %>% 
+maskTundra <- vect(file.path(data_dir,"cp_veg_la_shp/cp_veg_la.shp")) %>% 
   project(land_mask_crs3995) %>% 
   terra::rasterize(land_mask_crs3995,"PHYSIOG", na.rm =T) 
 
@@ -82,12 +80,26 @@ maskTundra <- vect("data_in/cp_veg_la_shp/cp_veg_la.shp") %>%
 # source: https://onlinelibrary.wiley.com/doi/full/10.1111/ecog.05012
 # https://figshare.com/articles/dataset/Global_distribution_and_bioclimatic_characterization_of_alpine_biomes/11710002
 
-zonesAlpine <- vect('data_in/alpine_clusters/alpine_clusters.shp')
-r_zonesAlpine <- rasterize(zonesAlpine,SOC_wgs84,field='cluster')
-r_zonesAlpine[r_zonesAlpine > 0] <- 10
-r_zonesAlpine_crs3995 <- project(x=r_zonesAlpine,SOC_crs3995_ext)
+zonesAlpine <- vect(file.path(data_dir,"alpine_clusters/alpine_clusters.shp"))
+r_zonesAlpine <- rasterize(zonesAlpine,SOC_crs4326,field='cluster')
+# New: plot
+plot(r_zonesAlpine, main = "Alpine zones")
 
-writeRaster(x = r_zonesAlpine_crs3995, filename = "data_out/alpine_zones.tif", gdal="COMPRESS=LZW",overwrite=T)
+r_zonesAlpine[r_zonesAlpine > 0] <- 10
+# New: Plot
+plot(r_zonesAlpine, main = "Alpine zones")
+
+r_zonesAlpine_crs3995 <- project(x=r_zonesAlpine,SOC_crs3995_ext)
+# New: Plot
+plot(r_zonesAlpine_crs3995, main = "Alpine zones")
+
+writeRaster(x = r_zonesAlpine_crs3995, filename = file.path(output_data_dir,"alpine_zones.tif"), gdal="COMPRESS=LZW",overwrite=T)
+
+#-------------------------------------------------------------------------------
+# CHANGES: This was missing
+maskAlpine <- project(r_zonesAlpine_crs3995, land_mask_crs3995, method = "near")
+compareGeom(maskAlpine, maskTundra)   # should be TRUE
+#-------------------------------------------------------------------------------
 
 maskTundraAlpine <- maskAlpine
 maskTundraAlpine[maskTundra > 0] = 1
@@ -96,13 +108,13 @@ maskTundraAlpine[maskTundraAlpine > 0] = 1
 plot(maskTundraAlpine)
 
 writeRaster(x = maskTundraAlpine,
-            filename = "data_out/maskTundraAlpine_crsEPSG3995.tif", gdal="COMPRESS=LZW",overwrite=T)
+            filename = file.path(output_data_dir, "maskTundraAlpine_crs3995.tif"), gdal="COMPRESS=LZW",overwrite=T)
 
 # project to wgs84
 
 maskTundraAlpine_crsWGS84 <- project(maskTundraAlpine, "EPSG:4326")
 
 writeRaster(x = maskTundraAlpine_crsWGS84,
-            filename = "data_out/maskTundraAlpine_crsEPSG4326.tif", gdal="COMPRESS=LZW",overwrite=T)
+            filename = file.path(output_data_dir,"maskTundraAlpine_crs4326.tif"), gdal="COMPRESS=LZW",overwrite=T)
 
 
