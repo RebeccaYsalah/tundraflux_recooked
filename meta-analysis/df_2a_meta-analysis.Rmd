@@ -41,9 +41,9 @@ df$Site<-as.factor(df$Site)
 df$Location<-as.factor(df$Location)
 df$Country<-as.factor(df$Country)
 
-
 ```
 
+# Comment by Flavia: Some of the data of the drivers were used for several years (e.g. the data of SOC_Org_CTL for ALA_1 was measured in 2009 and the exact same data was used again for 2010 and 2011) in df. This happens for (nearly?) every of the drivers eventually, even when the values themselves changes quite a lot (e.g. dfSummaryLichens). Should we continue with doing the same or just use the data sets where the data contains information about the exact year? It kind of feels like faking the data otherwise.
 
 #meta-analysis
 ##model output
@@ -67,7 +67,21 @@ df$Dataset_ID <- fct_inorder(df$Dataset_ID)
 df$Year<-as.factor(df$Year)
 # str(df$Year)
 
-model1 <- rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data = df, random= ~1 | Exp_ID/Year/Observation_ID)
+# CHANGE -----------------------------------
+
+# model1 <- rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data = df, random= ~1 | Exp_ID/Year/Observation_ID)
+
+# Random effects are specified for Exp_ID and Year nested within Exp_ID. Observation_ID is omitted because it
+# is merely a unique sequential identifier for each observation, rather than an independent grouping level.
+# Each observation corresponds to exactly one year within a given Exp_ID. Therefore, including Observation_ID
+# would introduce a redundant random-effects level without providing an additional estimable variance component.
+# I checked model1 with an without Observation_ID as a random effect and there are no changes except for the AIC
+# and BIC getting a little better 
+
+model1 <- rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data = df, random= ~1 | Exp_ID/Year)
+
+# CHANGE ----------------------------------
+
 summary(model1)
 
 
@@ -82,7 +96,6 @@ summary(model2)
 #comparison
 anova.rma(model2,model1)
 
-
 ```
 
 ###Ratio Of Means ROM
@@ -92,7 +105,16 @@ anova.rma(model2,model1)
 df$Year<-as.factor(df$Year)
 # str(df$Year)
 
-model3 <- rma.mv(ROM, ROM_VARIANCE, data = df, random= ~1 | Exp_ID/Year/Observation_ID)
+# CHANGE -----------------------------------
+
+# model3 <- rma.mv(ROM, ROM_VARIANCE, data = df, random= ~1 | Exp_ID/Year/Observation_ID)
+
+# see line 70, Observation_ID is omitted
+
+model3 <- rma.mv(ROM, ROM_VARIANCE, data = df, random= ~1 | Exp_ID/Year)
+
+# CHANGE -----------------------------------
+
 summary(model3)
 
 
@@ -162,7 +184,6 @@ acf(resid(model2, type="cholesky")) #should show decreased/no temporal AC
 
 #method 2 - anova comparison
 anova.rma(model2,model1) #significant improvement
-
 ```
 
 
@@ -206,8 +227,10 @@ X <- model.matrix(model2)
 P <- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
 100 * sum(model2$sigma2) / (sum(model2$sigma2) + (model2$k-model2$p)/sum(diag(P)))
 100 * model2$sigma2 / (sum(model2$sigma2) + (model2$k-model2$p)/sum(diag(P)))
-#1st number: x1% of the total variance is estimated to be due to between and-cluster heterogeneity, 
+#1st number: x1% of the total variance is estimated to be due to between-cluster heterogeneity, 
+# (CHANGE for understanding: between-cluster heterogeneity means differences between different Exp_IDs)
 #2nd number: x2% due to within-cluster heterogeneity, 
+# (CHANGE for understanding: within-cluster heterogeneity means differences between different Observation_IDs within one Exp_ID)
 #remainder (100-x1-x2)% due to sampling variance.
 
 
@@ -222,6 +245,7 @@ P <- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
 #remainder (100-x1-x2)% due to sampling variance.
 ```
 
+# comment by Flavia: I'm not sure whether it makes any sense to calculate I2 here like this as it doesn't seem to include the temporal Autocorrelation structure. However, I'm not sure how to fix it and whether it's really relevant at all.
 
 ##robustness
 ###unbalanced sampling design (ALA_1, GRE_6)
@@ -252,8 +276,26 @@ summary(model1_laser)
 #lir
 model2_ir <- rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", data=dfsubir)
 summary(model2_ir)
-```
 
+# CHANGE ---------------------------------
+# Since the difference between model1_laser and model2_ir was quite high, the difference was investigated further.
+
+model_combined <- rma.mv(
+  Hedges_SMD,
+  Hedges_SMD_VARIANCE,
+  mods = ~ Machine_Type,
+  random = list(~ 1 | Exp_ID / Observation_ID, ~ Year | Exp_ID),
+  struct = "CAR",
+  data = df
+)
+
+summary(model_combined)
+
+# The estimated mean effect size was 0.53 for IR and 0.85 for Laser. This difference was not statistically significant (p = 0.069) but maybe worth noticing.
+
+# CHANGE -------------------------------------
+
+```
 
 ## forest plot
 ### vertical
@@ -286,6 +328,7 @@ summary(model2_ir)
 # Make dataframe with the means and CIs to plot (already had that one: see csv file)
 # extract weights from the model to add to the csv file
 weights<-weights(model2) #already in the right order
+
 yi<-model2$yi #as doublecheck for order
 weights<-as.data.frame(cbind(weights,yi))
 write.csv(weights, file.path(output_data_dir, "weights.csv"))

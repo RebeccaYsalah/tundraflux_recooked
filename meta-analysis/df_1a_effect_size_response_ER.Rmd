@@ -50,7 +50,7 @@ head(DS_final) # CHANGES: added
 ```{r data prep, echo=FALSE}
 dfSummary<-DS_final %>% group_by(Dataset_ID, Treatment) %>% summarize(MEAN=mean(gC_CO2), SDEV=sd(gC_CO2), SS=n())
 
-# Comment by Flavia: what we can see here is already quite interesting: take a look at the SS column which is the number of observations (i guess?!). The different data sets have a different amount of observations, ranging from 139 to 1507 for ALA_1 and from 9 to 78 for the rest. I might be wrong with this, but isn't that what we talked about with Carsten, that we have to pick 9 random values for each Dataset_ID and Treatment so that the data is equally represented? 
+# Comment by Flavia: In dfSummary, the number of observations (column SS) has big differences ranging from 9 to 1507 (with higher numbers for ALA_1 than for the other data sets. From this data, the SMD gets calculated and later on the weights for the model, where data sets with less variance (the ones with higher sample sizes) get more weight. Should we therefore pick 9 random values for each Dataset_ID and Treatment so that the data is equally represented?
 
 dfSummaryCTL <- dfSummary  %>% dplyr::filter(Treatment=="CTL")
 dfSummaryOTC <- dfSummary  %>% dplyr::filter(Treatment=="OTC")
@@ -81,8 +81,7 @@ SMD <-
 SMD<-dplyr::rename(SMD,any_of(c("Hedges_SMD"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 SMD<-dplyr::rename(SMD,any_of(c("Hedges_SMD_VARIANCE"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 
-# Another comment by Flavia: I see another issue here. In their methods section ("Ecosystem respiration") they claim to use "daily average ER data and standardized all individual data points to the same unit, that is, gCO2 m−2 d−1". This is not what is happening here. In DS_final, you can see for ALA_1, that they sometimes have more than one measurement per plot per day (column "Treatment_If_Other"). However, in their supplementary table 2 they state e.g. for ALA_1 in 2009 to have 1673, which is exactly the same number of observations that we have in DS_final. Despite not calculating a daily mean before calculating the Hedges g, they have a different temporal resolution of the values, namely g CO2-C per m2 per half an hour and NOT gCO2 per m2 per day (furthermore, g CO2-C and g CO2 is something different). The consequence is that the Hedges' g value calculated here don't match with the ones shown in Fig. 2. In other words: There are a lot of steps missing here. How did they calculate the gCO2 per day from the half hour based values? Did they account for having several measurements per day in some data sets? 
-# HOWEVER, the values of the Hedges values calculated here match with the values they calculated in supplementary table 4. This means, that their calculated values from supp. table 4 do not match with the ones shown in Fig. 2! Maybe they did use the daily values for Fig. 2 but not for supp. table 4?
+# Comment by Flavia: The SMD values calculated here are matching with the ones stated in supp. table 4 but not completely with Fig. 2 (there is a mismatch between supp. table 4 and Fig. 2).
 
 Mean_SMD<-mean(SMD$Hedges_SMD)
 Mean_SMD
