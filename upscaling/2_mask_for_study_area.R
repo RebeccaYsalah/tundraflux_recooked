@@ -3,37 +3,67 @@
 
 library(terra)
 library(tidyverse)
-library(here)  # CHANGES: added
-source(here("config.R"))  # CHANGES: added
 
 
+### ----------------------------------------------------------------------------
+# CHANGES: Setting working directory and find data
+library(here)
+source(here("config.R"))
+### ----------------------------------------------------------------------------
+
+
+
+### ----------------------------------------------------------------------------
+# CHANGES: Use our dirs instead to find fies
 
 # set working directory the path that this script is located in
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+# setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 # soil
+# https://apgc.awi.de/collection/ncscdv2 (Northern Circumpolar Soil Carbon Database, Circum-Arctic Region, geotiff-files -> 1.0 deg, geotiff, circumpolar NCSCDv2)
+# https://apgc.awi.de/dataset/ncscdv2-circumarctic-geotiff/resource/92c980f8-ac16-4795-bc36-f91273d65b10
 
-SOC_crs3995 <- rast("data_in/SOCC30_circumpolar_crs3995.tif")
-crs3995 <- crs(SOC_crs3995)
+# NCSCDv2_Circumpolar_WGS84_SOCC30_1deg.tif  -> SOCC30_circumpolar_crs3995.tif (name in the script)
 
+#SOC_crs3995 <- rast("data_in/SOCC30_circumpolar_crs3995.tif")
+SOC_crs3995 <- rast(file.path(data_dir, "SOCC30_circumpolar_crs3995.tif")) # we don't have that file. Would have to download it from SoilGrids and do some preprocessing that is not given.
 
+# set soil to 3995
+crs3995 <- "EPSG:3995"
+SOC_crs3995 <- project(SOC_crs3995, crs3995, method = "bilinear")
+# ------------------------------------------------------------------------------
 
 # permafrost area
 # https://apgc.awi.de/dataset/pex/resource/18fe2e48-fe60-4b0b-9469-7cb361542f61
 
-pf_prob_crs3995 <-  project(rast("data_in/UiO_PEX_PERPROB_5.0_20181128_2000_2016_NH/UiO_PEX_PERPROB_5.0_20181128_2000_2016_NH.tif"), 
+pf_prob_crs3995 <-  project(rast(file.path(data_dir, "UiO_PEX_PERPROB_5.0_20181128_2000_2016_NH/UiO_PEX_PERPROB_5.0_20181128_2000_2016_NH.tif")), 
                             crs3995)
 # extend soil extent
 
 SOC_crs3995_ext <- extend(SOC_crs3995,pf_prob_crs3995)
-writeRaster(x = SOC_crs3995_ext, filename = "data_out/SOC_crs3995_ext.tif", gdal="COMPRESS=LZW",overwrite=T)
+writeRaster(x = SOC_crs3995_ext, filename = file.path(output_data_dir,"SOC_crs3995_ext.tif"), gdal="COMPRESS=LZW",overwrite=T) # CHANGED to match our structure
 
-pf_prob_crs3995_soil <-  project(rast("data_in/UiO_PEX_PERPROB_5.0_20181128_2000_2016_NH/UiO_PEX_PERPROB_5.0_20181128_2000_2016_NH.tif"), 
-                            SOC_crs3995_ext)
+
+#-------------------------------------------------------------------------------
+# CHANGES: line doesnt work. Claude thinks its because of "project"
+# pf_prob_crs3995_soil <-  project(rast(file.path(data_dir,"UiO_PEX_PERPROB_5.0_20181128_2000_2016_NH/UiO_PEX_PERPROB_5.0_20181128_2000_2016_NH.tif")), SOC_crs3995_ext)
+
+pf_prob_crs3995_soil <- resample(
+  pf_prob_crs3995,
+  SOC_crs3995_ext,
+  method   = "bilinear",
+  filename = file.path(output_data_dir, "pf_prob_crs3995_soil.tif"),
+  gdal     = "COMPRESS=LZW",
+  overwrite = TRUE
+)
+
+# Plot to see if it makes sense
+plot(pf_prob_crs3995_soil, main = "Permafrost probability (resampled to soil grid)")
+#-------------------------------------------------------------------------------
 
 pf_prob_crs3995_soil[pf_prob_crs3995_soil>0] = 1
-writeRaster(x = pf_prob_crs3995_soil, filename = "data_out/pf_prob_crs3995.tif", gdal="COMPRESS=LZW",overwrite=T)
-pf_prob_crs3995 <- rast("data_out/pf_prob_crs3995.tif")
+writeRaster(x = pf_prob_crs3995_soil, filename = file.path(output_data_dir, "pf_prob_crs3995.tif"), gdal="COMPRESS=LZW",overwrite=T) # CHANGED to match our structure
+pf_prob_crs3995 <- rast(file.path(output_data_dir, "pf_prob_crs3995.tif"))
 
 # land mask
 
