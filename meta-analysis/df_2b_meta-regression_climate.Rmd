@@ -274,6 +274,13 @@ model<-RMAAT_ml
 r2_AT<-r2_rma.mv(model, null.model) 
 r2_AT #r2.loglik = used in manuscript
 
+# CHANGE -------------------------------
+
+# adding anova to see whether adding SMD_AT as a moderator has an influence
+
+anova(RMAAT_ml, RMAnull)
+
+# CHANGE --------------------------------
 
 
 
@@ -288,7 +295,13 @@ model<-RMAST_ml
 r2_ST<-r2_rma.mv(model, null.model) 
 r2_ST #r2.loglik = used in manuscript
 
+# CHANGE -------------------------------
 
+# adding anova to see whether adding SMD_ST as a moderator has an influence
+
+anova(RMAST_ml, RMAnull)
+
+# CHANGE --------------------------------
 
 
 
@@ -303,9 +316,21 @@ null.model<-RMAnull
 model<-RMASM_ml
 r2_SM<-r2_rma.mv(model, null.model) 
 r2_SM #r2.loglik = used in manuscript
- 
 
+# CHANGE -------------------------------
+
+# adding anova to see whether adding SMD_ST as a moderator has an influence
+
+anova(RMASM_ml, RMAnull)
+
+# CHANGE --------------------------------
+
+ 
+# note to self (Flavia): the models are based on different data sets, therefore it's not smart to compare the models with each other
+# another note to self: Bei rma.mv() ist die Interpretation eines einzelnen R²-Wertes besonders schwierig, weil mehrere Varianzkomponenten und Korrelationsparameter gemeinsam die Kovarianzstruktur bestimmen.
 ```
+
+# Comment by Flavia: They continue with the models that include the temperature/moisture components as moderators, even though anovas show us that there is no significant improvement of the models. It's still possible to do this but for the interpretation, we/they have to be careful. With this analysis (or with this data) it cannot be shown that air & soil temperature or soil moisture explain the variation in ER.
 
 ##model validation
 ```{r model validation, echo=FALSE}
@@ -315,14 +340,27 @@ Err<-resid(RMAAT)
 Fit<-fitted(RMAAT) 
 # Residuals vs fitted
 plot(x=Fit, y=Err, xlab="fitted values", ylab="residuals", main="RMAAT - Residuals vs fitted SMD")
+abline(h=0, lty=2, col="red", lwd=2) # CHANGE: added reference line
 #Normality of fitted and residuals
 hist(Fit, main="Histogram fitted values SMD AT") #normality?
+abline(v=mean(Fit), lty=2, col="red", lwd=2) # CHANGE: added reference line
 qqnorm(Err, ylab="residuals SMD AT", xlab="scores") 
+qqline(Err, col="red", lty=2, lwd=2) # CHANGE: added reference line
 # profile.rma.mv(RMAAT)
 # Residuals vs explanatory 
-plot(x=df_AT$Hedges_SMDAT, y=Err, xlab="SMD_AT", ylab="Residuals")
 
+# CHANGE -----------------------
 
+# plot(x=df_AT$Hedges_SMDAT, y=Err, xlab="SMD_AT", ylab="Residuals")
+
+# this is not working since df_AT derives from df_1.csv originally (subset with open access data) but df which is the base for the model and for Err) is based on df_2.csv (full data set). Therefore, we have to derive df_AT from df.
+
+df_AT <- df %>% filter(!is.na(SMD_AT))
+
+plot(x=df_AT$SMD_AT, y=Err, xlab="SMD_AT", ylab="Residuals")
+abline(h=0, lty=2, col="red", lwd=2)
+
+# CHANGE -----------------------
 
 
 
@@ -331,14 +369,27 @@ Err<-resid(RMAST)
 Fit<-fitted(RMAST) 
 # Residuals vs fitted
 plot(x=Fit, y=Err, xlab="fitted values", ylab="residuals", main="RMAST - Residuals vs fitted SMD")
+abline(h=0, lty=2, col="red", lwd=2) # CHANGE: added reference line
 #Normality of fitted and residuals
 hist(Fit, main="Histogram fitted values SMD ST") #normality?
+abline(v=mean(Fit), lty=2, col="red", lwd=2) # CHANGE: added reference line
 qqnorm(Err, ylab="residuals SMD ST", xlab="scores") 
+qqline(Err, col="red", lty=2, lwd=2) # CHANGE: added reference line
 # profile.rma.mv(RMAST)
 # Residuals vs explanatory 
-plot(x=df_ST$Hedges_SMDST, y=Err, xlab="SMD_ST", ylab="Residuals")
 
+# CHANGE -----------------------
 
+# plot(x=df_ST$Hedges_SMDST, y=Err, xlab="SMD_ST", ylab="Residuals")
+
+# this is not working since df_ST derives from df_1.csv originally (subset with open access data) but df (which is the base for the model and for Err) is based on df_2.csv (full data set). Therefore, we have to derive df_ST from df.
+
+df_ST <- df %>% filter(!is.na(SMD_ST))
+
+plot(x=df_ST$SMD_ST, y=Err, xlab="SMD_ST", ylab="Residuals")
+abline(h=0, lty=2, col="red", lwd=2)
+
+# CHANGE -----------------------
 
 
 
@@ -347,17 +398,53 @@ Err<-resid(RMASM)
 Fit<-fitted(RMASM) 
 # Residuals vs fitted
 plot(x=Fit, y=Err, xlab="fitted values", ylab="residuals", main="RMASM - Residuals vs fitted SMD")
+abline(h=0, lty=2, col="red", lwd=2) # CHANGE: added reference line
 #Normality of fitted and residuals
 hist(Fit, main="Histogram fitted values SMD SM") #normality?
+abline(v=mean(Fit), lty=2, col="red", lwd=2) # CHANGE: added reference line
 qqnorm(Err, ylab="residuals SMD SM", xlab="scores") 
+qqline(Err, col="red", lty=2, lwd=2) # CHANGE: added reference line
 # profile.rma.mv(RMASM)
 # Residuals vs explanatory 
-plot(x=df_SM$Hedges_SMDSM, y=Err, xlab="SMD_SM", ylab="Residuals")
+
+# CHANGE -----------------------
+
+# plot(x=df_SM$Hedges_SMDSM, y=Err, xlab="SMD_SM", ylab="Residuals")
+
+# this is not working since df_SM derives from df_1.csv originally (subset with open access data) but df (which is the base for the model and for Err) is based on df_2.csv (full data set). Therefore, we have to derive df_SM from df.
+
+df_SM <- df %>% filter(!is.na(SMD_SM))
+
+plot(x=df_SM$SMD_SM, y=Err, xlab="SMD_SM", ylab="Residuals")
+abline(h=0, lty=2, col="red", lwd=2)
+
+# CHANGE -----------------------
 
 
 
 
 
+```
+
+# Comment by Flavia: Looks okay overall but further investigation in the outliers seems like a good idea.
+
+```{r outlier investigation}
+# CHANGE --------------------------
+
+# the whole code chunk
+
+# Air temperature
+which(abs(resid(RMAAT)) > 1.5)
+
+# Soil temperature
+which(abs(resid(RMAST)) > 1.5)
+
+# Soil moisture
+which(abs(resid(RMASM)) > 1.5)
+
+# 111 has high residuals for AT, ST and SM. This is SWE_15_ER_2001. This is not very surprising since Hedges' g SMD is the most negative for this data set.
+
+# CHANGE -------------------------
 ```
 
 ##calculate I²
@@ -397,6 +484,8 @@ c(100 * (vcov(RMASM.R)[1,1] - vcov(RMASM.F)[1,1]) / vcov(RMASM.R)[1,1],
 
 ```
 
+# Comment by Flavia: Including the random effects and the CAR structure has a big effect on the uncertainty of the intercept and also a effect on uncertainty of the slope.
+
 ##effect plots
 
 ```{r effect plots}
@@ -409,4 +498,4 @@ regplot.rma(RMASM, mod="SMD_SM", xlab="SMD_SM", ylab="Raw SMD")
 
 ```
 
-
+# Comment by Flavia: So AT and SM doesn't look like they are related a lot. ST maybe but it's still not statistically significant as can be seen in code chunk "Pseudo R² posthoc" (line 264 following)
