@@ -6,7 +6,8 @@ output:
     df_print: paged
 ---
 
-<!-- FYI df = full dataframe; df_orphans = dataframe only experiments with 1 year of ER data; df_no_orphans = dataframe only experiments with more than 1 year of ER data. Across experiments: on df; Within experiments: on df_no_orphans -->
+<!-- FYI df = full dataframe; df_orphans = dataframe only experiments with 1 year of ER data; df_no_orphans = dataframe only experiments with more than 1 year of ER data. 
+Across experiments: on df; Within experiments: on df_no_orphans -->
 
 
 # 1 load data 
@@ -278,7 +279,7 @@ make_eqn <- function(m) sprintf(
   coef(m)[[1]], coef(m)[[2]], m$QM, m$pval[[2]], m$k)
 eqns <- lapply(age_models, make_eqn)   # (old script used class 1 coefficients for class 4's label — fixed here)
 
-pdf("Fig_3_b_raw.pdf", width=14, height=10)
+pdf(file.path(output_data_dir, "Fig_3_b_raw.pdf"), width=14, height=10)
 p <- ggplot()
 for (i in 1:4) {
   d <- age_dfs[[i]]
@@ -367,7 +368,7 @@ eqn <- sprintf("italic(Qm) ~ '=' ~ %.2g * ',' ~~ italic(p) ~ '=' ~ %.1g * ',' ~~
 # full names for plotting (on a copy, so df keeps its original levels)
 df_plot <- df %>% mutate(Dur_Age_Class = factor(Dur_Age_Class, labels = age_labels))
 
-pdf("Fig_3_a_raw.pdf", width=14, height=10)
+pdf(file.path(output_data_dir, "Fig_3_a_raw.pdf"), width=14, height=10)
 p_fig <- ggplot() +
   geom_violin(data=df_plot, aes(Dur_Age_Class, Hedges_SMD), alpha=0.5) +
   geom_jitter(data=df_plot, aes(Dur_Age_Class, Hedges_SMD), size=1/sqrt(df_plot$Hedges_SMD_VARIANCE), shape=21, fill=cbPalette[1]) +

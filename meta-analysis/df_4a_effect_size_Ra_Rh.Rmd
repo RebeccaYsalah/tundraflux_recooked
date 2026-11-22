@@ -14,7 +14,9 @@ library(here)  # CHANGES: added
 source(here("config.R"))  # CHANGES: added
 
 # load ER partitioning data
-data <- read_csv("df_3.csv")
+data <- read_csv(file.path(data_dir, "df_3.csv"), guess_max = Inf) # CHANGES: added path 
+# CHANGES - added guess_max = Inf cuz it was assuming the treatment_if_other was not a string but it is!
+
 data$treatment<-as.factor(data$treatment)
 
 # subset GS data
@@ -22,7 +24,10 @@ data <- subset(data, season_automatic == "GS" & c_loss=="CO2", )
 data <- subset(data, site_id_automatic != "CAN_2" & site_id_automatic != "CAN_3" & site_id_automatic != "CAN_4" & site_id_automatic != "SWE_12", )
 
 # count number of missing values in each column
-missing_cols <- colSums(is.na(data))
+missing_cols <- colSums(is.na(data)) # POTENTIAL CHANGES (from Claude): The n values may be too high. 
+# n = n() counts every row, including rows where the respiration value is missing. 
+# That makes n too large and the effect-size variances too small. 
+# Using sum(!is.na(x)) would count only real values.
 # subset dataset to remove columns with only missing values
 ER_data <- subset(data, select = -which(missing_cols == nrow(data)))
 ```
@@ -44,7 +49,7 @@ ER_hr <- ER_data %>%
   group_by(ID, treatment) %>% 
   dplyr::summarize(mean=mean(co2_heterotrophic_respiration, na.rm = TRUE), 
             sd=sd(co2_heterotrophic_respiration, na.rm = TRUE), 
-            n=n()
+            n=n() # POTENTIAL CHANGES (from Claude): The n values may be too high. use: n = sum(!is.na(co2_heterotrophic_respiration))
             )
 
 ER_CTL <- ER_hr  %>% dplyr::filter(treatment=="CTL")
@@ -60,7 +65,6 @@ ER_hr<-dplyr::rename(ER_hr,any_of(c("n_OTC_hr"="n.y")))  # CHANGES: plyr::rename
 ```
 
 ```{r calculate effect sizes - heterotrophic respiration, echo=FALSE}
-
 # calculate Hedges SMD
 SMD_hr <- escalc("SMD",       m1i = mean_OTC_hr,
                            n1i = n_OTC_hr,
@@ -72,6 +76,21 @@ SMD_hr <- escalc("SMD",       m1i = mean_OTC_hr,
 )
 
 Mean_SMD<-mean(SMD_hr$yi, na.rm = TRUE)
+
+###### CHANGES: A lil check from Claude about pseudoreplication. ~~~~~~~~~~
+# CHECK: which site-years have |SMD| > 2? Cuz got an error
+SMD_hr %>%
+  dplyr::filter(abs(yi) > 2) %>%
+  dplyr::select(ID, yi, mean_CTL_hr, mean_OTC_hr, sd_CTL_hr, sd_OTC_hr, n_CTL_hr, n_OTC_hr)
+# Claude said numbers seem like legit big changes but could be because of pseudoreplication.
+
+ER_data %>%
+  dplyr::group_by(ID, treatment) %>%
+  dplyr::summarise(n_rows = n(), n_plots = dplyr::n_distinct(plot_id), .groups = "drop") %>%
+  dplyr::filter(n_rows > n_plots)
+# if rows > plots, then there are multiple measurements per plot, which is pseudoreplication.
+
+###### Now back to their code.  ~~~~~~~~~~
 
 SMD_hr<-dplyr::rename(SMD_hr,any_of(c("SMD_HR"="yi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
 SMD_hr<-dplyr::rename(SMD_hr,any_of(c("var_SMD_HR"="vi")))  # CHANGES: plyr::rename -> dplyr::rename (new = old); plyr removed
@@ -121,7 +140,7 @@ ER_er <- ER_data %>%
   group_by(ID, treatment) %>% 
   dplyr::summarize(mean=mean(co2_ecosystem_respiration, na.rm = TRUE), 
             sd=sd(co2_ecosystem_respiration, na.rm = TRUE), 
-            n=n()
+            n=n() # POTENTIAL CHANGES (from Claude): The n values may be too high. use: n = sum(!is.na(co2_ecosystem_respiration)
             )
 
 ER_CTL <- ER_er  %>% dplyr::filter(treatment=="CTL")
@@ -198,7 +217,7 @@ ER_he <- ER_data %>%
   group_by(ID, treatment) %>% 
   dplyr::summarize(mean=mean(ratio_HR_ER, na.rm = TRUE), 
             sd=sd(ratio_HR_ER, na.rm = TRUE), 
-            n=n()
+            n=n() # POTENTIAL CHANGES (from Claude): The n values may be too high. use: n = sum(!is.na(ratio_HR_ER)
             )
 ER_CTL <- ER_he  %>% dplyr::filter(treatment=="CTL")
 ER_OTC <- ER_he  %>% dplyr::filter(treatment=="OTC")
@@ -280,7 +299,7 @@ ER_au <- ER_data %>%
   group_by(ID, treatment) %>%
   dplyr::summarize(mean = mean(auto_resp, na.rm = TRUE),
                    sd = sd(auto_resp, na.rm = TRUE),
-                   n = n())
+                   n = n()) # POTENTIAL CHANGES (from Claude): The n values may be too high. use: n = sum(!is.na(auto_resp)
 
 # # extract autotrophic respiration
 # ER_au <- ER_data %>%
@@ -357,7 +376,7 @@ df<-cbind(ER_meta, ER_meta1[2:11])
 df2<-cbind(df, ER_meta2[2:11])
 df_meta<-cbind(df2, ER_meta3[2:11])
 
-write.csv(df_meta,"df_4.csv")
+write.csv(df_meta, file.path(output_data_dir, "df_4.csv"))
 
 ```
 
