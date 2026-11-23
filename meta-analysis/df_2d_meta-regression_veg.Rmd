@@ -144,7 +144,7 @@ model1 <- rma.mv(Hedges_SMDGraminoids, Hedges_SMDGraminoids_VARIANCE, random=lis
 summary(model1)
 ```
 
-
+# Comment by Flavia: Once again here, we're facing the problem that the data was collected in one year but is shown for several years and with the distinct command, the year the gets into the model might not be the one in which the data was actually collected.
 
 ### Forbs
 ```{r Forbs, echo=FALSE}
@@ -337,9 +337,13 @@ P <- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
 
 ```
 
+# Comment by Flavia: We're back to I2... I honestly still don't know what they're doing, but Chattie told me that the interpretation (x1=, x2=) is definitely wrong.
 
 #metaregression
 ##model output
+
+# Comment by Flavia: The problem with the same values for several years doesn't get solved by just putting it all into the model.
+
 ```{r single models, echo=FALSE}
 
 RMAGRAMINOIDS<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", mods=~SMD_Graminoids, control=list(optimizer="optim"))  # CHANGES: added optimizer="optim" - nlminb did not converge (same fix as other scripts)
@@ -378,6 +382,8 @@ return(cbind(r2.sigma,r2.loglik))
 }
 ```
 
+# Comment by Flavia: Same issue as in script 2c: I don't understand where this formula comes from, maybe someone else can help out.
+
 ```{r Pseudo R² posthoc, echo=FALSE}
 
 #Graminoids
@@ -391,18 +397,46 @@ model<-RMAGraminoids_ml
 r2_Graminoids<-r2_rma.mv(model, null.model) 
 r2_Graminoids #r2.loglik = used in manuscript
 
+summary(RMAGraminoids_ml)
+
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance (try e.g. "summary(RMAGraminoids_ml)". Together with the formula of the pseudo r2, I'm really not sure what the point of this analysis is.
+
+anova(RMAnull, RMAGraminoids_ml)
+
+# CHANGE -------------------------------------
+
 
 
 #Forbs
 subset<-df %>% filter(!is.na(SMD_Forbs))
 Observation_ID_subset<-1:nrow(subset)
-RMAnull<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=subset, random=list(~ 1 |  Exp_ID / Observation_ID_subset , ~ Year |  Exp_ID ), struct="CAR", mods=~ 1, method="ML") 
+
+# CHANGE ------------------------------------
+
+# RMAnull<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=subset, random=list(~ 1 |  Exp_ID / Observation_ID_subset , ~ Year |  Exp_ID ), struct="CAR", mods=~ 1, method="ML") 
+
+# Optimizer did not achieve convergence, therefore it's changed to optim
+
+RMAnull<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=subset, random=list(~ 1 |  Exp_ID / Observation_ID_subset , ~ Year |  Exp_ID ), struct="CAR", mods=~ 1, method="ML", control=list(optimizer="optim")) 
+
+# CHANGE ------------------------------------
+
 RMAForbs_ml<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=subset, random=list(~ 1 |  Exp_ID / Observation_ID_subset , ~ Year |  Exp_ID ), struct="CAR", mods=~ SMD_Forbs, method="ML")
 
 null.model<-RMAnull
 model<-RMAForbs_ml
 r2_Forbs<-r2_rma.mv(model, null.model) 
 r2_Forbs #r2.loglik = used in manuscript
+
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance.
+
+anova(RMAnull, RMAForbs_ml)
+
+# CHANGE -------------------------------------
 
 
 
@@ -417,6 +451,14 @@ model<-RMADecid_Shrubs_ml
 r2_Decid_Shrubs<-r2_rma.mv(model, null.model) 
 r2_Decid_Shrubs #r2.loglik = used in manuscript
 
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance.
+
+anova(RMAnull, RMADecid_Shrubs_ml)
+
+# CHANGE -------------------------------------
+
 
 
 #Evergr_Shrubs
@@ -429,6 +471,14 @@ null.model<-RMAnull
 model<-RMAEvergr_Shrubs_ml
 r2_Evergr_Shrubs<-r2_rma.mv(model, null.model) 
 r2_Evergr_Shrubs #r2.loglik = used in manuscript
+
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance.
+
+anova(RMAnull, RMAEvergr_Shrubs_ml)
+
+# CHANGE -------------------------------------
 
 
 
@@ -443,6 +493,14 @@ model<-RMAMosses_ml
 r2_Mosses<-r2_rma.mv(model, null.model) 
 r2_Mosses #r2.loglik = used in manuscript
 
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance.
+
+anova(RMAnull, RMAMosses_ml)
+
+# CHANGE -------------------------------------
+
 
 
 #Lichens
@@ -456,6 +514,13 @@ model<-RMALichens_ml
 r2_Lichens<-r2_rma.mv(model, null.model) 
 r2_Lichens #r2.loglik = used in manuscript
 
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance.
+
+anova(RMAnull, RMALichens_ml)
+
+# CHANGE -------------------------------------
 
 
 #BM
@@ -469,6 +534,13 @@ model<-RMABM_ml
 r2_BM<-r2_rma.mv(model, null.model) 
 r2_BM #r2.loglik = used in manuscript
 
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance.
+
+anova(RMAnull, RMABM_ml)
+
+# CHANGE -------------------------------------
 
 
 #Mean_H
@@ -481,6 +553,14 @@ null.model<-RMAnull
 model<-RMAMean_H_ml
 r2_Mean_H<-r2_rma.mv(model, null.model) 
 r2_Mean_H #r2.loglik = used in manuscript
+
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance.
+
+anova(RMAnull, RMAMean_H_ml)
+
+# CHANGE -------------------------------------
 
 ```
 
@@ -692,6 +772,7 @@ c(100 * (vcov(RMAMEANH.R)[1,1] - vcov(RMAMEANH.F)[1,1]) / vcov(RMAMEANH.R)[1,1],
 
 ```
 
+# Comment by Flavia: I still don't get it.
 
 ## effect plots
 
