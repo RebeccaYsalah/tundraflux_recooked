@@ -193,7 +193,7 @@ summary(model1)
 
 ```
 
-
+# Comment by Flavia: Remember that they used the same values for different years for the drivers (see script 1b)? Now, for the model, they only use the values once but it might be that the year the is selected by distinct is not the year the the values were observed, therefore the model might be built on a "wrong" year.
 
 ##### SOM_Min
 ```{r SOM_Min, echo=FALSE}
@@ -350,6 +350,9 @@ summary(model1)
 
 #### RMD
 <!-- ! They are always called same model name - adjust if needed -->
+
+# Comment by Flavia: From here on, they don't use the distinct command anymore, so we're facing the problem of the years having the same values for each of the drivers. Therefore, the models are not really usable.
+
 ##### SOM_Org
 ```{r SOM Org, echo=FALSE}
 # Site level values that people gave should be removed from this analysis, otherwise you get bias -- for hedges smd he removes that himself as you cannot calculate a SMD (due to pooled stdev) then but RMD you can. --> need to provide extra line here before these RMD models for soil (RMD = 0: remove). 
@@ -463,7 +466,16 @@ dfsub<-df[ , which(names(df) %in% c("Dataset_ID", "Exp_ID", "Year"))]
 df_SON_Min_RMD <- df_SON_Min_RMD %>% inner_join(dfsub, by="Dataset_ID")
 # df_SON_Min_RMD <- df_SON_Min_RMD[-which(df_SON_Min_RMD$RMDSON_Min==0),]
 
-model1_RMD <- rma.mv(RMDSON_Min, RMDSON_Min_VARIANCE, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", data=df_SON_Min_RMD, verbose=TRUE)
+# CHANGE ------------------------------------------
+
+# model1_RMD <- rma.mv(RMDSON_Min, RMDSON_Min_VARIANCE, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", data=df_SON_Min_RMD, verbose=TRUE)
+
+# set verbose=FALSE because why do we need it 
+
+model1_RMD <- rma.mv(RMDSON_Min, RMDSON_Min_VARIANCE, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", data=df_SON_Min_RMD)
+
+# CHANGE -------------------------------------------
+
 summary(model1_RMD)
 
 ```
@@ -597,7 +609,7 @@ summary(model1_RMD)
 
 ```
 
-
+# Comment by Flavia: All of the modelling above doesn't really make sense for us because of the subset of the data that we use. All of the p-values show non-significant models and the sample sizes are usually very small. However, we face the problem that the model is fitted with the same values for different years (see script 1b).
 
 
 #metaregression
@@ -619,7 +631,16 @@ summary(RMASOC_Min)
 RMASON_Org<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", mods=~SMD_SON_Org)
 summary(RMASON_Org)
 
-RMASON_Min<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", mods=~SMD_SON_Min)
+# CHANGE ----------------
+
+# RMASON_Min<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", mods=~SMD_SON_Min)
+
+# Optimizer did not converge, therefore the optimizer is changed to optim
+
+RMASON_Min<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", mods=~SMD_SON_Min, control=list(optimizer="optim"))
+
+# CHANGE ----------------
+
 summary(RMASON_Min)
 
 RMACN_Org<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", mods=~SMD_CN_Org)
@@ -644,6 +665,8 @@ RMAOL_D_Plot<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, random=list(~ 1 |
 summary(RMAOL_D_Plot)
 ```
 
+# Comment by Flavia: It might be interesting to see whether the moderators above really play a role in the results.
+# Another comment by Flavia: The only two models with significant outcomes are SMD_pH_Min and SMD_SON_Min.
 
 ##pseudoR² 
 ```{r function R², echo=FALSE}
@@ -655,6 +678,8 @@ return(cbind(r2.sigma,r2.loglik))
 
 }
 ```
+
+# Comment by Flavia: I don't understand where this formula comes from, maybe someone else can help out.
 
 ```{r Pseudo R² posthoc, echo=FALSE}
 
@@ -669,7 +694,13 @@ model<-RMASOM_Org_ml
 r2_SOM_Org<-r2_rma.mv(model, null.model) 
 r2_SOM_Org #r2.loglik = used in manuscript
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. The sigma2 shows very high values but those derive from the variance components coming close to 0 in the moderator model. Furthermore, we not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance (try e.g. "summary(RMASOM_Org_ml2)". Together with the formula of the pseudo r2, I'm really not sure what the point of this analysis is.
+
+anova(RMAnull, RMASOM_Org_ml)
+
+# CHANGE -------------------------------------
 
 #SOM_Min
 subset<-df %>% filter(!is.na(SMD_SOM_Min))
@@ -681,6 +712,14 @@ null.model<-RMAnull
 model<-RMASOM_Min_ml
 r2_SOM_Min<-r2_rma.mv(model, null.model) 
 r2_SOM_Min #r2.loglik = used in manuscript
+
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. Furthermore, we not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance.
+
+anova(RMAnull, RMASOM_Min_ml)
+
+# CHANGE -------------------------------------
 
 
 
@@ -695,6 +734,14 @@ model<-RMASOC_Org_ml
 r2_SOC_Org<-r2_rma.mv(model, null.model) 
 r2_SOC_Org #r2.loglik = used in manuscript
 
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. Furthermore, we not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance.
+
+anova(RMAnull, RMASOC_Org_ml)
+
+# CHANGE -------------------------------------
+
 
 
 #SOC_Min
@@ -707,6 +754,14 @@ null.model<-RMAnull
 model<-RMASOC_Min_ml
 r2_SOC_Min<-r2_rma.mv(model, null.model) 
 r2_SOC_Min #r2.loglik = used in manuscript
+
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. Furthermore, we not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance.
+
+anova(RMAnull, RMASOC_Min_ml)
+
+# CHANGE -------------------------------------
 
 
 
@@ -721,7 +776,13 @@ model<-RMASON_Org_ml
 r2_SON_Org<-r2_rma.mv(model, null.model) 
 r2_SON_Org #r2.loglik = used in manuscript
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. Furthermore, we not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance.
+
+anova(RMAnull, RMASON_Org_ml)
+
+# CHANGE -------------------------------------
 
 #SON_Min
 subset<-df %>% filter(!is.na(SMD_SON_Min))
@@ -734,6 +795,13 @@ model<-RMASON_Min_ml
 r2_SON_Min<-r2_rma.mv(model, null.model) 
 r2_SON_Min #r2.loglik = used in manuscript
 
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. Furthermore, we not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance.
+
+anova(RMAnull, RMASON_Min_ml)
+
+# CHANGE -------------------------------------
 
 
 #CN_Org
@@ -747,6 +815,13 @@ model<-RMACN_Org_ml
 r2_CN_Org<-r2_rma.mv(model, null.model) 
 r2_CN_Org #r2.loglik = used in manuscript
 
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. Furthermore, we not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance.
+
+anova(RMAnull, RMACN_Org_ml)
+
+# CHANGE -------------------------------------
 
 
 
@@ -761,7 +836,13 @@ model<-RMACN_Min_ml
 r2_CN_Min<-r2_rma.mv(model, null.model) 
 r2_CN_Min #r2.loglik = used in manuscript
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. Furthermore, we not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance.
+
+anova(RMAnull, RMACN_Min_ml)
+
+# CHANGE -------------------------------------
 
 
 #pH_Org
@@ -775,7 +856,13 @@ model<-RMApH_Org_ml
 r2_pH_Org<-r2_rma.mv(model, null.model) 
 r2_pH_Org #r2.loglik = used in manuscript
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. Furthermore, we not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance.
+
+anova(RMAnull, RMApH_Org_ml)
+
+# CHANGE -------------------------------------
 
 
 #pH_Min
@@ -789,7 +876,13 @@ model<-RMApH_Min_ml
 r2_pH_Min<-r2_rma.mv(model, null.model) 
 r2_pH_Min #r2.loglik = used in manuscript
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. Furthermore, we not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance.
+
+anova(RMAnull, RMApH_Min_ml)
+
+# CHANGE -------------------------------------
 
 
 #BD_Org
@@ -803,6 +896,13 @@ model<-RMABD_Org_ml
 r2_BD_Org<-r2_rma.mv(model, null.model) 
 r2_BD_Org #r2.loglik = used in manuscript
 
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. Furthermore, we not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance.
+
+anova(RMAnull, RMABD_Org_ml)
+
+# CHANGE -------------------------------------
 
 
 #BD_Min
@@ -816,6 +916,13 @@ model<-RMABD_Min_ml
 r2_BD_Min<-r2_rma.mv(model, null.model) 
 r2_BD_Min #r2.loglik = used in manuscript
 
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. Furthermore, we not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance.
+
+anova(RMAnull, RMABD_Min_ml)
+
+# CHANGE -------------------------------------
 
 
 #OL_D_Plot
@@ -829,13 +936,21 @@ model<-RMAOL_D_Plot_ml
 r2_OL_D_Plot<-r2_rma.mv(model, null.model) 
 r2_OL_D_Plot #r2.loglik = used in manuscript
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. Furthermore, we not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 also explains variance.
+
+anova(RMAnull, RMAOL_D_Plot_ml)
+
+# CHANGE -------------------------------------
 
 
 
 
 
 ```
+
+# Comment by Flavia: Non of the models seem to be significantly better with a moderator regarding the anovas.
 
 ##model validation
 ```{r model validation, echo=FALSE}
@@ -1084,6 +1199,8 @@ regplot.rma(RMAOL_D_Plot, mod="SMD_OL_D_Plot", xlab="SMD_OL_D_Plot", ylab="Hedge
 
 
 ```
+# Comment by Flavia: Despite from maybe pH_Min and BD_Min, I don't see any interesting results.
+
 ### manuscript (only sign drivers)
 #### SMD_SON_Org
 ```{r SMD_SON_Org, echo=FALSE}
@@ -1204,12 +1321,25 @@ dev.off()
 ```{r SMD_SON_Min, echo=FALSE}
 # df #just one factor so he will only use observations available for that factor (no need to subsect)
 
+# CHANGE ----------------------------------------
+
+# model<-rma.mv(Hedges_SMD,
+#                       Hedges_SMD_VARIANCE,
+#                       data=df,
+#                       random = list(~ 1 | Exp_ID/Observation_ID, ~ Year | Exp_ID),
+#                       struct="CAR",
+#                       mods= ~   SMD_SON_Min  )
+
+# This model doesn't converge, so we're changing the optimizer
+
 model<-rma.mv(Hedges_SMD,
                        Hedges_SMD_VARIANCE,
                        data=df,
                        random = list(~ 1 | Exp_ID/Observation_ID, ~ Year | Exp_ID),
                        struct="CAR",
-                       mods= ~   SMD_SON_Min  )
+                       mods= ~   SMD_SON_Min,
+                       control=list(optimizer="optim"))
+
 # model
 
 
@@ -1657,3 +1787,4 @@ annotate("text",  x = SMD_BD_Minmin, y = 2, label = eqn2, parse = TRUE, hjust = 
 dev.off()
 
 ```
+# Comment by Flavia: Excited how it's gonna like like with different weights.
