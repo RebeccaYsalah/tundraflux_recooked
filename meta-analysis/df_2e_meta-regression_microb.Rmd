@@ -133,6 +133,8 @@ model1 <- rma.mv(Hedges_SMDFB_Ratio, Hedges_SMDFB_Ratio_VARIANCE, random=list(~ 
 summary(model1)
 ```
 
+# Comment by Flavia: Once again here, we're facing the problem that the data was collected in one year but is shown for several years and with the distinct command, the year the gets into the model might not be the one in which the data was actually collected.
+
 ### RMD
 ##### Bacterial_BM_Weight
 ```{r Bacterial_BM_Weight 2, echo=FALSE}
@@ -191,6 +193,9 @@ summary(model1_RMD)
 
 #metaregression
 ##model output
+
+# Comment by Flavia: The problem with the same values for several years doesn't get solved by just putting it all into the model.
+
 ```{r single models, echo=FALSE}
 
 RMABacterial_BM_Weight<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df, random=list(~ 1 |  Exp_ID / Observation_ID , ~ Year |  Exp_ID ), struct="CAR", mods=~SMD_Bacterial_BM_Weight)
@@ -214,6 +219,8 @@ return(cbind(r2.sigma,r2.loglik))
 }
 ```
 
+# Comment by Flavia: Same issue as in script 2c: I don't understand where this formula comes from, maybe someone else can help out.
+
 ```{r Pseudo R² posthoc, echo=FALSE}
 
 #Bacterial_BM_Weight
@@ -226,6 +233,16 @@ null.model<-RMAnull
 model<-RMABacterial_BM_Weight_ml
 r2_Bacterial_BM_Weight<-r2_rma.mv(model, null.model) 
 r2_Bacterial_BM_Weight #r2.loglik = used in manuscript
+
+summary(RMABacterial_BM_Weight_ml)
+
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance (try e.g. "summary(RMABacterial_BM_Weight_ml)". Together with the formula of the pseudo r2, I'm really not sure what the point of this analysis is.
+
+anova(RMAnull, RMABacterial_BM_Weight_ml)
+
+# CHANGE -------------------------------------
 
 
 
@@ -240,6 +257,14 @@ model<-RMAFungal_BM_Weight_ml
 r2_Fungal_BM_Weight<-r2_rma.mv(model, null.model) 
 r2_Fungal_BM_Weight #r2.loglik = used in manuscript
 
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
+
+anova(RMAnull, RMAFungal_BM_Weight_ml)
+
+# CHANGE -------------------------------------
+
 
 
 #FB_Ratio
@@ -252,6 +277,14 @@ null.model<-RMAnull
 model<-RMAFB_Ratio_ml
 r2_FB_Ratio<-r2_rma.mv(model, null.model) 
 r2_FB_Ratio #r2.loglik = used in manuscript
+
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
+
+anova(RMAnull, RMAFB_Ratio_ml)
+
+# CHANGE -------------------------------------
 
 
 
