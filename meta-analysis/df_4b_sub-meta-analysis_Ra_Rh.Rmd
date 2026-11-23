@@ -17,7 +17,7 @@ library(here)  # CHANGES: added
 source(here("config.R"))  # CHANGES: added
 
 # load ER partitioning data
-data <- read_csv("df_3.csv")
+data <- read_csv(file.path(data_dir, "df_3.csv"), guess_max = Inf) # CHANGES: added guess_max to ensure all columns are assumed correct types & added data path.
 data$treatment<-as.factor(data$treatment)
 
 # subset GS data
@@ -32,7 +32,7 @@ ER_data <- subset(data, select = -which(missing_cols == nrow(data)))
 
 ```{r fit random-effects models}
 
-df_meta <- read_csv("df_4.csv")
+df_meta <- read_csv(file.path(output_data_dir, "df_4.csv")) # CHANGES: added data path.
 
 ## HETEROTROPHIC
 ## SMD
