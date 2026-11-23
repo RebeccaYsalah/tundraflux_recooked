@@ -172,6 +172,8 @@ df %>%
 
 ```
 
+# Comment by Flavia: Once again, we're facing the problem the some of the environmental drivers were measured in one year but the data was used for several years.
+
 ##correlation
 ```{r correlation, echo=FALSE}
 
@@ -276,6 +278,7 @@ RMAOLDPLOTCTL
 
 ```
 
+# Comment by Flavia: SON_Min_CTL and CN_Min_CTL are the only significant things going on here
 
 ##pseudoR²
 
@@ -289,6 +292,8 @@ return(cbind(r2.sigma,r2.loglik))
 
 }
 ```
+
+# Comment by Flavia: Same issue as in script 2c: I don't understand where this formula comes from, maybe someone else can help out.
 
 ```{r pseudoR²}
 
@@ -305,6 +310,16 @@ null.model<-RMAn
 model<-RMAVEGCLASS_ml
 r2_VEGCLASS<-r2_rma.mv(model, null.model)
 
+summary(RMAVEGCLASS_ml)
+
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance (try e.g. "summary(RMABacterial_BM_Weight_ml)". Together with the formula of the pseudo r2, I'm really not sure what the point of this analysis is.
+
+anova(RMAn, RMAVEGCLASS_ml)
+
+# CHANGE -------------------------------------
+
 
 #RMAn null model but for same subset of observations as driver data
 df_sub<-df %>% filter(!is.na(Zone))
@@ -319,6 +334,14 @@ null.model<-RMAn
 model<-RMAZONE_ml
 r2_ZONE<-r2_rma.mv(model, null.model)
 
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
+
+anova(RMAn, RMAZONE_ml)
+
+# CHANGE -------------------------------------
+
 
 #RMAn null model but for same subset of observations as driver data
 df_sub<-df %>% filter(!is.na(Soil_C_stock))
@@ -332,6 +355,14 @@ RMASOILCSTOCK_ml<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df_sub, random=li
 null.model<-RMAn
 model<-RMASOILCSTOCK_ml
 r2_SOILCSTOCK<-r2_rma.mv(model, null.model)
+
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
+
+anova(RMAn, RMASOILCSTOCK_ml)
+
+# CHANGE -------------------------------------
 
 
 
@@ -348,6 +379,13 @@ null.model<-RMAn
 model<-RMAPH_ml
 r2_PH<-r2_rma.mv(model, null.model)
 
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
+
+anova(RMAn, RMAPH_ml)
+
+# CHANGE -------------------------------------
 
 
 #RMAn null model but for same subset of observations as driver data
@@ -363,6 +401,13 @@ null.model<-RMAn
 model<-RMAPFPROB_ml
 r2_PFPROB<-r2_rma.mv(model, null.model)
 
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
+
+anova(RMAn, RMAPFPROB_ml)
+
+# CHANGE -------------------------------------
 
 
 #RMAn null model but for same subset of observations as driver data
@@ -378,6 +423,13 @@ null.model<-RMAn
 model<-RMASOILMOIST_ml
 r2_SOILMOIST<-r2_rma.mv(model, null.model)
 
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
+
+anova(RMAn, RMASOILMOIST_ml)
+
+# CHANGE -------------------------------------
 
 
 #RMAn null model but for same subset of observations as driver data
@@ -392,6 +444,14 @@ RMANPP_ml<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df_sub, random=list(~ 1 
 null.model<-RMAn
 model<-RMANPP_ml
 r2_NPP<-r2_rma.mv(model, null.model)
+
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
+
+anova(RMAn, RMANPP_ml)
+
+# CHANGE -------------------------------------
 
 
 r2_ZONE
@@ -418,7 +478,13 @@ null.model<-RMAn
 model<-RMAAir_Temp_CTL_ml
 r2_Air_Temp_CTL<-r2_rma.mv(model, null.model)
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
+
+anova(RMAn, RMAAir_Temp_CTL_ml)
+
+# CHANGE -------------------------------------
 
 
 
@@ -435,9 +501,13 @@ null.model<-RMAn
 model<-RMASoil_Temp_CTL_ml
 r2_Soil_Temp_CTL<-r2_rma.mv(model, null.model)
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
 
+anova(RMAn, RMASoil_Temp_CTL_ml)
 
+# CHANGE -------------------------------------
 
 
 #RMAn null model but for same subset of observations as driver data
@@ -453,9 +523,13 @@ null.model<-RMAn
 model<-RMASoil_Moist_CTL_ml
 r2_Soil_Moist_CTL<-r2_rma.mv(model, null.model)
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
 
+anova(RMAn, RMASoil_Moist_CTL_ml)
 
+# CHANGE -------------------------------------
 
 
 #RMAn null model but for same subset of observations as driver data
@@ -471,10 +545,13 @@ null.model<-RMAn
 model<-RMASOM_Org_CTL_ml
 r2_SOM_Org_CTL<-r2_rma.mv(model, null.model)
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
 
+anova(RMAn, RMASOM_Org_CTL_ml)
 
-
+# CHANGE -------------------------------------
 
 
 #RMAn null model but for same subset of observations as driver data
@@ -490,11 +567,13 @@ null.model<-RMAn
 model<-RMASOM_Min_CTL_ml
 r2_SOM_Min_CTL<-r2_rma.mv(model, null.model)
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
 
+anova(RMAn, RMASOM_Min_CTL_ml)
 
-
-
+# CHANGE -------------------------------------
 
 
 #RMAn null model but for same subset of observations as driver data
@@ -510,11 +589,13 @@ null.model<-RMAn
 model<-RMASOC_Org_CTL_ml
 r2_SOC_Org_CTL<-r2_rma.mv(model, null.model)
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
 
+anova(RMAn, RMASOC_Org_CTL_ml)
 
-
-
+# CHANGE -------------------------------------
 
 
 #RMAn null model but for same subset of observations as driver data
@@ -530,11 +611,13 @@ null.model<-RMAn
 model<-RMASOC_Min_CTL_ml
 r2_SOC_Min_CTL<-r2_rma.mv(model, null.model)
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
 
+anova(RMAn, RMASOC_Min_CTL_ml)
 
-
-
+# CHANGE -------------------------------------
 
 
 
@@ -551,11 +634,13 @@ null.model<-RMAn
 model<-RMASON_Org_CTL_ml
 r2_SON_Org_CTL<-r2_rma.mv(model, null.model)
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
 
+anova(RMAn, RMASON_Org_CTL_ml)
 
-
-
+# CHANGE -------------------------------------
 
 
 #RMAn null model but for same subset of observations as driver data
@@ -571,13 +656,13 @@ null.model<-RMAn
 model<-RMASON_Min_CTL_ml
 r2_SON_Min_CTL<-r2_rma.mv(model, null.model)
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
 
+anova(RMAn, RMASON_Min_CTL_ml)
 
-
-
-
-
+# CHANGE -------------------------------------
 
 
 #RMAn null model but for same subset of observations as driver data
@@ -593,10 +678,13 @@ null.model<-RMAn
 model<-RMACN_Org_CTL_ml
 r2_CN_Org_CTL<-r2_rma.mv(model, null.model)
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
 
+anova(RMAn, RMACN_Org_CTL_ml)
 
-
+# CHANGE -------------------------------------
 
 
 
@@ -613,9 +701,13 @@ null.model<-RMAn
 model<-RMACN_Min_CTL_ml
 r2_CN_Min_CTL<-r2_rma.mv(model, null.model)
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
 
+anova(RMAn, RMACN_Min_CTL_ml)
 
+# CHANGE -------------------------------------
 
 
 #RMAn null model but for same subset of observations as driver data
@@ -631,6 +723,13 @@ null.model<-RMAn
 model<-RMApH_Org_CTL_ml
 r2_pH_Org_CTL<-r2_rma.mv(model, null.model)
 
+# CHANGE -------------------------------------
+
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
+
+anova(RMAn, RMApH_Org_CTL_ml)
+
+# CHANGE -------------------------------------
 
 
 #RMAn null model but for same subset of observations as driver data
@@ -646,8 +745,13 @@ null.model<-RMAn
 model<-RMApH_Min_CTL_ml
 r2_pH_Min_CTL<-r2_rma.mv(model, null.model)
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
 
+anova(RMAn, RMApH_Min_CTL_ml)
+
+# CHANGE -------------------------------------
 
 
 #RMAn null model but for same subset of observations as driver data
@@ -662,12 +766,14 @@ RMABD_Org_CTL_ml<-rma.mv(Hedges_SMD, Hedges_SMD_VARIANCE, data=df_sub, random=li
 null.model<-RMAn
 model<-RMABD_Org_CTL_ml
 r2_BD_Org_CTL<-r2_rma.mv(model, null.model)
-#
-#
-#
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
 
+anova(RMAn, RMABD_Org_CTL_ml)
+
+# CHANGE -------------------------------------
 
 
 #RMAn null model but for same subset of observations as driver data
@@ -683,7 +789,13 @@ null.model<-RMAn
 model<-RMABD_Min_CTL_ml
 r2_BD_Min_CTL<-r2_rma.mv(model, null.model)
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
+
+anova(RMAn, RMABD_Min_CTL_ml)
+
+# CHANGE -------------------------------------
 
 
 #RMAn null model but for same subset of observations as driver data
@@ -699,7 +811,13 @@ null.model<-RMAn
 model<-RMAOL_D_Plot_CTL_ml
 r2_OL_D_Plot_CTL<-r2_rma.mv(model, null.model)
 
+# CHANGE -------------------------------------
 
+# Adding anova to see whether the model with moderator is really better than the one without. We not only have sigma2 in the model but also tau2 and rho for the temporal autocorrelation and tau2 might also explain variance.
+
+anova(RMAn, RMAOL_D_Plot_CTL_ml)
+
+# CHANGE -------------------------------------
 
 
 
@@ -733,6 +851,7 @@ r2_OL_D_Plot_CTL
 
 ```
 
+# Comment by Flavia: Based on the anova, SON_Min and CN_Min are the only two significant results.
 
 ##model validation
 ###part1
@@ -1548,9 +1667,6 @@ annotate("text",  x = 0, y = -1, label = eqn, parse = TRUE, hjust = 0, size=8  )
 
 
 
-
-
-
 ##### Veg class
 
 ```{r A Veg Class, echo=FALSE}
@@ -1761,23 +1877,6 @@ dev.off()
 
 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ####SOIL
